@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace LineupGenerator.Model
+namespace mCubed.LineupGenerator.Model
 {
 	public class Player : INotifyPropertyChanged
 	{

@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Facet.Combinatorics {
+namespace mCubed.Combinatorics
+{
     /// <summary>
     /// Indicates whether a Permutation, Combination or Variation meta-collections
     /// generate repetition sets.  

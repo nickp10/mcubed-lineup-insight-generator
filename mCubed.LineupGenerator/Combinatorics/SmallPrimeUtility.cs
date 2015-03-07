@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 
-namespace Facet.Combinatorics {
+namespace mCubed.Combinatorics
+{
     /// <summary>
     /// Utility class that maintains a small table of prime numbers and provides
     /// simple implementations of Prime Factorization algorithms.  

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace LineupGenerator.Controller
+namespace mCubed.LineupGenerator.Controller
 {
 	public class PositionComparer : IComparer<string>
 	{

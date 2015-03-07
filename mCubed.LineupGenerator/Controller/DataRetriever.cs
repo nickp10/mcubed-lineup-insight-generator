@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using LineupGenerator.Model;
+using System.Windows;
+using mCubed.LineupGenerator.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace LineupGenerator.Controller
+namespace mCubed.LineupGenerator.Controller
 {
 	public class DataRetriever
 	{
@@ -16,10 +18,27 @@ namespace LineupGenerator.Controller
 		private const string CONTEST_URL_FORMAT = "https://www.fanduel.com/e/Game/{0}";
 		private static readonly IDictionary<string, string> ALTERNATE_NAMES = new Dictionary<string, string>
 		{
+			/* NBA */
+			{ "Bill Walker", "Henry Walker" },
 			{ "Brad Beal", "Bradley Beal" },
+			{ "Ishmael Smith", "Ish Smith" },
+			{ "JaKarr Sampson", "Jakarr Sampson" },
+			{ "James Michael McAdoo", "James McAdoo" },
+			{ "Jeffery Taylor", "Jeff Taylor" },
 			{ "Jose Juan Barea", "J.J. Barea" },
+			{ "Juan Jose Barea", "J.J. Barea" },
+			{ "Kentavious Caldwell-Pope", "K. Caldwell-Pope" },
+			{ "Luc Mbah a Moute", "L. Mbah a Moute" },
 			{ "Luc Richard Mbah a Moute", "L. Mbah a Moute" },
 			{ "Michael Carter-Williams", "M. Carter-Williams" },
+			{ "Michael Kidd-Gilchrist", "M. Kidd-Gilchrist" },
+			{ "Patrick Mills", "Patty Mills" },
+			{ "Perry Jones III", "Perry Jones" },
+			{ "Phil (Flip) Pressey", "Phil Pressey" },
+			{ "Roy Devyn Marble", "Devyn Marble" },
+			{ "Tim Hardaway Jr.", "Tim Hardaway" },
+
+			/* NHL */
 			{ "Alexander Ovechkin", "Alex Ovechkin" }
 		};
 		private static readonly IDictionary<string, StatsInfo> STATS_INFOS = new Dictionary<string, StatsInfo>
@@ -31,6 +50,10 @@ namespace LineupGenerator.Controller
 					RecentGroupIndex = 5,
 					SeasonGroupIndex = 7,
 					Regex = "<a href=\"/baseball/player.*?>(.*?)</a>(.*?<td){8}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>",
+					NumberFirePlayers = "players",
+					NumberFirePlayerID = "mlb_player_id",
+					NumberFireProjections = "projections",
+					NumberFireProjectedPoints = "fanduel_fp",
 					URLRotoWire = "http://www.rotowire.com/daily/mlb/value-report.htm",
 					URLNumberFire = "https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections"
 				}
@@ -42,6 +65,10 @@ namespace LineupGenerator.Controller
 					RecentGroupIndex = 5,
 					SeasonGroupIndex = 7,
 					Regex = "<a href=\"/basketball/player.*?>(.*?)</a>(.*?<td){6}.*?>(.*?)</td>(.*?<td){4}.*?>(.*?)</td>(.*?<td){4}.*?>(.*?)</td>",
+					NumberFirePlayers = "players",
+					NumberFirePlayerID = "nba_player_id",
+					NumberFireProjections = "daily_projections",
+					NumberFireProjectedPoints = "fanduel_fp",
 					URLRotoWire = "http://www.rotowire.com/daily/nba/value-report.htm",
 					URLNumberFire = "https://www.numberfire.com/nba/fantasy/fantasy-basketball-projections"
 				}
@@ -64,8 +91,7 @@ namespace LineupGenerator.Controller
 					RecentGroupIndex = -1,
 					SeasonGroupIndex = 5,
 					Regex = "<a href=\"/hockey/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>",
-					URLRotoWire = "http://www.rotowire.com/daily/nhl/value-report.htm",
-					URLNumberFire = "https://www.numberfire.com/nhl/daily-fantasy-hockey-projections"
+					URLRotoWire = "http://www.rotowire.com/daily/nhl/value-report.htm"
 				}
 			}
 		};
@@ -174,6 +200,57 @@ namespace LineupGenerator.Controller
 
 		#endregion
 
+		#region StatlessPlayers
+
+		private ObservableCollection<string> _statlessPlayers;
+		public ObservableCollection<string> StatlessPlayers
+		{
+			get
+			{
+				if (_statlessPlayers == null)
+				{
+					_statlessPlayers = new ObservableCollection<string>();
+				}
+				return _statlessPlayers;
+			}
+		}
+
+		#endregion
+
+		#region ZeroesFromNumberFire
+
+		private ObservableCollection<string> _zeroesFromNumberFire;
+		public ObservableCollection<string> ZeroesFromNumberFire
+		{
+			get
+			{
+				if (_zeroesFromNumberFire == null)
+				{
+					_zeroesFromNumberFire = new ObservableCollection<string>();
+				}
+				return _zeroesFromNumberFire;
+			}
+		}
+
+		#endregion
+
+		#region ZeroesFromRotoWire
+
+		private ObservableCollection<string> _zeroesFromRotoWire;
+		public ObservableCollection<string> ZeroesFromRotoWire
+		{
+			get
+			{
+				if (_zeroesFromRotoWire == null)
+				{
+					_zeroesFromRotoWire = new ObservableCollection<string>();
+				}
+				return _zeroesFromRotoWire;
+			}
+		}
+
+		#endregion
+
 		#endregion
 
 		#region Contest Data Methods
@@ -246,10 +323,16 @@ namespace LineupGenerator.Controller
 			StatsInfo info;
 			if (STATS_INFOS.TryGetValue(ContestType, out info) && info != null)
 			{
-				var data = DownloadStatsData(info.URLRotoWire);
-				ParsePlayersStatsFromRotoWire(info, data);
-				data = DownloadStatsData(info.URLNumberFire);
-				ParsePlayersStatsFromNumberFire(info, data);
+				if (!string.IsNullOrEmpty(info.URLRotoWire))
+				{
+					var data = DownloadStatsData(info.URLRotoWire);
+					ParsePlayersStatsFromRotoWire(info, data);
+				}
+				if (!string.IsNullOrEmpty(info.URLNumberFire))
+				{
+					var data = DownloadStatsData(info.URLNumberFire);
+					ParsePlayersStatsFromNumberFire(info, data);
+				}
 			}
 			else
 			{
@@ -312,6 +395,13 @@ namespace LineupGenerator.Controller
 					ProjectedPoints = ParseGroupDouble(match, info.ProjectedGroupIndex),
 					SeasonAveragePoints = ParseGroupDouble(match, info.SeasonGroupIndex)
 				};
+				if (stats.ProjectedPoints <= 0 && !ZeroesFromRotoWire.Contains(name))
+				{
+					Application.Current.Dispatcher.Invoke(new Action(() =>
+					{
+						ZeroesFromRotoWire.Add(name);
+					}));
+				}
 				playersStats[name] = stats;
 				match = match.NextMatch();
 			}
@@ -327,8 +417,8 @@ namespace LineupGenerator.Controller
 		{
 			foreach (JObject projection in projections)
 			{
-				var playerID = (string)projection["nba_player_id"];
-				var projectedPoints = (double)projection["fanduel_fp"];
+				var playerID = (string)projection[info.NumberFirePlayerID];
+				var projectedPoints = (double)projection[info.NumberFireProjectedPoints];
 				if (projectedPoints >= 0)
 				{
 					string playerName;
@@ -337,19 +427,27 @@ namespace LineupGenerator.Controller
 						var stats = GetPlayerStats(playerName);
 						if (stats == null)
 						{
-							PlayersStats[playerName] = new PlayerStats
+							stats = new PlayerStats
 							{
 								Name = playerName,
 								ProjectedPoints = projectedPoints
 							};
+							PlayersStats[playerName] = stats;
 						}
 						else if (stats.ProjectedPoints <= 0)
 						{
 							stats.ProjectedPoints = projectedPoints;
 						}
-						else
+						else if (projectedPoints > 0)
 						{
 							stats.ProjectedPoints = (stats.ProjectedPoints + projectedPoints) / 2d;
+						}
+						if (projectedPoints <= 0 && !ZeroesFromNumberFire.Contains(stats.Name))
+						{
+							Application.Current.Dispatcher.Invoke(new Action(() =>
+							{
+								ZeroesFromNumberFire.Add(stats.Name);
+							}));
 						}
 					}
 				}
@@ -364,8 +462,8 @@ namespace LineupGenerator.Controller
 			{
 				var json = ParseGroupValue(match, 1);
 				var jsonObj = (JObject)JsonConvert.DeserializeObject(json);
-				var players = ParseNumberFirePlayers((JObject)jsonObj["players"]);
-				ParseNumberFireStats(info, players, (JArray)jsonObj["daily_projections"]);
+				var players = ParseNumberFirePlayers((JObject)jsonObj[info.NumberFirePlayers]);
+				ParseNumberFireStats(info, players, (JArray)jsonObj[info.NumberFireProjections]);
 			}
 		}
 
@@ -383,6 +481,13 @@ namespace LineupGenerator.Controller
 				{
 					return stats;
 				}
+			}
+			if (!StatlessPlayers.Contains(name))
+			{
+				Application.Current.Dispatcher.Invoke(new Action(() =>
+				{
+					StatlessPlayers.Add(name);
+				}));
 			}
 			return null;
 		}

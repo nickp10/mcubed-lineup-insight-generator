@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
-namespace LineupGenerator.Model
+namespace mCubed.LineupGenerator.Model
 {
 	public class Lineup : INotifyPropertyChanged
 	{

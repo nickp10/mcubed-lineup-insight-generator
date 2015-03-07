@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using Facet.Combinatorics;
-using LineupGenerator.Model;
+using mCubed.Combinatorics;
+using mCubed.LineupGenerator.Model;
 
-namespace LineupGenerator.Controller
+namespace mCubed.LineupGenerator.Controller
 {
 	public class LineupGenerator
 	{

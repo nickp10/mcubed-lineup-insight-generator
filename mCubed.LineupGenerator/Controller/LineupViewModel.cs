@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
-using LineupGenerator.Model;
-using LineupGenerator.Utilities;
+using mCubed.LineupGenerator.Model;
+using mCubed.LineupGenerator.Utilities;
 
-namespace LineupGenerator.Controller
+namespace mCubed.LineupGenerator.Controller
 {
 	public class LineupViewModel : INotifyPropertyChanged
 	{
 		#region Data Members
 
-		private DataRetriever _dataRetriever;
 		private readonly LineupGenerator _lineupGenerator = new LineupGenerator();
 
 		#endregion
@@ -34,13 +32,13 @@ namespace LineupGenerator.Controller
 		{
 			get
 			{
-				if (_dataRetriever == null)
+				if (DataRetriever == null)
 				{
 					return Enumerable.Empty<IGrouping<string, Player>>();
 				}
 				else
 				{
-					return AllPlayers.GroupBy(p => p.Position).OrderBy(g => g.Key, new PositionComparer(_dataRetriever.Positions));
+					return AllPlayers.GroupBy(p => p.Position).OrderBy(g => g.Key, new PositionComparer(DataRetriever.Positions));
 				}
 			}
 		}
@@ -59,6 +57,24 @@ namespace LineupGenerator.Controller
 				{
 					_currentProcess = value;
 					RaisePropertyChanged("CurrentProcess");
+				}
+			}
+		}
+
+		#endregion
+
+		#region DataRetriever
+
+		private DataRetriever _dataRetriever;
+		public DataRetriever DataRetriever
+		{
+			get { return _dataRetriever; }
+			private set
+			{
+				if (_dataRetriever != value)
+				{
+					_dataRetriever = value;
+					RaisePropertyChanged("DataRetriever");
 				}
 			}
 		}
@@ -101,6 +117,24 @@ namespace LineupGenerator.Controller
 
 		#endregion
 
+		#region RatingTolerance
+
+		private double _ratingTolerance = IEnumerableExtensions.DEFAULT_RATING_TOLERANCE;
+		public double RatingTolerance
+		{
+			get { return _ratingTolerance; }
+			set
+			{
+				if (_ratingTolerance != value)
+				{
+					_ratingTolerance = value;
+					RaisePropertyChanged("RatingTolerance");
+				}
+			}
+		}
+
+		#endregion
+
 		#endregion
 
 		#region Methods
@@ -110,8 +144,8 @@ namespace LineupGenerator.Controller
 			CurrentProcess = "Retrieving players...";
 			ThreadPool.QueueUserWorkItem(q =>
 			{
-				_dataRetriever = new DataRetriever(GameID);
-				_lineupGenerator.AllPlayers = _dataRetriever.Players;
+				DataRetriever = new DataRetriever(GameID);
+				_lineupGenerator.AllPlayers = DataRetriever.Players;
 				RaisePropertyChanged("AllPlayers");
 				RaisePropertyChanged("AllPlayersGrouped");
 				CurrentProcess = null;
@@ -123,11 +157,10 @@ namespace LineupGenerator.Controller
 			CurrentProcess = "Generating lineups...";
 			ThreadPool.QueueUserWorkItem(q =>
 			{
-				var lineups = _lineupGenerator.GenerateLineups(_dataRetriever.Positions, _dataRetriever.MaxSalary).ToArray();
-				var threshold = (int)Math.Ceiling(lineups.Length * 0.05d);
-				lineups.AddRating(l => l.TotalProjectedPoints, threshold);
-				lineups.AddRating(l => l.TotalRecentAveragePoints, threshold);
-				lineups.AddRating(l => l.TotalSeasonAveragePoints, threshold);
+				var lineups = _lineupGenerator.GenerateLineups(DataRetriever.Positions, DataRetriever.MaxSalary).ToArray();
+				lineups.AddRating(l => l.TotalProjectedPoints, lineups.Length, RatingTolerance);
+				lineups.AddRating(l => l.TotalRecentAveragePoints, lineups.Length, RatingTolerance);
+				lineups.AddRating(l => l.TotalSeasonAveragePoints, lineups.Length, RatingTolerance);
 				Lineups = lineups;
 				CurrentProcess = null;
 			});

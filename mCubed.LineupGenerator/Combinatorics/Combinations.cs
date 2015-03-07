@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Facet.Combinatorics {
+namespace mCubed.Combinatorics
+{
     /// <summary>
     /// Combinations defines a meta-collection, typically a list of lists, of all possible 
     /// subsets of a particular size from the set of values.  This list is enumerable and 

@@ -2,10 +2,11 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
-using LineupGenerator.Controller;
+using mCubed.LineupGenerator.Controller;
 
-namespace LineupGenerator
+namespace mCubed.LineupGenerator
 {
 	public partial class MainWindow : Window
 	{
@@ -13,6 +14,20 @@ namespace LineupGenerator
 		{
 			InitializeComponent();
 			DataContext = new LineupViewModel();
+			Loaded += new RoutedEventHandler(OnLoaded);
+		}
+
+		private void OnLoaded(object sender, RoutedEventArgs e)
+		{
+			GameIDTextBox.Focus();
+		}
+
+		private void OnGameIDKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Enter || e.Key == Key.Return)
+			{
+				OnRetrievePlayersClick(sender, new RoutedEventArgs());
+			}
 		}
 
 		private void OnRetrievePlayersClick(object sender, RoutedEventArgs e)

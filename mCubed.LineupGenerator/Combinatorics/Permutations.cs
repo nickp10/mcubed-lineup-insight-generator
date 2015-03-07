@@ -4,7 +4,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Facet.Combinatorics {
+namespace mCubed.Combinatorics
+{
     /// <summary>
     /// Permutations defines a meta-collection, typically a list of lists, of all
     /// possible orderings of a set of values.  This list is enumerable and allows

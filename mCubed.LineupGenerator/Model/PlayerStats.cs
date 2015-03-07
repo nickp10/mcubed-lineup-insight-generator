@@ -1,5 +1,5 @@
 ﻿
-namespace LineupGenerator.Model
+namespace mCubed.LineupGenerator.Model
 {
 	public class PlayerStats
 	{
