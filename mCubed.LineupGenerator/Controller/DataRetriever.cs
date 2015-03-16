@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -11,7 +12,7 @@ using Newtonsoft.Json.Linq;
 
 namespace mCubed.LineupGenerator.Controller
 {
-	public class DataRetriever
+	public class DataRetriever : INotifyPropertyChanged
 	{
 		#region Data Members
 
@@ -55,7 +56,17 @@ namespace mCubed.LineupGenerator.Controller
 					NumberFireProjections = "projections",
 					NumberFireProjectedPoints = "fanduel_fp",
 					URLRotoWire = "http://www.rotowire.com/daily/mlb/value-report.htm",
-					URLNumberFire = "https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections"
+					//URLNumberFire = "https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections",
+					InjuryMappings = new Dictionary<string, InjuryData>
+					{
+						{ "", new InjuryData("DL", InjuryType.Out) },
+						{ "day-to-day", new InjuryData("DTD", InjuryType.Possible) },
+						{ "out", new InjuryData("O", InjuryType.Out) },
+						{ "suspension", new InjuryData("NA", InjuryType.Out) },
+						{ "15-day dl", new InjuryData("DL", InjuryType.Out) },
+						{ "60-day dl", new InjuryData("DL", InjuryType.Out) },
+						{ "7-day dl", new InjuryData("DL", InjuryType.Out) }
+					}
 				}
 			},
 			{ "NBA", new StatsInfo
@@ -70,7 +81,14 @@ namespace mCubed.LineupGenerator.Controller
 					NumberFireProjections = "daily_projections",
 					NumberFireProjectedPoints = "fanduel_fp",
 					URLRotoWire = "http://www.rotowire.com/daily/nba/value-report.htm",
-					URLNumberFire = "https://www.numberfire.com/nba/fantasy/fantasy-basketball-projections"
+					URLNumberFire = "https://www.numberfire.com/nba/fantasy/fantasy-basketball-projections",
+					InjuryMappings = new Dictionary<string, InjuryData>
+					{
+						{ "", new InjuryData("IR", InjuryType.Out) },
+						{ "gtd", new InjuryData("GTD", InjuryType.Possible) },
+						{ "out", new InjuryData("O", InjuryType.Out) },
+						{ "suspension", new InjuryData("NA", InjuryType.Out) }
+					}
 				}
 			},
 			{ "NFL", new StatsInfo
@@ -81,7 +99,21 @@ namespace mCubed.LineupGenerator.Controller
 					SeasonGroupIndex = 6,
 					Regex = "<a href=\"/football/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>.*?<td.*?>(.*?)</td>",
 					URLRotoWire = "http://www.rotowire.com/daily/nfl/value-report.htm",
-					URLNumberFire = "https://www.numberfire.com/nfl/fantasy/fantasy-football-projections"
+					//URLNumberFire = "https://www.numberfire.com/nfl/fantasy/fantasy-football-projections",
+					InjuryMappings = new Dictionary<string, InjuryData>
+					{
+						{ "", new InjuryData("IR", InjuryType.Out) },
+						{ "doubtful", new InjuryData("D", InjuryType.Possible) },
+						{ "out", new InjuryData("O", InjuryType.Out) },
+						{ "questionable", new InjuryData("Q", InjuryType.Possible) },
+						{ "probable", new InjuryData("P", InjuryType.Probable) },
+						{ "suspension", new InjuryData("NA", InjuryType.Out) },
+						{ "inactive", new InjuryData("NA", InjuryType.Out) },
+						{ "pup-p", new InjuryData("NA", InjuryType.Out) },
+						{ "pup-r", new InjuryData("NA", InjuryType.Out) },
+						{ "ir", new InjuryData("IR", InjuryType.Out) },
+						{ "ir-r", new InjuryData("IR", InjuryType.Out) }
+					}
 				}
 			},
 			{ "NHL", new StatsInfo
@@ -91,19 +123,26 @@ namespace mCubed.LineupGenerator.Controller
 					RecentGroupIndex = -1,
 					SeasonGroupIndex = 5,
 					Regex = "<a href=\"/hockey/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>",
-					URLRotoWire = "http://www.rotowire.com/daily/nhl/value-report.htm"
+					URLRotoWire = "http://www.rotowire.com/daily/nhl/value-report.htm",
+					InjuryMappings = new Dictionary<string, InjuryData>
+					{
+						{ "", new InjuryData("IR", InjuryType.Out) },
+						{ "day-to-day", new InjuryData("DTD", InjuryType.Possible) },
+						{ "out", new InjuryData("O", InjuryType.Out) },
+						{ "dl", new InjuryData("IR", InjuryType.Out) },
+						{ "ir", new InjuryData("IR", InjuryType.Out) },
+						{ "suspension", new InjuryData("NA", InjuryType.Out) }
+					}
 				}
 			}
 		};
-		private readonly string _gameID;
 
 		#endregion
 
 		#region Constructors
 
-		public DataRetriever(string gameID)
+		public DataRetriever()
 		{
-			_gameID = gameID;
 		}
 
 		#endregion
@@ -124,6 +163,24 @@ namespace mCubed.LineupGenerator.Controller
 				return _contestType;
 			}
 			private set { _contestType = value; }
+		}
+
+		#endregion
+
+		#region GameID
+
+		private string _gameID;
+		public string GameID
+		{
+			get { return _gameID; }
+			set
+			{
+				if (_gameID != value)
+				{
+					_gameID = value;
+					RaisePropertyChanged("GameID");
+				}
+			}
 		}
 
 		#endregion
@@ -253,6 +310,25 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
+		#region Methods
+
+		public void Clear()
+		{
+			ContestType = null;
+			_maxSalary = null;
+			Players = null;
+			PlayersStats = null;
+			Positions = null;
+			Application.Current.Dispatcher.Invoke(new Action(() =>
+			{
+				StatlessPlayers.Clear();
+				ZeroesFromNumberFire.Clear();
+				ZeroesFromRotoWire.Clear();
+			}));
+		}
+
+		#endregion
+
 		#region Contest Data Methods
 
 		private void ReadContestData()
@@ -268,7 +344,7 @@ namespace mCubed.LineupGenerator.Controller
 		{
 			using (var client = new WebClient())
 			{
-				return client.DownloadString(string.Format(CONTEST_URL_FORMAT, _gameID));
+				return client.DownloadString(string.Format(CONTEST_URL_FORMAT, GameID));
 			}
 		}
 
@@ -293,18 +369,34 @@ namespace mCubed.LineupGenerator.Controller
 			MaxSalary = int.Parse(salaryData);
 		}
 
+		private InjuryData ParsePlayerInjury(StatsInfo info, int injuryStatus, string injury)
+		{
+			if ((injuryStatus & 2) == 0)
+			{
+				return null;
+			}
+			InjuryData injuryData;
+			info.InjuryMappings.TryGetValue(injury.ToLower(), out injuryData);
+			return injuryData;
+		}
+
 		private void ParsePlayers(string data)
 		{
-			var playersData = ParseJSONString(data, "FD.playerpicker.allPlayersFullData");
-			var playersDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(playersData);
-			Players = playersDictionary.Select(p => new Player
+			StatsInfo info;
+			if (STATS_INFOS.TryGetValue(ContestType, out info) && info != null)
 			{
-				Name = p.Value[1],
-				Position = p.Value[0],
-				Salary = int.Parse(p.Value[5]),
-				SeasonAveragePoints = double.Parse(p.Value[6]),
-				PlayerStats = GetPlayerStats(p.Value[1])
-			}).ToArray();
+				var playersData = ParseJSONString(data, "FD.playerpicker.allPlayersFullData");
+				var playersDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(playersData);
+				Players = playersDictionary.Select(p => new Player
+				{
+					Name = p.Value[1],
+					Position = p.Value[0],
+					Salary = int.Parse(p.Value[5]),
+					SeasonAveragePoints = double.Parse(p.Value[6]),
+					PlayerStats = GetPlayerStats(p.Value[1]),
+					Injury = ParsePlayerInjury(info, int.Parse(p.Value[9]), p.Value[12])
+				}).ToArray();
+			}
 		}
 
 		private void ParsePositions(string data)
@@ -490,6 +582,21 @@ namespace mCubed.LineupGenerator.Controller
 				}));
 			}
 			return null;
+		}
+
+		#endregion
+
+		#region INotifyPropertyChanged Members
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private void RaisePropertyChanged(string property)
+		{
+			var handler = PropertyChanged;
+			if (handler != null)
+			{
+				handler(this, new PropertyChangedEventArgs(property));
+			}
 		}
 
 		#endregion

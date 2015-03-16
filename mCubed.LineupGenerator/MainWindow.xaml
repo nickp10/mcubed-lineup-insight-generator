@@ -205,7 +205,7 @@
 							 Padding="0,5"
 							 KeyDown="OnGameIDKeyDown"
 							 VerticalAlignment="Center"
-							 Text="{Binding GameID, UpdateSourceTrigger=PropertyChanged}"
+							 Text="{Binding DataRetriever.GameID, UpdateSourceTrigger=PropertyChanged}"
 							 x:Name="GameIDTextBox" />
 					<Button Grid.Row="0"
 							Grid.Column="4"
@@ -263,8 +263,52 @@
 																		<ColumnDefinition Width="Auto"
 																						  SharedSizeGroup="SalaryColumn" />
 																	</Grid.ColumnDefinitions>
-																	<TextBlock Grid.Column="0"
-																			   Text="{Binding Name}" />
+																	<WrapPanel Grid.Column="0">
+																		<TextBlock Text="{Binding Name}" />
+																		<Border Margin="10,0,0,0"
+																				Padding="5,0">
+																			<Border.Style>
+																				<Style TargetType="{x:Type Border}">
+																					<Setter Property="BorderThickness"
+																							Value="0" />
+																					<Setter Property="BorderBrush"
+																							Value="Transparent" />
+																					<Setter Property="TextElement.Foreground"
+																							Value="Black" />
+																					<Style.Triggers>
+																						<DataTrigger Binding="{Binding Injury.InjuryType}"
+																									 Value="Out">
+																							<Setter Property="BorderThickness"
+																									Value="1" />
+																							<Setter Property="BorderBrush"
+																									Value="#9B1010" />
+																							<Setter Property="TextElement.Foreground"
+																									Value="#9B1010" />
+																						</DataTrigger>
+																						<DataTrigger Binding="{Binding Injury.InjuryType}"
+																									 Value="Possible">
+																							<Setter Property="BorderThickness"
+																									Value="1" />
+																							<Setter Property="BorderBrush"
+																									Value="#EB8500" />
+																							<Setter Property="TextElement.Foreground"
+																									Value="#EB8500" />
+																						</DataTrigger>
+																						<DataTrigger Binding="{Binding Injury.InjuryType}"
+																									 Value="Probable">
+																							<Setter Property="BorderThickness"
+																									Value="1" />
+																							<Setter Property="BorderBrush"
+																									Value="#53A31A" />
+																							<Setter Property="TextElement.Foreground"
+																									Value="#53A31A" />
+																						</DataTrigger>
+																					</Style.Triggers>
+																				</Style>
+																			</Border.Style>
+																			<TextBlock Text="{Binding Injury.Display}" />
+																		</Border>
+																	</WrapPanel>
 																	<TextBlock Grid.Column="2"
 																			   Text="{Binding Salary, StringFormat={}{0:C}}" />
 																</Grid>

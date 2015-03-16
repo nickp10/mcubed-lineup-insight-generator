@@ -1,8 +1,10 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace mCubed.LineupGenerator.Model
 {
 	public class StatsInfo
 	{
+		public IDictionary<string, InjuryData> InjuryMappings { get; set; }
 		public int NameGroupIndex { get; set; }
 		public int ProjectedGroupIndex { get; set; }
 		public int RecentGroupIndex { get; set; }

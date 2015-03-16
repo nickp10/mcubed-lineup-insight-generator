@@ -80,6 +80,8 @@
     <Compile Include="Controller\LineupGenerator.cs" />
     <Compile Include="Controller\LineupViewModel.cs" />
     <Compile Include="Controller\PositionComparer.cs" />
+    <Compile Include="Model\InjuryData.cs" />
+    <Compile Include="Model\InjuryType.cs" />
     <Compile Include="Model\Lineup.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\PlayerStats.cs" />

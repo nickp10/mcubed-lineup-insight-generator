@@ -32,7 +32,7 @@ namespace mCubed.LineupGenerator.Controller
 		{
 			get
 			{
-				if (DataRetriever == null)
+				if (string.IsNullOrEmpty(DataRetriever.GameID))
 				{
 					return Enumerable.Empty<IGrouping<string, Player>>();
 				}
@@ -68,32 +68,13 @@ namespace mCubed.LineupGenerator.Controller
 		private DataRetriever _dataRetriever;
 		public DataRetriever DataRetriever
 		{
-			get { return _dataRetriever; }
-			private set
+			get
 			{
-				if (_dataRetriever != value)
+				if (_dataRetriever == null)
 				{
-					_dataRetriever = value;
-					RaisePropertyChanged("DataRetriever");
+					_dataRetriever = new DataRetriever();
 				}
-			}
-		}
-
-		#endregion
-
-		#region GameID
-
-		private string _gameID;
-		public string GameID
-		{
-			get { return _gameID; }
-			set
-			{
-				if (_gameID != value)
-				{
-					_gameID = value;
-					RaisePropertyChanged("GameID");
-				}
+				return _dataRetriever;
 			}
 		}
 
@@ -144,7 +125,7 @@ namespace mCubed.LineupGenerator.Controller
 			CurrentProcess = "Retrieving players...";
 			ThreadPool.QueueUserWorkItem(q =>
 			{
-				DataRetriever = new DataRetriever(GameID);
+				DataRetriever.Clear();
 				_lineupGenerator.AllPlayers = DataRetriever.Players;
 				RaisePropertyChanged("AllPlayers");
 				RaisePropertyChanged("AllPlayersGrouped");

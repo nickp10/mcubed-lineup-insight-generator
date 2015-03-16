@@ -39,6 +39,24 @@ namespace mCubed.LineupGenerator.Model
 
 		#endregion
 
+		#region Injury
+
+		private InjuryData _injury;
+		public InjuryData Injury
+		{
+			get { return _injury; }
+			set
+			{
+				if (_injury != value)
+				{
+					_injury = value;
+					RaisePropertyChanged("Injury");
+				}
+			}
+		}
+
+		#endregion
+
 		#region Name
 
 		private string _name;
