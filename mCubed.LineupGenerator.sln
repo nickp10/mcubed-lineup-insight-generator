@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mCubed.LineupGenerator", "mCubed.LineupGenerator\mCubed.LineupGenerator.csproj", "{0DC15A19-4265-4838-91CB-AFE80403957C}"
 EndProject
 Global
