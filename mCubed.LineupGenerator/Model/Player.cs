@@ -57,6 +57,24 @@ namespace mCubed.LineupGenerator.Model
 
 		#endregion
 
+		#region IsProbablePitcher
+
+		private bool _isProbablePitcher;
+		public bool IsProbablePitcher
+		{
+			get { return _isProbablePitcher; }
+			set
+			{
+				if (_isProbablePitcher != value)
+				{
+					_isProbablePitcher = value;
+					RaisePropertyChanged("IsProbablePitcher");
+				}
+			}
+		}
+
+		#endregion
+
 		#region Name
 
 		private string _name;

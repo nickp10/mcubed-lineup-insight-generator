@@ -266,6 +266,27 @@
 																	<WrapPanel Grid.Column="0">
 																		<TextBlock Text="{Binding Name}" />
 																		<Border Margin="10,0,0,0"
+																				Padding="5,0"
+																				BorderThickness="1"
+																				BorderBrush="#87C213"
+																				Background="#87C213"
+																				TextElement.Foreground="#FFF">
+																			<Border.Style>
+																				<Style TargetType="{x:Type Border}">
+																					<Setter Property="Visibility"
+																							Value="Collapsed" />
+																					<Style.Triggers>
+																						<DataTrigger Binding="{Binding IsProbablePitcher}"
+																									 Value="True">
+																							<Setter Property="Visibility"
+																									Value="Visible" />
+																						</DataTrigger>
+																					</Style.Triggers>
+																				</Style>
+																			</Border.Style>
+																			<TextBlock Text="P" />
+																		</Border>
+																		<Border Margin="10,0,0,0"
 																				Padding="5,0">
 																			<Border.Style>
 																				<Style TargetType="{x:Type Border}">

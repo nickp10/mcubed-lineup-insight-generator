@@ -56,7 +56,11 @@ namespace mCubed.LineupGenerator.Controller
 					NumberFireProjections = "projections",
 					NumberFireProjectedPoints = "fanduel_fp",
 					URLRotoWire = "http://www.rotowire.com/daily/mlb/value-report.htm",
-					//URLNumberFire = "https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections",
+					URLNumberFire = new string[]
+					{
+						"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/batters",
+						"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/pitchers"
+					},
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
 						{ "", new InjuryData("DL", InjuryType.Out) },
@@ -81,7 +85,10 @@ namespace mCubed.LineupGenerator.Controller
 					NumberFireProjections = "daily_projections",
 					NumberFireProjectedPoints = "fanduel_fp",
 					URLRotoWire = "http://www.rotowire.com/daily/nba/value-report.htm",
-					URLNumberFire = "https://www.numberfire.com/nba/fantasy/fantasy-basketball-projections",
+					URLNumberFire = new string[]
+					{
+						"https://www.numberfire.com/nba/fantasy/fantasy-basketball-projections"
+					},
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
 						{ "", new InjuryData("IR", InjuryType.Out) },
@@ -99,7 +106,10 @@ namespace mCubed.LineupGenerator.Controller
 					SeasonGroupIndex = 6,
 					Regex = "<a href=\"/football/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>.*?<td.*?>(.*?)</td>",
 					URLRotoWire = "http://www.rotowire.com/daily/nfl/value-report.htm",
-					//URLNumberFire = "https://www.numberfire.com/nfl/fantasy/fantasy-football-projections",
+					URLNumberFire = new string[]
+					{
+						//"https://www.numberfire.com/nfl/fantasy/fantasy-football-projections"
+					},
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
 						{ "", new InjuryData("IR", InjuryType.Out) },
@@ -380,6 +390,11 @@ namespace mCubed.LineupGenerator.Controller
 			return injuryData;
 		}
 
+		private bool IsProbablePitcher(StatsInfo info, int injuryStatus)
+		{
+			return (injuryStatus & 1) != 0;
+		}
+
 		private void ParsePlayers(string data)
 		{
 			StatsInfo info;
@@ -394,8 +409,9 @@ namespace mCubed.LineupGenerator.Controller
 					Salary = int.Parse(p.Value[5]),
 					SeasonAveragePoints = double.Parse(p.Value[6]),
 					PlayerStats = GetPlayerStats(p.Value[1]),
-					Injury = ParsePlayerInjury(info, int.Parse(p.Value[9]), p.Value[12])
-				}).ToArray();
+					Injury = ParsePlayerInjury(info, int.Parse(p.Value[9]), p.Value[12]),
+					IsProbablePitcher = IsProbablePitcher(info, int.Parse(p.Value[9]))
+				}).Where(p => p.Position != "P" || p.IsProbablePitcher).ToArray();
 			}
 		}
 
@@ -420,10 +436,13 @@ namespace mCubed.LineupGenerator.Controller
 					var data = DownloadStatsData(info.URLRotoWire);
 					ParsePlayersStatsFromRotoWire(info, data);
 				}
-				if (!string.IsNullOrEmpty(info.URLNumberFire))
+				if (info.URLNumberFire != null)
 				{
-					var data = DownloadStatsData(info.URLNumberFire);
-					ParsePlayersStatsFromNumberFire(info, data);
+					foreach (var url in info.URLNumberFire)
+					{
+						var data = DownloadStatsData(url);
+						ParsePlayersStatsFromNumberFire(info, data);
+					}
 				}
 			}
 			else
@@ -573,6 +592,12 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					return stats;
 				}
+			}
+			var lastNameIndex = name.LastIndexOf(' ');
+			var lastNameFirst = name.Substring(lastNameIndex + 1) + ", " + name.Substring(0, lastNameIndex);
+			if (PlayersStats.TryGetValue(lastNameFirst, out stats))
+			{
+				return stats;
 			}
 			if (!StatlessPlayers.Contains(name))
 			{

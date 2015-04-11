@@ -14,7 +14,7 @@ namespace mCubed.LineupGenerator.Model
 		public string NumberFireProjections { get; set; }
 		public string NumberFireProjectedPoints { get; set; }
 		public string Regex { get; set; }
-		public string URLNumberFire { get; set; }
+		public IEnumerable<string> URLNumberFire { get; set; }
 		public string URLRotoWire { get; set; }
 	}
 }
