@@ -436,6 +436,10 @@ namespace mCubed.LineupGenerator.Controller
 					var data = DownloadStatsData(info.URLRotoWire);
 					ParsePlayersStatsFromRotoWire(info, data);
 				}
+				else
+				{
+					PlayersStats = new Dictionary<string, PlayerStats>();
+				}
 				if (info.URLNumberFire != null)
 				{
 					foreach (var url in info.URLNumberFire)
