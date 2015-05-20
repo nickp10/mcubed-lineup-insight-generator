@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace mCubed.LineupGenerator.Model
 {
@@ -75,6 +77,24 @@ namespace mCubed.LineupGenerator.Model
 
 		#endregion
 
+		#region IsStarter
+
+		private bool _isStarter;
+		public bool IsStarter
+		{
+			get { return _isStarter; }
+			set
+			{
+				if (_isStarter != value)
+				{
+					_isStarter = value;
+					RaisePropertyChanged("IsStarter");
+				}
+			}
+		}
+
+		#endregion
+
 		#region Name
 
 		private string _name;
@@ -87,24 +107,6 @@ namespace mCubed.LineupGenerator.Model
 				{
 					_name = value;
 					RaisePropertyChanged("Name");
-				}
-			}
-		}
-
-		#endregion
-
-		#region PlayerStats
-
-		private PlayerStats _playerStats;
-		public PlayerStats PlayerStats
-		{
-			get { return _playerStats; }
-			set
-			{
-				if (_playerStats != value)
-				{
-					_playerStats = value;
-					RaisePropertyChanged("PlayerStats");
 				}
 			}
 		}
@@ -147,23 +149,102 @@ namespace mCubed.LineupGenerator.Model
 
 		#endregion
 
-		#region SeasonAveragePoints
+		#region Stats
 
-		private double _seasonAveragePoints;
-		public double SeasonAveragePoints
+		private IEnumerable<PlayerStats> _stats;
+		public IEnumerable<PlayerStats> Stats
 		{
-			get { return _seasonAveragePoints; }
+			get { return _stats; }
 			set
 			{
-				if (_seasonAveragePoints != value)
+				if (_stats != value)
 				{
-					_seasonAveragePoints = value;
+					_stats = value;
+					RaisePropertyChanged("Stats");
+					RaisePropertyChanged("ProjectedPoints");
+					RaisePropertyChanged("RecentAveragePoints");
 					RaisePropertyChanged("SeasonAveragePoints");
 				}
 			}
 		}
 
 		#endregion
+
+		#region Team
+
+		private string _team;
+		public string Team
+		{
+			get { return _team; }
+			set
+			{
+				if (_team != value)
+				{
+					_team = value;
+					RaisePropertyChanged("Team");
+				}
+			}
+		}
+
+		#endregion
+
+		#endregion
+
+		#region Calculated Properties
+
+		#region ProjectedPoints
+
+		public double ProjectedPoints
+		{
+			get { return Calculate(s => s.ProjectedPoints); }
+		}
+
+		#endregion
+
+		#region RecentAveragePoints
+
+		public double RecentAveragePoints
+		{
+			get { return Calculate(s => s.RecentAveragePoints); }
+		}
+
+		#endregion
+
+		#region SeasonAveragePoints
+
+		public double SeasonAveragePoints
+		{
+			get { return Calculate(s => s.SeasonAveragePoints); }
+		}
+
+		#endregion
+
+		#endregion
+
+		#region Methods
+
+		private double Calculate(Func<PlayerStats, double?> property)
+		{
+			double total = 0d;
+			int count = 0;
+			var stats = Stats;
+			if (stats != null)
+			{
+				foreach (var stat in stats)
+				{
+					if (stat != null)
+					{
+						var value = property(stat);
+						if (value != null)
+						{
+							total += value.Value;
+							count++;
+						}
+					}
+				}
+			}
+			return count > 0 ? total / (double)count : 0d;
+		}
 
 		#endregion
 

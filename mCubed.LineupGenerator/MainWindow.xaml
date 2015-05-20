@@ -7,179 +7,12 @@
 	<Grid>
 		<Grid Margin="10">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
 				<RowDefinition Height="*" />
 				<RowDefinition Height="10" />
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="10" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="10" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-				<ToggleButton Grid.Column="1"
-							  x:Name="StatlessPlayersToggle">
-					<ToggleButton.Template>
-						<ControlTemplate TargetType="{x:Type ToggleButton}">
-							<TextBlock Cursor="Hand"
-									   FontSize="11"
-									   Foreground="Blue"
-									   TextDecorations="Underline">
-								<Run>Stat-less Players (</Run><TextBlock Text="{Binding DataRetriever.StatlessPlayers.Count, FallbackValue=0}" /><Run>)</Run>
-							</TextBlock>
-						</ControlTemplate>
-					</ToggleButton.Template>
-					Stat-less Players
-				</ToggleButton>
-				<Popup AllowsTransparency="True"
-					   IsOpen="{Binding ElementName=StatlessPlayersToggle, Path=IsChecked, Mode=TwoWay}"
-					   MaxHeight="300"
-					   PlacementTarget="{Binding ElementName=StatlessPlayersToggle}"
-					   Placement="Left"
-					   VerticalOffset="{Binding ElementName=StatlessPlayersToggle, Path=ActualHeight}"
-					   HorizontalOffset="{Binding ElementName=StatlessPlayersToggle, Path=ActualWidth}"
-					   StaysOpen="{Binding ElementName=StatlessPlayersToggle, Path=IsMouseOver}">
-					<Border Background="White"
-							BorderBrush="Black"
-							BorderThickness="1"
-							CornerRadius="5"
-							Padding="1,5">
-						<ScrollViewer HorizontalScrollBarVisibility="Auto"
-									  VerticalScrollBarVisibility="Auto"
-									  Padding="9,5">
-							<Grid>
-								<ItemsControl ItemsSource="{Binding DataRetriever.StatlessPlayers}" />
-								<TextBlock Text="There are no stat-less players">
-									<TextBlock.Style>
-										<Style TargetType="{x:Type TextBlock}">
-											<Setter Property="Visibility"
-													Value="Collapsed" />
-											<Style.Triggers>
-												<DataTrigger Binding="{Binding DataRetriever.StatlessPlayers.Count, FallbackValue=0}"
-															 Value="0">
-													<Setter Property="Visibility"
-															Value="Visible" />
-												</DataTrigger>
-											</Style.Triggers>
-										</Style>
-									</TextBlock.Style>
-								</TextBlock>
-							</Grid>
-						</ScrollViewer>
-					</Border>
-				</Popup>
-
-				<ToggleButton Grid.Column="3"
-							  x:Name="ZeroesFromRotoWireToggle">
-					<ToggleButton.Template>
-						<ControlTemplate TargetType="{x:Type ToggleButton}">
-							<TextBlock Cursor="Hand"
-									   FontSize="11"
-									   Foreground="Blue"
-									   TextDecorations="Underline">
-								<Run>Zeroes (RotoWire) (</Run><TextBlock Text="{Binding DataRetriever.ZeroesFromRotoWire.Count, FallbackValue=0}" /><Run>)</Run>
-							</TextBlock>
-						</ControlTemplate>
-					</ToggleButton.Template>
-					Stat-less Players
-				</ToggleButton>
-				<Popup AllowsTransparency="True"
-					   IsOpen="{Binding ElementName=ZeroesFromRotoWireToggle, Path=IsChecked, Mode=TwoWay}"
-					   MaxHeight="300"
-					   PlacementTarget="{Binding ElementName=ZeroesFromRotoWireToggle}"
-					   Placement="Left"
-					   VerticalOffset="{Binding ElementName=ZeroesFromRotoWireToggle, Path=ActualHeight}"
-					   HorizontalOffset="{Binding ElementName=ZeroesFromRotoWireToggle, Path=ActualWidth}"
-					   StaysOpen="{Binding ElementName=ZeroesFromRotoWireToggle, Path=IsMouseOver}">
-					<Border Background="White"
-							BorderBrush="Black"
-							BorderThickness="1"
-							CornerRadius="5"
-							Padding="1,5">
-						<ScrollViewer HorizontalScrollBarVisibility="Auto"
-									  VerticalScrollBarVisibility="Auto"
-									  Padding="9,5">
-							<Grid>
-								<ItemsControl ItemsSource="{Binding DataRetriever.ZeroesFromRotoWire}" />
-								<TextBlock Text="There are no players with a zero projection from RotoWire">
-									<TextBlock.Style>
-										<Style TargetType="{x:Type TextBlock}">
-											<Setter Property="Visibility"
-													Value="Collapsed" />
-											<Style.Triggers>
-												<DataTrigger Binding="{Binding DataRetriever.ZeroesFromRotoWire.Count, FallbackValue=0}"
-															 Value="0">
-													<Setter Property="Visibility"
-															Value="Visible" />
-												</DataTrigger>
-											</Style.Triggers>
-										</Style>
-									</TextBlock.Style>
-								</TextBlock>
-							</Grid>
-						</ScrollViewer>
-					</Border>
-				</Popup>
-
-				<ToggleButton Grid.Column="5"
-							  x:Name="ZeroesFromNumberFireToggle">
-					<ToggleButton.Template>
-						<ControlTemplate TargetType="{x:Type ToggleButton}">
-							<TextBlock Cursor="Hand"
-									   FontSize="11"
-									   Foreground="Blue"
-									   TextDecorations="Underline">
-								<Run>Zeroes (NumberFire) (</Run><TextBlock Text="{Binding DataRetriever.ZeroesFromNumberFire.Count, FallbackValue=0}" /><Run>)</Run>
-							</TextBlock>
-						</ControlTemplate>
-					</ToggleButton.Template>
-					Stat-less Players
-				</ToggleButton>
-				<Popup AllowsTransparency="True"
-					   IsOpen="{Binding ElementName=ZeroesFromNumberFireToggle, Path=IsChecked, Mode=TwoWay}"
-					   MaxHeight="300"
-					   PlacementTarget="{Binding ElementName=ZeroesFromNumberFireToggle}"
-					   Placement="Left"
-					   VerticalOffset="{Binding ElementName=ZeroesFromNumberFireToggle, Path=ActualHeight}"
-					   HorizontalOffset="{Binding ElementName=ZeroesFromNumberFireToggle, Path=ActualWidth}"
-					   StaysOpen="{Binding ElementName=ZeroesFromNumberFireToggle, Path=IsMouseOver}">
-					<Border Background="White"
-							BorderBrush="Black"
-							BorderThickness="1"
-							CornerRadius="5"
-							Padding="1,5">
-						<ScrollViewer HorizontalScrollBarVisibility="Auto"
-									  VerticalScrollBarVisibility="Auto"
-									  Padding="9,5">
-							<Grid>
-								<ItemsControl ItemsSource="{Binding DataRetriever.ZeroesFromNumberFire}" />
-								<TextBlock Text="There are no players with a zero projection from NumberFire">
-									<TextBlock.Style>
-										<Style TargetType="{x:Type TextBlock}">
-											<Setter Property="Visibility"
-													Value="Collapsed" />
-											<Style.Triggers>
-												<DataTrigger Binding="{Binding DataRetriever.ZeroesFromNumberFire.Count, FallbackValue=0}"
-															 Value="0">
-													<Setter Property="Visibility"
-															Value="Visible" />
-												</DataTrigger>
-											</Style.Triggers>
-										</Style>
-									</TextBlock.Style>
-								</TextBlock>
-							</Grid>
-						</ScrollViewer>
-					</Border>
-				</Popup>
-			</Grid>
-
-			<GroupBox Grid.Row="1"
+			<GroupBox Grid.Row="0"
 					  Header="Players">
 				<Grid Margin="10">
 					<Grid.RowDefinitions>
@@ -259,7 +92,12 @@
 																<Grid>
 																	<Grid.ColumnDefinitions>
 																		<ColumnDefinition Width="*" />
-																		<ColumnDefinition Width="10" />
+																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="ProjectedColumn" />
+																		<ColumnDefinition Width="50" />
+																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="TeamColumn" />
+																		<ColumnDefinition Width="50" />
 																		<ColumnDefinition Width="Auto"
 																						  SharedSizeGroup="SalaryColumn" />
 																	</Grid.ColumnDefinitions>
@@ -330,7 +168,11 @@
 																			<TextBlock Text="{Binding Injury.Display}" />
 																		</Border>
 																	</WrapPanel>
-																	<TextBlock Grid.Column="2"
+																	<TextBlock Grid.Column="1"
+																			   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
+																	<TextBlock Grid.Column="3"
+																			   Text="{Binding Team}" />
+																	<TextBlock Grid.Column="5"
 																			   Text="{Binding Salary, StringFormat={}{0:C}}" />
 																</Grid>
 															</Border>
@@ -363,12 +205,12 @@
 					</TabControl>
 				</Grid>
 			</GroupBox>
-			<Button Grid.Row="3"
+			<Button Grid.Row="2"
 					HorizontalAlignment="Center"
 					Content="Generate Lineups"
 					Click="OnGenerateLineupsClick"
 					Padding="5" />
-			<GroupBox Grid.Row="4"
+			<GroupBox Grid.Row="3"
 					  Header="Lineups">
 				<ListView ItemsSource="{Binding Lineups}"
 						  Margin="10"

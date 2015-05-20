@@ -126,7 +126,7 @@ namespace mCubed.LineupGenerator.Controller
 			ThreadPool.QueueUserWorkItem(q =>
 			{
 				DataRetriever.Clear();
-				_lineupGenerator.AllPlayers = DataRetriever.Players;
+				_lineupGenerator.AllPlayers = DataRetriever.Players.Values;
 				RaisePropertyChanged("AllPlayers");
 				RaisePropertyChanged("AllPlayersGrouped");
 				CurrentProcess = null;

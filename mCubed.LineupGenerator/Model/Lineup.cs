@@ -118,7 +118,7 @@ namespace mCubed.LineupGenerator.Model
 			{
 				if (_totalProjectedPoints == null)
 				{
-					_totalProjectedPoints = Players.Sum(p => p.PlayerStats == null ? 0d : p.PlayerStats.ProjectedPoints);
+					_totalProjectedPoints = Players.Sum(p => p.ProjectedPoints);
 				}
 				return _totalProjectedPoints.Value;
 			}
@@ -146,7 +146,7 @@ namespace mCubed.LineupGenerator.Model
 			{
 				if (_totalRecentAveragePoints == null)
 				{
-					_totalRecentAveragePoints = Players.Sum(p => p.PlayerStats == null ? 0d : p.PlayerStats.RecentAveragePoints);
+					_totalRecentAveragePoints = Players.Sum(p => p.RecentAveragePoints);
 				}
 				return _totalRecentAveragePoints.Value;
 			}
@@ -174,7 +174,7 @@ namespace mCubed.LineupGenerator.Model
 			{
 				if (_totalSeasonAveragePoints == null)
 				{
-					_totalSeasonAveragePoints = Players.Sum(p => p.PlayerStats == null ? p.SeasonAveragePoints : p.PlayerStats.SeasonAveragePoints);
+					_totalSeasonAveragePoints = Players.Sum(p => p.SeasonAveragePoints);
 				}
 				return _totalSeasonAveragePoints.Value;
 			}

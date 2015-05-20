@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Windows;
 using mCubed.LineupGenerator.Model;
+using mCubed.LineupGenerator.StatRetrievers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -46,20 +44,13 @@ namespace mCubed.LineupGenerator.Controller
 		{
 			{ "MLB", new StatsInfo
 				{
-					NameGroupIndex = 1,
-					ProjectedGroupIndex = 3,
-					RecentGroupIndex = 5,
-					SeasonGroupIndex = 7,
-					Regex = "<a href=\"/baseball/player.*?>(.*?)</a>(.*?<td){8}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>",
-					NumberFirePlayers = "players",
-					NumberFirePlayerID = "mlb_player_id",
-					NumberFireProjections = "projections",
-					NumberFireProjectedPoints = "fanduel_fp",
-					URLRotoWire = "http://www.rotowire.com/daily/mlb/value-report.htm",
-					URLNumberFire = new string[]
+					StatRetrievers = new IStatRetriever[]
 					{
-						"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/batters",
-						"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/pitchers"
+						new RotoWireStatRetriever("<a href=\"/baseball/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>", 1, 3,
+							"http://www.rotowire.com/daily/mlb/optimizer.htm"),
+						new NumberFireStatRetriever("players", "mlb_player_id", "projections", "fanduel_fp",
+							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/batters",
+							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/pitchers")
 					},
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
@@ -75,19 +66,12 @@ namespace mCubed.LineupGenerator.Controller
 			},
 			{ "NBA", new StatsInfo
 				{
-					NameGroupIndex = 1,
-					ProjectedGroupIndex = 3,
-					RecentGroupIndex = 5,
-					SeasonGroupIndex = 7,
-					Regex = "<a href=\"/basketball/player.*?>(.*?)</a>(.*?<td){6}.*?>(.*?)</td>(.*?<td){4}.*?>(.*?)</td>(.*?<td){4}.*?>(.*?)</td>",
-					NumberFirePlayers = "players",
-					NumberFirePlayerID = "nba_player_id",
-					NumberFireProjections = "daily_projections",
-					NumberFireProjectedPoints = "fanduel_fp",
-					URLRotoWire = "http://www.rotowire.com/daily/nba/value-report.htm",
-					URLNumberFire = new string[]
+					StatRetrievers = new IStatRetriever[]
 					{
-						"https://www.numberfire.com/nba/fantasy/fantasy-basketball-projections"
+						new RotoWireStatRetriever("<a href=\"/basketball/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>", 1, 3,
+							"http://www.rotowire.com/daily/nba/optimizer.htm"),
+						new NumberFireStatRetriever("players", "nba_player_id", "daily_projections", "fanduel_fp",
+							"https://www.numberfire.com/nba/fantasy/fantasy-basketball-projections")
 					},
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
@@ -100,15 +84,12 @@ namespace mCubed.LineupGenerator.Controller
 			},
 			{ "NFL", new StatsInfo
 				{
-					NameGroupIndex = 1,
-					ProjectedGroupIndex = 3,
-					RecentGroupIndex = 5,
-					SeasonGroupIndex = 6,
-					Regex = "<a href=\"/football/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>.*?<td.*?>(.*?)</td>",
-					URLRotoWire = "http://www.rotowire.com/daily/nfl/value-report.htm",
-					URLNumberFire = new string[]
+					StatRetrievers = new IStatRetriever[]
 					{
-						//"https://www.numberfire.com/nfl/fantasy/fantasy-football-projections"
+						new RotoWireStatRetriever("<a href=\"/football/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>", 1, 3,
+							"http://www.rotowire.com/daily/nfl/optimizer.htm")
+						/*new NumberFireStatRetriever("players", "nfl_player_id", "projections", "fanduel_fp",
+							"https://www.numberfire.com/nfl/fantasy/fantasy-football-projections")*/
 					},
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
@@ -128,12 +109,14 @@ namespace mCubed.LineupGenerator.Controller
 			},
 			{ "NHL", new StatsInfo
 				{
-					NameGroupIndex = 1,
-					ProjectedGroupIndex = 3,
-					RecentGroupIndex = -1,
-					SeasonGroupIndex = 5,
-					Regex = "<a href=\"/hockey/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>(.*?<td){2}.*?>(.*?)</td>",
-					URLRotoWire = "http://www.rotowire.com/daily/nhl/value-report.htm",
+					StatRetrievers = new IStatRetriever[]
+					{
+						new RotoWireStatRetriever("<a href=\"/hockey/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>", 1, 3,
+							"http://www.rotowire.com/daily/nhl/optimizer.htm")
+						/*new NumberFireStatRetriever("players", "nhl_player_id", "projections", "fanduel_fp",
+							"https://www.numberfire.com/nhl/daily-fantasy-hockey-projections/skaters",
+							"https://www.numberfire.com/nhl/daily-fantasy-hockey-projections/goalies")*/
+					},
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
 						{ "", new InjuryData("IR", InjuryType.Out) },
@@ -146,14 +129,6 @@ namespace mCubed.LineupGenerator.Controller
 				}
 			}
 		};
-
-		#endregion
-
-		#region Constructors
-
-		public DataRetriever()
-		{
-		}
 
 		#endregion
 
@@ -215,8 +190,8 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Players
 
-		private IEnumerable<Player> _players;
-		public IEnumerable<Player> Players
+		private IDictionary<string, Player> _players;
+		public IDictionary<string, Player> Players
 		{
 			get
 			{
@@ -227,24 +202,6 @@ namespace mCubed.LineupGenerator.Controller
 				return _players;
 			}
 			private set { _players = value; }
-		}
-
-		#endregion
-
-		#region PlayersStats
-
-		private IDictionary<string, PlayerStats> _playersStats;
-		public IDictionary<string, PlayerStats> PlayersStats
-		{
-			get
-			{
-				if (_playersStats == null)
-				{
-					ReadStatsData();
-				}
-				return _playersStats;
-			}
-			private set { _playersStats = value; }
 		}
 
 		#endregion
@@ -267,53 +224,20 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
-		#region StatlessPlayers
+		#region Teams
 
-		private ObservableCollection<string> _statlessPlayers;
-		public ObservableCollection<string> StatlessPlayers
+		private IDictionary<string, string> _teams;
+		public IDictionary<string, string> Teams
 		{
 			get
 			{
-				if (_statlessPlayers == null)
+				if (_teams == null)
 				{
-					_statlessPlayers = new ObservableCollection<string>();
+					ReadContestData();
 				}
-				return _statlessPlayers;
+				return _teams;
 			}
-		}
-
-		#endregion
-
-		#region ZeroesFromNumberFire
-
-		private ObservableCollection<string> _zeroesFromNumberFire;
-		public ObservableCollection<string> ZeroesFromNumberFire
-		{
-			get
-			{
-				if (_zeroesFromNumberFire == null)
-				{
-					_zeroesFromNumberFire = new ObservableCollection<string>();
-				}
-				return _zeroesFromNumberFire;
-			}
-		}
-
-		#endregion
-
-		#region ZeroesFromRotoWire
-
-		private ObservableCollection<string> _zeroesFromRotoWire;
-		public ObservableCollection<string> ZeroesFromRotoWire
-		{
-			get
-			{
-				if (_zeroesFromRotoWire == null)
-				{
-					_zeroesFromRotoWire = new ObservableCollection<string>();
-				}
-				return _zeroesFromRotoWire;
-			}
+			private set { _teams = value; }
 		}
 
 		#endregion
@@ -327,27 +251,19 @@ namespace mCubed.LineupGenerator.Controller
 			ContestType = null;
 			_maxSalary = null;
 			Players = null;
-			PlayersStats = null;
 			Positions = null;
-			Application.Current.Dispatcher.Invoke(new Action(() =>
-			{
-				StatlessPlayers.Clear();
-				ZeroesFromNumberFire.Clear();
-				ZeroesFromRotoWire.Clear();
-			}));
+			Teams = null;
 		}
-
-		#endregion
-
-		#region Contest Data Methods
 
 		private void ReadContestData()
 		{
 			var data = DownloadContestData();
 			ParseContestType(data);
 			ParseMaxSalary(data);
+			ParseTeams(data);
 			ParsePlayers(data);
 			ParsePositions(data);
+			ParseStats();
 		}
 
 		private string DownloadContestData()
@@ -407,12 +323,33 @@ namespace mCubed.LineupGenerator.Controller
 					Name = p.Value[1],
 					Position = p.Value[0],
 					Salary = int.Parse(p.Value[5]),
-					SeasonAveragePoints = double.Parse(p.Value[6]),
-					PlayerStats = GetPlayerStats(p.Value[1]),
+					Stats = new[]
+					{
+						new PlayerStats
+						{
+							Name = p.Value[1],
+							Source = "FanDuel",
+							SeasonAveragePoints = double.Parse(p.Value[6])
+						}
+					},
+					Team = Teams[p.Value[3]],
 					Injury = ParsePlayerInjury(info, int.Parse(p.Value[9]), p.Value[12]),
 					IsProbablePitcher = IsProbablePitcher(info, int.Parse(p.Value[9]))
-				}).Where(p => p.Position != "P" || p.IsProbablePitcher).ToArray();
+				}).Where(p => p.Position != "P" || p.IsProbablePitcher).ToDictionary(k => k.Name, v => v);
 			}
+		}
+
+		private void ParseTeams(string data)
+		{
+			var regex = new Regex("<b>(.*)</b>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+			var teamData = ParseJSONString(data, "FD.playerpicker.teamIdToFixtureCompactString");
+			var teams = JObject.Parse(teamData);
+			Teams = teams.Properties().ToDictionary(k => k.Name, v =>
+			{
+				var team = (string)teams[v.Name];
+				var match = regex.Match(team);
+				return match.Groups[1].Value;
+			});
 		}
 
 		private void ParsePositions(string data)
@@ -422,193 +359,56 @@ namespace mCubed.LineupGenerator.Controller
 			Positions = positionsList.ToArray();
 		}
 
-		#endregion
-
-		#region Stats Data Methods
-
-		private void ReadStatsData()
+		private IEnumerable<PlayerStats> ReadStatsData()
 		{
 			StatsInfo info;
 			if (STATS_INFOS.TryGetValue(ContestType, out info) && info != null)
 			{
-				if (!string.IsNullOrEmpty(info.URLRotoWire))
+				return info.StatRetrievers.SelectMany(s => s.RetrieveStats).ToArray();
+			}
+			return Enumerable.Empty<PlayerStats>();
+		}
+
+		private void ParseStats()
+		{
+			foreach (var stats in ReadStatsData())
+			{
+				var player = GetPlayer(stats.Name);
+				if (player != null)
 				{
-					var data = DownloadStatsData(info.URLRotoWire);
-					ParsePlayersStatsFromRotoWire(info, data);
-				}
-				else
-				{
-					PlayersStats = new Dictionary<string, PlayerStats>();
-				}
-				if (info.URLNumberFire != null)
-				{
-					foreach (var url in info.URLNumberFire)
+					var existingStats = player.Stats;
+					if (existingStats == null)
 					{
-						var data = DownloadStatsData(url);
-						ParsePlayersStatsFromNumberFire(info, data);
+						player.Stats = new[] { stats };
 					}
-				}
-			}
-			else
-			{
-				PlayersStats = new Dictionary<string, PlayerStats>();
-			}
-		}
-
-		private string DownloadStatsData(string url)
-		{
-			using (var client = new WebClient())
-			{
-				return client.DownloadString(url);
-			}
-		}
-
-		private string ParseGroupValue(Match match, int index)
-		{
-			var groups = match == null ? null : match.Groups;
-			if (groups != null && index >= 0 && index < groups.Count)
-			{
-				var group = groups[index];
-				if (group != null)
-				{
-					return group.Value;
-				}
-			}
-			return null;
-		}
-
-		private double ParseGroupDouble(Match match, int index)
-		{
-			var value = ParseGroupValue(match, index);
-			double doubleValue;
-			if (double.TryParse(value, out doubleValue))
-			{
-				return doubleValue;
-			}
-			return 0d;
-		}
-
-		private string ParsePlayerName(Match match, int index)
-		{
-			var name = ParseGroupValue(match, index);
-			var parts = name.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-			return parts.Length == 2 ? parts[1] + " " + parts[0] : name;
-		}
-
-		private void ParsePlayersStatsFromRotoWire(StatsInfo info, string data)
-		{
-			var playersStats = new Dictionary<string, PlayerStats>();
-			var regex = new Regex(info.Regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-			var match = regex.Match(data);
-			while (match.Success)
-			{
-				var name = ParsePlayerName(match, info.NameGroupIndex);
-				var stats = new PlayerStats
-				{
-					Name = name,
-					RecentAveragePoints = ParseGroupDouble(match, info.RecentGroupIndex),
-					ProjectedPoints = ParseGroupDouble(match, info.ProjectedGroupIndex),
-					SeasonAveragePoints = ParseGroupDouble(match, info.SeasonGroupIndex)
-				};
-				if (stats.ProjectedPoints <= 0 && !ZeroesFromRotoWire.Contains(name))
-				{
-					Application.Current.Dispatcher.Invoke(new Action(() =>
+					else
 					{
-						ZeroesFromRotoWire.Add(name);
-					}));
-				}
-				playersStats[name] = stats;
-				match = match.NextMatch();
-			}
-			PlayersStats = playersStats;
-		}
-
-		private IDictionary<string, string> ParseNumberFirePlayers(IEnumerable<KeyValuePair<string, JToken>> players)
-		{
-			return players.ToDictionary(pair => pair.Key, pair => (string)(pair.Value["name"]));
-		}
-
-		private void ParseNumberFireStats(StatsInfo info, IDictionary<string, string> players, JArray projections)
-		{
-			foreach (JObject projection in projections)
-			{
-				var playerID = (string)projection[info.NumberFirePlayerID];
-				var projectedPoints = (double)projection[info.NumberFireProjectedPoints];
-				if (projectedPoints >= 0)
-				{
-					string playerName;
-					if (players.TryGetValue(playerID, out playerName))
-					{
-						var stats = GetPlayerStats(playerName);
-						if (stats == null)
-						{
-							stats = new PlayerStats
-							{
-								Name = playerName,
-								ProjectedPoints = projectedPoints
-							};
-							PlayersStats[playerName] = stats;
-						}
-						else if (stats.ProjectedPoints <= 0)
-						{
-							stats.ProjectedPoints = projectedPoints;
-						}
-						else if (projectedPoints > 0)
-						{
-							stats.ProjectedPoints = (stats.ProjectedPoints + projectedPoints) / 2d;
-						}
-						if (projectedPoints <= 0 && !ZeroesFromNumberFire.Contains(stats.Name))
-						{
-							Application.Current.Dispatcher.Invoke(new Action(() =>
-							{
-								ZeroesFromNumberFire.Add(stats.Name);
-							}));
-						}
+						player.Stats = existingStats.Concat(new[] { stats }).ToArray();
 					}
 				}
 			}
 		}
 
-		private void ParsePlayersStatsFromNumberFire(StatsInfo info, string data)
+		private Player GetPlayer(string name)
 		{
-			var regex = new Regex(@"NF_DATA\s*=\s*(.*?);", RegexOptions.Singleline);
-			var match = regex.Match(data);
-			if (match.Success)
+			Player player;
+			if (Players.TryGetValue(name, out player))
 			{
-				var json = ParseGroupValue(match, 1);
-				var jsonObj = (JObject)JsonConvert.DeserializeObject(json);
-				var players = ParseNumberFirePlayers((JObject)jsonObj[info.NumberFirePlayers]);
-				ParseNumberFireStats(info, players, (JArray)jsonObj[info.NumberFireProjections]);
-			}
-		}
-
-		private PlayerStats GetPlayerStats(string name)
-		{
-			PlayerStats stats;
-			if (PlayersStats.TryGetValue(name, out stats))
-			{
-				return stats;
+				return player;
 			}
 			string alternateName;
 			if (ALTERNATE_NAMES.TryGetValue(name, out alternateName))
 			{
-				if (PlayersStats.TryGetValue(alternateName, out stats))
+				if (Players.TryGetValue(alternateName, out player))
 				{
-					return stats;
+					return player;
 				}
 			}
 			var lastNameIndex = name.LastIndexOf(' ');
 			var lastNameFirst = name.Substring(lastNameIndex + 1) + ", " + name.Substring(0, lastNameIndex);
-			if (PlayersStats.TryGetValue(lastNameFirst, out stats))
+			if (Players.TryGetValue(lastNameFirst, out player))
 			{
-				return stats;
-			}
-			if (!StatlessPlayers.Contains(name))
-			{
-				Application.Current.Dispatcher.Invoke(new Action(() =>
-				{
-					StatlessPlayers.Add(name);
-				}));
+				return player;
 			}
 			return null;
 		}
