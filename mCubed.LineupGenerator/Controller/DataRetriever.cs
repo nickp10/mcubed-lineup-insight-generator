@@ -46,7 +46,7 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					StatRetrievers = new IStatRetriever[]
 					{
-						new RotoWireStatRetriever("<a href=\"/baseball/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>", 1, 3,
+						new RotoWireStatRetriever("<a.*?baseball/player.*?>(.*?)</(.*?<td){5}.*?>(.*?)</td>", 1, 3,
 							"http://www.rotowire.com/daily/mlb/optimizer.htm"),
 						new NumberFireStatRetriever("players", "mlb_player_id", "projections", "fanduel_fp",
 							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/batters",
@@ -68,7 +68,7 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					StatRetrievers = new IStatRetriever[]
 					{
-						new RotoWireStatRetriever("<a href=\"/basketball/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>", 1, 3,
+						new RotoWireStatRetriever("<a.*?basketball/player.*?>(.*?)</(.*?<td){5}.*?>(.*?)</td>", 1, 3,
 							"http://www.rotowire.com/daily/nba/optimizer.htm"),
 						new NumberFireStatRetriever("players", "nba_player_id", "daily_projections", "fanduel_fp",
 							"https://www.numberfire.com/nba/fantasy/fantasy-basketball-projections")
@@ -86,7 +86,7 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					StatRetrievers = new IStatRetriever[]
 					{
-						new RotoWireStatRetriever("<a href=\"/football/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>", 1, 3,
+						new RotoWireStatRetriever("<a.*?football/player.*?>(.*?)</(.*?<td){5}.*?>(.*?)</td>", 1, 3,
 							"http://www.rotowire.com/daily/nfl/optimizer.htm")
 						/*new NumberFireStatRetriever("players", "nfl_player_id", "projections", "fanduel_fp",
 							"https://www.numberfire.com/nfl/fantasy/fantasy-football-projections")*/
@@ -111,7 +111,7 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					StatRetrievers = new IStatRetriever[]
 					{
-						new RotoWireStatRetriever("<a href=\"/hockey/player.*?>(.*?)</a>(.*?<td){5}.*?>(.*?)</td>", 1, 3,
+						new RotoWireStatRetriever("<a.*?hockey/player.*?>(.*?)</(.*?<td){5}.*?>(.*?)</td>", 1, 3,
 							"http://www.rotowire.com/daily/nhl/optimizer.htm")
 						/*new NumberFireStatRetriever("players", "nhl_player_id", "projections", "fanduel_fp",
 							"https://www.numberfire.com/nhl/daily-fantasy-hockey-projections/skaters",
