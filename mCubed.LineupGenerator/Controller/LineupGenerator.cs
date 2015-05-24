@@ -28,9 +28,9 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Methods
 
-		public IEnumerable<Lineup> GenerateLineups(IEnumerable<string> positions, int maxSalary)
+		public IEnumerable<Lineup> GenerateLineups(IEnumerable<string> positions, int maxSalary, int maxPlayersPerTeam)
 		{
-			return GenerateLineups(positions).Where(l => l.TotalSalary <= maxSalary).OrderByDescending(l => l.TotalSalary);
+			return GenerateLineups(positions).Where(l => l.TotalSalary <= maxSalary).Where(l => l.Players.GroupBy(p => p.Team).All(g => g.Count() <= maxPlayersPerTeam)).OrderByDescending(l => l.TotalSalary);
 		}
 
 		private IEnumerable<Lineup> GenerateLineups(IEnumerable<string> positions)

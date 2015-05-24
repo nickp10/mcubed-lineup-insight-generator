@@ -138,7 +138,7 @@ namespace mCubed.LineupGenerator.Controller
 			CurrentProcess = "Generating lineups...";
 			ThreadPool.QueueUserWorkItem(q =>
 			{
-				var lineups = _lineupGenerator.GenerateLineups(DataRetriever.Positions, DataRetriever.MaxSalary).ToArray();
+				var lineups = _lineupGenerator.GenerateLineups(DataRetriever.Positions, DataRetriever.MaxSalary, DataRetriever.MaxPlayersPerTeam).ToArray();
 				lineups.AddRating(l => l.TotalProjectedPoints, lineups.Length, RatingTolerance);
 				lineups.AddRating(l => l.TotalRecentAveragePoints, lineups.Length, RatingTolerance);
 				lineups.AddRating(l => l.TotalSeasonAveragePoints, lineups.Length, RatingTolerance);

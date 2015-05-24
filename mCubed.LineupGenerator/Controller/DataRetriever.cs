@@ -170,6 +170,15 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
+		#region MaxPlayersPerTeam
+
+		public int MaxPlayersPerTeam
+		{
+			get { return 4; }
+		}
+
+		#endregion
+
 		#region MaxSalary
 
 		private int? _maxSalary;
