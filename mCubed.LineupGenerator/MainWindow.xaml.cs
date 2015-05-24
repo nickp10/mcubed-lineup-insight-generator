@@ -17,6 +17,8 @@ namespace mCubed.LineupGenerator
 			Loaded += new RoutedEventHandler(OnLoaded);
 		}
 
+		#region Event Handlers
+
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			GameIDTextBox.Focus();
@@ -35,10 +37,17 @@ namespace mCubed.LineupGenerator
 			((LineupViewModel)DataContext).RetrievePlayerList();
 		}
 
+		private void OnSelectStartersClick(object sender, RoutedEventArgs e)
+		{
+			((LineupViewModel)DataContext).SelectStarters();
+		}
+
 		private void OnGenerateLineupsClick(object sender, RoutedEventArgs e)
 		{
 			((LineupViewModel)DataContext).GenerateLineups();
 		}
+
+		#endregion
 
 		#region Sort
 

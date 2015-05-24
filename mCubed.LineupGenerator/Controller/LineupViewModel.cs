@@ -147,6 +147,17 @@ namespace mCubed.LineupGenerator.Controller
 			});
 		}
 
+		public void SelectStarters()
+		{
+			ThreadPool.QueueUserWorkItem(q =>
+			{
+				foreach (var player in _lineupGenerator.AllPlayers)
+				{
+					player.IncludeInLineups = player.IsProbablePitcher || player.IsStarter;
+				}
+			});
+		}
+
 		#endregion
 
 		#region INotifyPropertyChanged Members

@@ -93,6 +93,9 @@
 																	<Grid.ColumnDefinitions>
 																		<ColumnDefinition Width="*" />
 																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="StarterColumn" />
+																		<ColumnDefinition Width="50" />
+																		<ColumnDefinition Width="Auto"
 																						  SharedSizeGroup="ProjectedColumn" />
 																		<ColumnDefinition Width="50" />
 																		<ColumnDefinition Width="Auto"
@@ -103,27 +106,6 @@
 																	</Grid.ColumnDefinitions>
 																	<WrapPanel Grid.Column="0">
 																		<TextBlock Text="{Binding Name}" />
-																		<Border Margin="10,0,0,0"
-																				Padding="5,0"
-																				BorderThickness="1"
-																				BorderBrush="#87C213"
-																				Background="#87C213"
-																				TextElement.Foreground="#FFF">
-																			<Border.Style>
-																				<Style TargetType="{x:Type Border}">
-																					<Setter Property="Visibility"
-																							Value="Collapsed" />
-																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding IsProbablePitcher}"
-																									 Value="True">
-																							<Setter Property="Visibility"
-																									Value="Visible" />
-																						</DataTrigger>
-																					</Style.Triggers>
-																				</Style>
-																			</Border.Style>
-																			<TextBlock Text="P" />
-																		</Border>
 																		<Border Margin="10,0,0,0"
 																				Padding="5,0">
 																			<Border.Style>
@@ -168,11 +150,37 @@
 																			<TextBlock Text="{Binding Injury.Display}" />
 																		</Border>
 																	</WrapPanel>
-																	<TextBlock Grid.Column="1"
-																			   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
+																	<Border Grid.Column="1"
+																			Padding="5,0"
+																			BorderThickness="1"
+																			BorderBrush="#87C213"
+																			Background="#87C213"
+																			TextElement.Foreground="#FFF">
+																		<Border.Style>
+																			<Style TargetType="{x:Type Border}">
+																				<Setter Property="Visibility"
+																						Value="Collapsed" />
+																				<Style.Triggers>
+																					<DataTrigger Binding="{Binding IsStarter}"
+																								 Value="True">
+																						<Setter Property="Visibility"
+																								Value="Visible" />
+																					</DataTrigger>
+																					<DataTrigger Binding="{Binding IsProbablePitcher}"
+																								 Value="True">
+																						<Setter Property="Visibility"
+																								Value="Visible" />
+																					</DataTrigger>
+																				</Style.Triggers>
+																			</Style>
+																		</Border.Style>
+																		<TextBlock Text="Starter" />
+																	</Border>
 																	<TextBlock Grid.Column="3"
-																			   Text="{Binding Team}" />
+																			   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
 																	<TextBlock Grid.Column="5"
+																			   Text="{Binding Team}" />
+																	<TextBlock Grid.Column="7"
 																			   Text="{Binding Salary, StringFormat={}{0:C}}" />
 																</Grid>
 															</Border>
@@ -205,11 +213,16 @@
 					</TabControl>
 				</Grid>
 			</GroupBox>
-			<Button Grid.Row="2"
-					HorizontalAlignment="Center"
-					Content="Generate Lineups"
-					Click="OnGenerateLineupsClick"
-					Padding="5" />
+			<WrapPanel Grid.Row="2"
+					   HorizontalAlignment="Center">
+				<Button Content="Select Starters"
+						Click="OnSelectStartersClick"
+						Padding="5"
+						Margin="0,0,10,0" />
+				<Button Content="Generate Lineups"
+						Click="OnGenerateLineupsClick"
+						Padding="5" />
+			</WrapPanel>
 			<GroupBox Grid.Row="3"
 					  Header="Lineups">
 				<ListView ItemsSource="{Binding Lineups}"
