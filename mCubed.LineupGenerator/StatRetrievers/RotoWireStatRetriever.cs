@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using mCubed.LineupGenerator.Model;
+using mCubed.LineupGenerator.Utilities;
 
 namespace mCubed.LineupGenerator.StatRetrievers
 {
@@ -39,7 +39,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 			{
 				if (_stats == null)
 				{
-					_stats = ParsePlayerStats(DownloadStatsData(_url)).ToArray();
+					_stats = ParsePlayerStats(Utils.DownloadURL(_url)).ToArray();
 				}
 				return _stats;
 			}
@@ -49,42 +49,9 @@ namespace mCubed.LineupGenerator.StatRetrievers
 
 		#region Methods
 
-		private string DownloadStatsData(string url)
-		{
-			using (var client = new WebClient())
-			{
-				return client.DownloadString(url);
-			}
-		}
-
-		private string ParseGroupValue(Match match, int index)
-		{
-			var groups = match == null ? null : match.Groups;
-			if (groups != null && index >= 0 && index < groups.Count)
-			{
-				var group = groups[index];
-				if (group != null)
-				{
-					return group.Value;
-				}
-			}
-			return null;
-		}
-
-		private double ParseGroupDouble(Match match, int index)
-		{
-			var value = ParseGroupValue(match, index);
-			double doubleValue;
-			if (double.TryParse(value, out doubleValue))
-			{
-				return doubleValue;
-			}
-			return 0d;
-		}
-
 		private string ParsePlayerName(Match match, int index)
 		{
-			var name = ParseGroupValue(match, index);
+			var name = Utils.ParseGroupValue(match, index);
 			var parts = name.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 			return parts.Length == 2 ? parts[1] + " " + parts[0] : name;
 		}
@@ -100,7 +67,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 				{
 					Name = name,
 					Source = "RotoWire",
-					ProjectedPoints = ParseGroupDouble(match, _projectedGroupIndex)
+					ProjectedPoints = Utils.ParseGroupDouble(match, _projectedGroupIndex)
 				};
 				match = match.NextMatch();
 			}

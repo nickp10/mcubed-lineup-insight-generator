@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using mCubed.LineupGenerator.Model;
+using mCubed.LineupGenerator.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -47,7 +47,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 			{
 				if (_stats == null)
 				{
-					_stats = _urls.Select(DownloadStatsData).Select(ParsePlayerStats).SelectMany(p => p).ToArray();
+					_stats = _urls.Select(Utils.DownloadURL).Select(ParsePlayerStats).SelectMany(p => p).ToArray();
 				}
 				return _stats;
 			}
@@ -56,14 +56,6 @@ namespace mCubed.LineupGenerator.StatRetrievers
 		#endregion
 
 		#region Methods
-
-		private string DownloadStatsData(string url)
-		{
-			using (var client = new WebClient())
-			{
-				return client.DownloadString(url);
-			}
-		}
 
 		private IDictionary<string, string> ParsePlayers(IEnumerable<KeyValuePair<string, JToken>> players)
 		{
@@ -98,26 +90,12 @@ namespace mCubed.LineupGenerator.StatRetrievers
 			var match = regex.Match(data);
 			if (match.Success)
 			{
-				var json = ParseGroupValue(match, 1);
+				var json = Utils.ParseGroupValue(match, 1);
 				var jsonObj = (JObject)JsonConvert.DeserializeObject(json);
 				var players = ParsePlayers((JObject)jsonObj[_players]);
 				return ParseStats(players, (JArray)jsonObj[_projections]);
 			}
 			return Enumerable.Empty<PlayerStats>();
-		}
-
-		private string ParseGroupValue(Match match, int index)
-		{
-			var groups = match == null ? null : match.Groups;
-			if (groups != null && index >= 0 && index < groups.Count)
-			{
-				var group = groups[index];
-				if (group != null)
-				{
-					return group.Value;
-				}
-			}
-			return null;
 		}
 
 		#endregion

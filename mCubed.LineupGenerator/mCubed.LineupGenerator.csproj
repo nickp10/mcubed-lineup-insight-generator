@@ -122,10 +122,13 @@
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\PlayerStats.cs" />
     <Compile Include="Model\StatsInfo.cs" />
+    <Compile Include="StartingPlayerRetrievers\IStartingPlayerRetriever.cs" />
+    <Compile Include="StartingPlayerRetrievers\RotoWireStartingPlayerRetriever.cs" />
     <Compile Include="StatRetrievers\IStatRetriever.cs" />
     <Compile Include="StatRetrievers\NumberFireStatRetriever.cs" />
     <Compile Include="StatRetrievers\RotoWireStatRetriever.cs" />
     <Compile Include="Utilities\IEnumerableExtensions.cs" />
+    <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mCubed.LineupGenerator.pfx" />

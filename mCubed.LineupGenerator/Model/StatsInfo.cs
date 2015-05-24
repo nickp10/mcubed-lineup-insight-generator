@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using mCubed.LineupGenerator.StartingPlayerRetrievers;
 using mCubed.LineupGenerator.StatRetrievers;
 
 namespace mCubed.LineupGenerator.Model
@@ -7,5 +8,6 @@ namespace mCubed.LineupGenerator.Model
 	{
 		public IDictionary<string, InjuryData> InjuryMappings { get; set; }
 		public IEnumerable<IStatRetriever> StatRetrievers { get; set; }
+		public IStartingPlayerRetriever StartingPlayerRetriever { get; set; }
 	}
 }

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using mCubed.LineupGenerator.Model;
+using mCubed.LineupGenerator.StartingPlayerRetrievers;
 using mCubed.LineupGenerator.StatRetrievers;
+using mCubed.LineupGenerator.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -52,6 +53,9 @@ namespace mCubed.LineupGenerator.Controller
 							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/batters",
 							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/pitchers")
 					},
+					StartingPlayerRetriever = new RotoWireStartingPlayerRetriever("http://www.rotowire.com/baseball/daily_lineups.htm",
+						@":\s<.*?baseball/player\..*?>(.*?)</",
+						@"title=""([\w\s.-]*)"".*?baseball/player\."),
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
 						{ "", new InjuryData("DL", InjuryType.Out) },
@@ -73,6 +77,8 @@ namespace mCubed.LineupGenerator.Controller
 						new NumberFireStatRetriever("players", "nba_player_id", "daily_projections", "fanduel_fp",
 							"https://www.numberfire.com/nba/fantasy/fantasy-basketball-projections")
 					},
+					StartingPlayerRetriever = new RotoWireStartingPlayerRetriever("http://www.rotowire.com/basketball/nba_lineups.htm",
+						@"title=""([\w\s.-]*)"".*?basketball/player\."),
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
 						{ "", new InjuryData("IR", InjuryType.Out) },
@@ -91,6 +97,8 @@ namespace mCubed.LineupGenerator.Controller
 						/*new NumberFireStatRetriever("players", "nfl_player_id", "projections", "fanduel_fp",
 							"https://www.numberfire.com/nfl/fantasy/fantasy-football-projections")*/
 					},
+					StartingPlayerRetriever = new RotoWireStartingPlayerRetriever("http://www.rotowire.com/football/nfl_lineups.htm",
+						@"(?<!inactiveblock.*?)football/player\..*?>(.*?)</"),
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
 						{ "", new InjuryData("IR", InjuryType.Out) },
@@ -117,6 +125,9 @@ namespace mCubed.LineupGenerator.Controller
 							"https://www.numberfire.com/nhl/daily-fantasy-hockey-projections/skaters",
 							"https://www.numberfire.com/nhl/daily-fantasy-hockey-projections/goalies")*/
 					},
+					StartingPlayerRetriever = new RotoWireStartingPlayerRetriever("http://www.rotowire.com/hockey/nhl_lineups.htm",
+						@"goalie-tag.*?hockey/player\..*?>(.*?)</",
+						@"title=""([\w\s.-]*)"".*?hockey/player\."),
 					InjuryMappings = new Dictionary<string, InjuryData>
 					{
 						{ "", new InjuryData("IR", InjuryType.Out) },
@@ -233,6 +244,24 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
+		#region StartingPlayers
+
+		private IEnumerable<string> _startingPlayers;
+		public IEnumerable<string> StartingPlayers
+		{
+			get
+			{
+				if (_startingPlayers == null)
+				{
+					ReadContestData();
+				}
+				return _startingPlayers;
+			}
+			private set { _startingPlayers = value; }
+		}
+
+		#endregion
+
 		#region Teams
 
 		private IDictionary<string, string> _teams;
@@ -261,6 +290,7 @@ namespace mCubed.LineupGenerator.Controller
 			_maxSalary = null;
 			Players = null;
 			Positions = null;
+			StartingPlayers = null;
 			Teams = null;
 		}
 
@@ -273,14 +303,12 @@ namespace mCubed.LineupGenerator.Controller
 			ParsePlayers(data);
 			ParsePositions(data);
 			ParseStats();
+			ParseStartingPlayers();
 		}
 
 		private string DownloadContestData()
 		{
-			using (var client = new WebClient())
-			{
-				return client.DownloadString(string.Format(CONTEST_URL_FORMAT, GameID));
-			}
+			return Utils.DownloadURL(string.Format(CONTEST_URL_FORMAT, GameID));
 		}
 
 		private string ParseJSONString(string data, string key)
@@ -394,6 +422,28 @@ namespace mCubed.LineupGenerator.Controller
 					{
 						player.Stats = existingStats.Concat(new[] { stats }).ToArray();
 					}
+				}
+			}
+		}
+
+		private IEnumerable<string> ReadStartingPlayers()
+		{
+			StatsInfo info;
+			if (STATS_INFOS.TryGetValue(ContestType, out info) && info != null)
+			{
+				return info.StartingPlayerRetriever.RetrieveStartingPlayers;
+			}
+			return Enumerable.Empty<string>();
+		}
+
+		private void ParseStartingPlayers()
+		{
+			foreach (var player in ReadStartingPlayers())
+			{
+				var p = GetPlayer(player);
+				if (p != null)
+				{
+					p.IsStarter = true;
 				}
 			}
 		}
