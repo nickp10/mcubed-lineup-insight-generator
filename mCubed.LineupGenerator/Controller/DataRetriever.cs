@@ -244,24 +244,6 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
-		#region StartingPlayers
-
-		private IEnumerable<string> _startingPlayers;
-		public IEnumerable<string> StartingPlayers
-		{
-			get
-			{
-				if (_startingPlayers == null)
-				{
-					ReadContestData();
-				}
-				return _startingPlayers;
-			}
-			private set { _startingPlayers = value; }
-		}
-
-		#endregion
-
 		#region Teams
 
 		private IDictionary<string, string> _teams;
@@ -290,7 +272,6 @@ namespace mCubed.LineupGenerator.Controller
 			_maxSalary = null;
 			Players = null;
 			Positions = null;
-			StartingPlayers = null;
 			Teams = null;
 		}
 
@@ -298,12 +279,23 @@ namespace mCubed.LineupGenerator.Controller
 		{
 			var data = DownloadContestData();
 			ParseContestType(data);
-			ParseMaxSalary(data);
-			ParseTeams(data);
-			ParsePlayers(data);
-			ParsePositions(data);
-			ParseStats();
-			ParseStartingPlayers();
+			if (!string.IsNullOrWhiteSpace(ContestType))
+			{
+				ParseMaxSalary(data);
+				ParseTeams(data);
+				ParsePlayers(data);
+				ParsePositions(data);
+				ParseStats();
+				ParseStartingPlayers();
+			}
+			else
+			{
+				ContestType = string.Empty;
+				MaxSalary = 0;
+				Players = new Dictionary<string, Player>();
+				Positions = Enumerable.Empty<string>();
+				Teams = new Dictionary<string, string>();
+			}
 		}
 
 		private string DownloadContestData()

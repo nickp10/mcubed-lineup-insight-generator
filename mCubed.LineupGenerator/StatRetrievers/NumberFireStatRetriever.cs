@@ -91,9 +91,17 @@ namespace mCubed.LineupGenerator.StatRetrievers
 			if (match.Success)
 			{
 				var json = Utils.ParseGroupValue(match, 1);
-				var jsonObj = (JObject)JsonConvert.DeserializeObject(json);
-				var players = ParsePlayers((JObject)jsonObj[_players]);
-				return ParseStats(players, (JArray)jsonObj[_projections]);
+				var jsonObj = JsonConvert.DeserializeObject(json) as JObject;
+				if (jsonObj != null)
+				{
+					var jsonPlayers = jsonObj[_players] as JObject;
+					var jsonProjections = jsonObj[_projections] as JArray;
+					if (jsonPlayers != null && jsonProjections != null)
+					{
+						var players = ParsePlayers(jsonPlayers);
+						return ParseStats(players, jsonProjections);
+					}
+				}
 			}
 			return Enumerable.Empty<PlayerStats>();
 		}
