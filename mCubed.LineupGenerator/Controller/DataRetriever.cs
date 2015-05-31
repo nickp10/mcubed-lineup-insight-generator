@@ -18,6 +18,10 @@ namespace mCubed.LineupGenerator.Controller
 		private const string CONTEST_URL_FORMAT = "https://www.fanduel.com/e/Game/{0}";
 		private static readonly IDictionary<string, string> ALTERNATE_NAMES = new Dictionary<string, string>
 		{
+			/* MLB */
+			{ "Jung-ho Kang", "Jung-Ho Kang" },
+			{ "Jung-Ho Kang", "Jung-ho Kang" },
+
 			/* NBA */
 			{ "Bill Walker", "Henry Walker" },
 			{ "Brad Beal", "Bradley Beal" },
