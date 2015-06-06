@@ -16,11 +16,17 @@ namespace mCubed.LineupGenerator.Controller
 		#region Data Members
 
 		private const string CONTEST_URL_FORMAT = "https://www.fanduel.com/e/Game/{0}";
+
+		/// <summary>
+		/// Key - The name from the stat URLs.
+		/// Value - The name from the contest URL.
+		/// </summary>
 		private static readonly IDictionary<string, string> ALTERNATE_NAMES = new Dictionary<string, string>
 		{
 			/* MLB */
-			{ "Jung-ho Kang", "Jung-Ho Kang" },
+			{ "Delino DeShields Jr.", "Delino Deshields Jr." },
 			{ "Jung-Ho Kang", "Jung-ho Kang" },
+			{ "Steven Souza", "Steve Souza" },
 
 			/* NBA */
 			{ "Bill Walker", "Henry Walker" },
