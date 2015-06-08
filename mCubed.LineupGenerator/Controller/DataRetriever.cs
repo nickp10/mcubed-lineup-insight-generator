@@ -25,6 +25,8 @@ namespace mCubed.LineupGenerator.Controller
 		{
 			/* MLB */
 			{ "Delino DeShields Jr.", "Delino Deshields Jr." },
+			{ "J.T. Realmuto", "Jacob Realmuto" },
+			{ "JT Realmuto", "Jacob Realmuto" },
 			{ "Jung-Ho Kang", "Jung-ho Kang" },
 			{ "Steven Souza", "Steve Souza" },
 
