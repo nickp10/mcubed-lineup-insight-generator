@@ -59,7 +59,7 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					StatRetrievers = new IStatRetriever[]
 					{
-						new RotoWireStatRetriever("<a.*?baseball/player.*?>(.*?)</(.*?<td){5}.*?>(.*?)</td>", 1, 3,
+						new RotoWireStatRetriever("<a.*?baseball/player.*?>(.*?)</(.*?<td){9}.*?>(.*?)</td>", 1, 3,
 							"http://www.rotowire.com/daily/mlb/optimizer.htm"),
 						new NumberFireStatRetriever("players", "mlb_player_id", "projections", "fanduel_fp",
 							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/batters",
