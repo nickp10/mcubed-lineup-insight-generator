@@ -120,6 +120,7 @@
     <Compile Include="Model\InjuryType.cs" />
     <Compile Include="Model\Lineup.cs" />
     <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\PlayerNameComparer.cs" />
     <Compile Include="Model\PlayerStats.cs" />
     <Compile Include="Model\StatsInfo.cs" />
     <Compile Include="StartingPlayerRetrievers\IStartingPlayerRetriever.cs" />

@@ -28,6 +28,7 @@ namespace mCubed.LineupGenerator.Controller
 			{ "J.T. Realmuto", "Jacob Realmuto" },
 			{ "JT Realmuto", "Jacob Realmuto" },
 			{ "Jung-Ho Kang", "Jung-ho Kang" },
+			{ "Mike McKenry", "Michael McKenry" },
 			{ "Steven Souza", "Steve Souza" },
 
 			/* NBA */
@@ -376,7 +377,7 @@ namespace mCubed.LineupGenerator.Controller
 					Team = Teams[p.Value[3]],
 					Injury = ParsePlayerInjury(info, int.Parse(p.Value[9]), p.Value[12]),
 					IsProbablePitcher = IsProbablePitcher(info, int.Parse(p.Value[9]))
-				}).Where(p => p.Position != "P" || p.IsProbablePitcher).ToDictionary(k => k.Name, v => v);
+				}).Where(p => p.Position != "P" || p.IsProbablePitcher).Distinct(new PlayerNameComparer()).ToDictionary(k => k.Name, v => v);
 			}
 		}
 
