@@ -86,7 +86,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 
 		private IEnumerable<PlayerStats> ParsePlayerStats(string data)
 		{
-			var regex = new Regex(@"NF_DATA\s*=\s*(.*?);", RegexOptions.Singleline);
+			var regex = new Regex(@"NF_DATA\s*=\s*(.*?}|]);", RegexOptions.Singleline);
 			var match = regex.Match(data);
 			if (match.Success)
 			{
