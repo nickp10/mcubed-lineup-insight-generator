@@ -24,6 +24,7 @@ namespace mCubed.LineupGenerator.Controller
 		private static readonly IDictionary<string, string> ALTERNATE_NAMES = new Dictionary<string, string>
 		{
 			/* MLB */
+			{ "Alex Guerrero", "Alexander Guerrero" },
 			{ "B.J. Upton", "Melvin Upton" },
 			{ "Delino DeShields Jr.", "Delino Deshields Jr." },
 			{ "Jake Lamb", "Jacob Lamb" },
