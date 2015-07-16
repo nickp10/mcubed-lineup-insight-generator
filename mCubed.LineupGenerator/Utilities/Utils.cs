@@ -15,6 +15,15 @@ namespace mCubed.LineupGenerator.Utilities
 			}
 		}
 
+		public static string DownloadURL(string url, string authorization)
+		{
+			using (var client = new WebClient())
+			{
+				client.Headers.Add(HttpRequestHeader.Authorization, authorization);
+				return client.DownloadString(url);
+			}
+		}
+
 		#endregion
 
 		#region Regex Methods

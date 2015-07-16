@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using mCubed.LineupGenerator.Controller;
 
@@ -14,28 +13,9 @@ namespace mCubed.LineupGenerator
 		{
 			InitializeComponent();
 			DataContext = new LineupViewModel();
-			Loaded += new RoutedEventHandler(OnLoaded);
 		}
 
 		#region Event Handlers
-
-		private void OnLoaded(object sender, RoutedEventArgs e)
-		{
-			GameIDTextBox.Focus();
-		}
-
-		private void OnGameIDKeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.Key == Key.Enter || e.Key == Key.Return)
-			{
-				OnRetrievePlayersClick(sender, new RoutedEventArgs());
-			}
-		}
-
-		private void OnRetrievePlayersClick(object sender, RoutedEventArgs e)
-		{
-			((LineupViewModel)DataContext).RetrievePlayerList();
-		}
 
 		private void OnSelectStartersClick(object sender, RoutedEventArgs e)
 		{

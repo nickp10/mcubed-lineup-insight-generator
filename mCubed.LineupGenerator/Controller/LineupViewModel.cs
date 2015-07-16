@@ -9,36 +9,20 @@ namespace mCubed.LineupGenerator.Controller
 {
 	public class LineupViewModel : INotifyPropertyChanged
 	{
-		#region Data Members
-
-		private readonly LineupGenerator _lineupGenerator = new LineupGenerator();
-
-		#endregion
-
 		#region Properties
 
-		#region AllPlayers
+		#region Contests
 
-		public IEnumerable<Player> AllPlayers
+		private IEnumerable<Contest> _contests = Enumerable.Empty<Contest>();
+		public IEnumerable<Contest> Contests
 		{
-			get { return _lineupGenerator.AllPlayers; }
-		}
-
-		#endregion
-
-		#region AllPlayersGrouped
-
-		public IEnumerable<IGrouping<string, Player>> AllPlayersGrouped
-		{
-			get
+			get { return _contests; }
+			private set
 			{
-				if (string.IsNullOrEmpty(DataRetriever.GameID))
+				if (_contests != value)
 				{
-					return Enumerable.Empty<IGrouping<string, Player>>();
-				}
-				else
-				{
-					return AllPlayers.GroupBy(p => p.Position).OrderBy(g => g.Key, new PositionComparer(DataRetriever.Positions));
+					_contests = value;
+					RaisePropertyChanged("Contests");
 				}
 			}
 		}
@@ -58,23 +42,6 @@ namespace mCubed.LineupGenerator.Controller
 					_currentProcess = value;
 					RaisePropertyChanged("CurrentProcess");
 				}
-			}
-		}
-
-		#endregion
-
-		#region DataRetriever
-
-		private DataRetriever _dataRetriever;
-		public DataRetriever DataRetriever
-		{
-			get
-			{
-				if (_dataRetriever == null)
-				{
-					_dataRetriever = new DataRetriever();
-				}
-				return _dataRetriever;
 			}
 		}
 
@@ -116,46 +83,99 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
+		#region SelectedContest
+
+		private Contest _selectedContest;
+		public Contest SelectedContest
+		{
+			get { return _selectedContest; }
+			set
+			{
+				if (_selectedContest != value)
+				{
+					_selectedContest = value;
+					RetrieveContestData(_selectedContest);
+					RaisePropertyChanged("SelectedContest");
+				}
+			}
+		}
+
+		#endregion
+
+		#endregion
+
+		#region Constructors
+
+		public LineupViewModel()
+		{
+			RetrieveContestList();
+		}
+
 		#endregion
 
 		#region Methods
 
-		public void RetrievePlayerList()
+		public void RetrieveContestList()
 		{
-			CurrentProcess = "Retrieving players...";
+			CurrentProcess = "Retrieving contests...";
 			ThreadPool.QueueUserWorkItem(q =>
 			{
-				DataRetriever.Clear();
-				_lineupGenerator.AllPlayers = DataRetriever.Players.Values;
-				RaisePropertyChanged("AllPlayers");
-				RaisePropertyChanged("AllPlayersGrouped");
+				Contests = DataRetriever.ContestRetrievers.SelectMany(c => c.Contests).ToArray();
 				CurrentProcess = null;
 			});
+		}
+
+		public void RetrieveContestData(Contest contest)
+		{
+			if (contest != null && !contest.IsDataRetrieved)
+			{
+				CurrentProcess = "Retrieving contest data...";
+				ThreadPool.QueueUserWorkItem(q =>
+				{
+					var retriever = DataRetriever.ContestRetrievers.FirstOrDefault(c => c.ContestType == contest.GetType());
+					if (retriever != null)
+					{
+						retriever.FillAdditionalContestData(contest);
+						contest.IsDataRetrieved = true;
+					}
+					DataRetriever.ParseStartingPlayers(contest);
+					DataRetriever.ParseStats(contest);
+					CurrentProcess = null;
+				});
+			}
 		}
 
 		public void GenerateLineups()
 		{
-			CurrentProcess = "Generating lineups...";
-			ThreadPool.QueueUserWorkItem(q =>
+			var contest = SelectedContest;
+			if (contest != null)
 			{
-				var lineups = _lineupGenerator.GenerateLineups(DataRetriever.Positions, DataRetriever.MaxSalary, DataRetriever.MaxPlayersPerTeam).ToArray();
-				lineups.AddRating(l => l.TotalProjectedPoints, lineups.Length, RatingTolerance);
-				lineups.AddRating(l => l.TotalRecentAveragePoints, lineups.Length, RatingTolerance);
-				lineups.AddRating(l => l.TotalSeasonAveragePoints, lineups.Length, RatingTolerance);
-				Lineups = lineups;
-				CurrentProcess = null;
-			});
+				CurrentProcess = "Generating lineups...";
+				ThreadPool.QueueUserWorkItem(q =>
+				{
+					var lineups = LineupGenerator.GenerateLineups(contest).ToArray();
+					lineups.AddRating(l => l.TotalProjectedPoints, lineups.Length, RatingTolerance);
+					lineups.AddRating(l => l.TotalRecentAveragePoints, lineups.Length, RatingTolerance);
+					lineups.AddRating(l => l.TotalSeasonAveragePoints, lineups.Length, RatingTolerance);
+					Lineups = lineups;
+					CurrentProcess = null;
+				});
+			}
 		}
 
 		public void SelectStarters()
 		{
-			ThreadPool.QueueUserWorkItem(q =>
+			var contest = SelectedContest;
+			if (contest != null)
 			{
-				foreach (var player in _lineupGenerator.AllPlayers)
+				ThreadPool.QueueUserWorkItem(q =>
 				{
-					player.IncludeInLineups = player.IsProbablePitcher || player.IsStarter;
-				}
-			});
+					foreach (var player in contest.Players)
+					{
+						player.IncludeInLineups = player.IsProbablePitcher || player.IsStarter;
+					}
+				});
+			}
 		}
 
 		#endregion
