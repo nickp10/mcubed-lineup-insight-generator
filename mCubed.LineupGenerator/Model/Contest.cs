@@ -2,7 +2,9 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows.Data;
 using mCubed.LineupGenerator.Controller;
+using mCubed.LineupGenerator.Utilities;
 
 namespace mCubed.LineupGenerator.Model
 {
@@ -74,7 +76,8 @@ namespace mCubed.LineupGenerator.Model
 				{
 					_players = value;
 					RaisePropertyChanged("Players");
-					RaisePropertyChanged("PlayersGrouped");
+					PlayersDictionary = null;
+					PlayersGrouped = null;
 				}
 			}
 		}
@@ -83,12 +86,25 @@ namespace mCubed.LineupGenerator.Model
 
 		#region PlayersDictionary
 
+		private IDictionary<string, Player> _playersDictionary;
 		public IDictionary<string, Player> PlayersDictionary
 		{
 			get
 			{
-				var players = Players;
-				return players == null ? new Dictionary<string, Player>() : players.Distinct(new PlayerNameComparer()).ToDictionary(k => k.Name, v => v);
+				if (_playersDictionary == null)
+				{
+					var players = Players;
+					_playersDictionary = players == null ? new Dictionary<string, Player>() : players.Distinct(new PlayerNameComparer()).ToDictionary(k => k.Name, v => v);
+				}
+				return _playersDictionary;
+			}
+			private set
+			{
+				if (_playersDictionary != value)
+				{
+					_playersDictionary = value;
+					RaisePropertyChanged("PlayersDictionary");
+				}
 			}
 		}
 
@@ -96,19 +112,69 @@ namespace mCubed.LineupGenerator.Model
 
 		#region PlayersGrouped
 
-		public IEnumerable<IGrouping<string, Player>> PlayersGrouped
+		private List<PositionPlayers> _playersGrouped;
+		public List<PositionPlayers> PlayersGrouped
 		{
 			get
 			{
-				var players = Players;
-				var positions = Positions;
-				if (players == null || !players.Any() || positions == null)
+				if (_playersGrouped == null)
 				{
-					return Enumerable.Empty<IGrouping<string, Player>>();
+					var players = Players;
+					var positions = Positions;
+					if (players == null || !players.Any() || positions == null)
+					{
+						_playersGrouped = new List<PositionPlayers>();
+					}
+					else
+					{
+						_playersGrouped = players.
+							GroupBy(p => p.Position).
+							Select(g => new PositionPlayers
+							{
+								Position = g.Key,
+								Players = g.ToList()
+							}).
+							OrderBy(g => g.Position, new PositionComparer(positions)).
+							ToList();
+					}
 				}
-				else
+				return _playersGrouped;
+			}
+			private set
+			{
+				if (_playersGrouped != value)
 				{
-					return players.GroupBy(p => p.Position).OrderBy(g => g.Key, new PositionComparer(positions));
+					_playersGrouped = value;
+					RaisePropertyChanged("PlayersGrouped");
+					PlayersGroupedView = null;
+				}
+			}
+		}
+
+		#endregion
+
+		#region PlayersGroupedView
+
+		private ListCollectionView _playersGroupedView;
+		public ListCollectionView PlayersGroupedView
+		{
+			get
+			{
+				if (_playersGroupedView == null)
+				{
+					Utils.DispatcherInvoke(() =>
+					{
+						_playersGroupedView = new ListCollectionView(PlayersGrouped);
+					});
+				}
+				return _playersGroupedView;
+			}
+			private set
+			{
+				if (_playersGroupedView != value)
+				{
+					_playersGroupedView = value;
+					RaisePropertyChanged("PlayersGroupedView");
 				}
 			}
 		}
@@ -127,7 +193,7 @@ namespace mCubed.LineupGenerator.Model
 				{
 					_positions = value;
 					RaisePropertyChanged("Positions");
-					RaisePropertyChanged("PlayersGrouped");
+					PlayersGrouped = null;
 				}
 			}
 		}

@@ -71,6 +71,7 @@ namespace mCubed.LineupGenerator.Model
 				{
 					_isProbablePitcher = value;
 					RaisePropertyChanged("IsProbablePitcher");
+					RaisePropertyChanged("IsPlaying");
 				}
 			}
 		}
@@ -89,6 +90,7 @@ namespace mCubed.LineupGenerator.Model
 				{
 					_isStarter = value;
 					RaisePropertyChanged("IsStarter");
+					RaisePropertyChanged("IsPlaying");
 				}
 			}
 		}
@@ -191,6 +193,15 @@ namespace mCubed.LineupGenerator.Model
 		#endregion
 
 		#region Calculated Properties
+
+		#region IsPlaying
+
+		public bool IsPlaying
+		{
+			get { return IsStarter || IsProbablePitcher; }
+		}
+
+		#endregion
 
 		#region ProjectedPoints
 

@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace mCubed.LineupGenerator.Utilities
 {
@@ -51,6 +53,36 @@ namespace mCubed.LineupGenerator.Utilities
 				return doubleValue;
 			}
 			return 0d;
+		}
+
+		#endregion
+
+		#region Dispatcher Methods
+
+		public static void DispatcherInvoke(Action action)
+		{
+			var dispatcher = Application.Current.Dispatcher;
+			if (dispatcher.CheckAccess())
+			{
+				action();
+			}
+			else
+			{
+				dispatcher.Invoke(action);
+			}
+		}
+
+		public static void DispatcherBeginInvoke(Action action)
+		{
+			var dispatcher = Application.Current.Dispatcher;
+			if (dispatcher.CheckAccess())
+			{
+				action();
+			}
+			else
+			{
+				dispatcher.BeginInvoke(action);
+			}
 		}
 
 		#endregion

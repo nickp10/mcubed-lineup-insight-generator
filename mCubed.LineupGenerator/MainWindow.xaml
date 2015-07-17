@@ -1,6 +1,7 @@
 ﻿<Window x:Class="mCubed.LineupGenerator.MainWindow"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="clr-namespace:mCubed.LineupGenerator"
 		FocusManager.FocusedElement="{Binding ElementName=ContestComboBox}"
 		Title="mCubed: Lineup Generator"
 		Height="800"
@@ -8,10 +9,10 @@
 	<Grid>
 		<Grid Margin="10">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="*" />
+				<RowDefinition Height="3*" />
 				<RowDefinition Height="10" />
 				<RowDefinition Height="Auto" />
-				<RowDefinition Height="*" />
+				<RowDefinition Height="2*" />
 			</Grid.RowDefinitions>
 			<GroupBox Grid.Row="0"
 					  Header="Players">
@@ -55,9 +56,9 @@
 							Value="{Binding RatingTolerance, UpdateSourceTrigger=PropertyChanged}" />
 					<TabControl Grid.Row="4"
 								Grid.ColumnSpan="3"
-								DisplayMemberPath="Key"
+								DisplayMemberPath="Position"
 								IsSynchronizedWithCurrentItem="True"
-								ItemsSource="{Binding SelectedContest.PlayersGrouped}">
+								ItemsSource="{Binding SelectedContest.PlayersGroupedView}">
 						<TabControl.ItemContainerStyle>
 							<Style TargetType="{x:Type TabItem}">
 								<Setter Property="Padding"
@@ -66,141 +67,184 @@
 						</TabControl.ItemContainerStyle>
 						<TabControl.ContentTemplate>
 							<DataTemplate>
-								<ScrollViewer>
-									<ItemsControl Grid.IsSharedSizeScope="True"
-												  Focusable="False"
-												  Margin="5"
-												  ItemsSource="{Binding}">
-										<ItemsControl.ItemTemplate>
-											<DataTemplate>
-												<ToggleButton IsChecked="{Binding IncludeInLineups, Mode=TwoWay}">
-													<ToggleButton.Template>
-														<ControlTemplate TargetType="{x:Type ToggleButton}">
-															<Border Background="{TemplateBinding Background}"
-																	BorderBrush="#CCC"
-																	BorderThickness="1"
-																	Margin="0,1"
-																	Padding="10,8"
-																	Cursor="Hand">
-																<Grid>
-																	<Grid.ColumnDefinitions>
-																		<ColumnDefinition Width="*" />
-																		<ColumnDefinition Width="Auto"
-																						  SharedSizeGroup="StarterColumn" />
-																		<ColumnDefinition Width="50" />
-																		<ColumnDefinition Width="Auto"
-																						  SharedSizeGroup="ProjectedColumn" />
-																		<ColumnDefinition Width="50" />
-																		<ColumnDefinition Width="Auto"
-																						  SharedSizeGroup="TeamColumn" />
-																		<ColumnDefinition Width="50" />
-																		<ColumnDefinition Width="Auto"
-																						  SharedSizeGroup="SalaryColumn" />
-																	</Grid.ColumnDefinitions>
-																	<WrapPanel Grid.Column="0">
-																		<TextBlock Text="{Binding Name}" />
-																		<Border Margin="10,0,0,0"
-																				Padding="5,0">
+								<Grid Grid.IsSharedSizeScope="True"
+									  Margin="5">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="5" />
+										<RowDefinition />
+									</Grid.RowDefinitions>
+									<Grid HorizontalAlignment="Left"
+										  Width="{Binding ElementName=PlayersViewScroll, Path=ViewportWidth}">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="10" />
+											<ColumnDefinition Width="*" />
+											<ColumnDefinition Width="Auto"
+															  SharedSizeGroup="StarterColumn" />
+											<ColumnDefinition Width="50" />
+											<ColumnDefinition Width="Auto"
+															  SharedSizeGroup="ProjectedColumn" />
+											<ColumnDefinition Width="50" />
+											<ColumnDefinition Width="Auto"
+															  SharedSizeGroup="TeamColumn" />
+											<ColumnDefinition Width="50" />
+											<ColumnDefinition Width="Auto"
+															  SharedSizeGroup="SalaryColumn" />
+											<ColumnDefinition Width="10" />
+										</Grid.ColumnDefinitions>
+										<local:SortColumnLink Grid.Column="1"
+															  SortProperty="Name"
+															  ItemsSource="{Binding PlayersView}"
+															  Text="Name" />
+										<local:SortColumnLink Grid.Column="2"
+															  SortProperty="IsPlaying"
+															  ItemsSource="{Binding PlayersView}"
+															  Text="Starter" />
+										<local:SortColumnLink Grid.Column="4"
+															  SortProperty="ProjectedPoints"
+															  InitialSortDirection="Descending"
+															  ItemsSource="{Binding PlayersView}"
+															  Text="Projection" />
+										<local:SortColumnLink Grid.Column="6"
+															  SortProperty="Team"
+															  ItemsSource="{Binding PlayersView}"
+															  Text="Team" />
+										<local:SortColumnLink Grid.Column="8"
+															  SortProperty="Salary"
+															  InitialSortDirection="Descending"
+															  ItemsSource="{Binding PlayersView}"
+															  Text="Salary" />
+									</Grid>
+									<ScrollViewer Grid.Row="2"
+												  x:Name="PlayersViewScroll">
+										<ItemsControl Focusable="False"
+													  ItemsSource="{Binding PlayersView}">
+											<ItemsControl.ItemTemplate>
+												<DataTemplate>
+													<ToggleButton IsChecked="{Binding IncludeInLineups, Mode=TwoWay}">
+														<ToggleButton.Template>
+															<ControlTemplate TargetType="{x:Type ToggleButton}">
+																<Border Background="{TemplateBinding Background}"
+																		BorderBrush="#CCC"
+																		BorderThickness="1"
+																		Margin="0,1"
+																		Padding="10,8"
+																		Cursor="Hand">
+																	<Grid>
+																		<Grid.ColumnDefinitions>
+																			<ColumnDefinition Width="*" />
+																			<ColumnDefinition Width="Auto"
+																							  SharedSizeGroup="StarterColumn" />
+																			<ColumnDefinition Width="50" />
+																			<ColumnDefinition Width="Auto"
+																							  SharedSizeGroup="ProjectedColumn" />
+																			<ColumnDefinition Width="50" />
+																			<ColumnDefinition Width="Auto"
+																							  SharedSizeGroup="TeamColumn" />
+																			<ColumnDefinition Width="50" />
+																			<ColumnDefinition Width="Auto"
+																							  SharedSizeGroup="SalaryColumn" />
+																		</Grid.ColumnDefinitions>
+																		<WrapPanel Grid.Column="0">
+																			<TextBlock Text="{Binding Name}" />
+																			<Border Margin="10,0,0,0"
+																					Padding="5,0">
+																				<Border.Style>
+																					<Style TargetType="{x:Type Border}">
+																						<Setter Property="BorderThickness"
+																								Value="0" />
+																						<Setter Property="BorderBrush"
+																								Value="Transparent" />
+																						<Setter Property="TextElement.Foreground"
+																								Value="Black" />
+																						<Style.Triggers>
+																							<DataTrigger Binding="{Binding Injury.InjuryType}"
+																										 Value="Out">
+																								<Setter Property="BorderThickness"
+																										Value="1" />
+																								<Setter Property="BorderBrush"
+																										Value="#9B1010" />
+																								<Setter Property="TextElement.Foreground"
+																										Value="#9B1010" />
+																							</DataTrigger>
+																							<DataTrigger Binding="{Binding Injury.InjuryType}"
+																										 Value="Possible">
+																								<Setter Property="BorderThickness"
+																										Value="1" />
+																								<Setter Property="BorderBrush"
+																										Value="#EB8500" />
+																								<Setter Property="TextElement.Foreground"
+																										Value="#EB8500" />
+																							</DataTrigger>
+																							<DataTrigger Binding="{Binding Injury.InjuryType}"
+																										 Value="Probable">
+																								<Setter Property="BorderThickness"
+																										Value="1" />
+																								<Setter Property="BorderBrush"
+																										Value="#53A31A" />
+																								<Setter Property="TextElement.Foreground"
+																										Value="#53A31A" />
+																							</DataTrigger>
+																						</Style.Triggers>
+																					</Style>
+																				</Border.Style>
+																				<TextBlock Text="{Binding Injury.Display}" />
+																			</Border>
+																		</WrapPanel>
+																		<Border Grid.Column="1"
+																				Padding="5,0"
+																				BorderThickness="1"
+																				BorderBrush="#87C213"
+																				Background="#87C213"
+																				TextElement.Foreground="#FFF">
 																			<Border.Style>
 																				<Style TargetType="{x:Type Border}">
-																					<Setter Property="BorderThickness"
-																							Value="0" />
-																					<Setter Property="BorderBrush"
-																							Value="Transparent" />
-																					<Setter Property="TextElement.Foreground"
-																							Value="Black" />
+																					<Setter Property="Visibility"
+																							Value="Collapsed" />
 																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding Injury.InjuryType}"
-																									 Value="Out">
-																							<Setter Property="BorderThickness"
-																									Value="1" />
-																							<Setter Property="BorderBrush"
-																									Value="#9B1010" />
-																							<Setter Property="TextElement.Foreground"
-																									Value="#9B1010" />
-																						</DataTrigger>
-																						<DataTrigger Binding="{Binding Injury.InjuryType}"
-																									 Value="Possible">
-																							<Setter Property="BorderThickness"
-																									Value="1" />
-																							<Setter Property="BorderBrush"
-																									Value="#EB8500" />
-																							<Setter Property="TextElement.Foreground"
-																									Value="#EB8500" />
-																						</DataTrigger>
-																						<DataTrigger Binding="{Binding Injury.InjuryType}"
-																									 Value="Probable">
-																							<Setter Property="BorderThickness"
-																									Value="1" />
-																							<Setter Property="BorderBrush"
-																									Value="#53A31A" />
-																							<Setter Property="TextElement.Foreground"
-																									Value="#53A31A" />
+																						<DataTrigger Binding="{Binding IsPlaying}"
+																									 Value="True">
+																							<Setter Property="Visibility"
+																									Value="Visible" />
 																						</DataTrigger>
 																					</Style.Triggers>
 																				</Style>
 																			</Border.Style>
-																			<TextBlock Text="{Binding Injury.Display}" />
+																			<TextBlock Text="Starter" />
 																		</Border>
-																	</WrapPanel>
-																	<Border Grid.Column="1"
-																			Padding="5,0"
-																			BorderThickness="1"
-																			BorderBrush="#87C213"
-																			Background="#87C213"
-																			TextElement.Foreground="#FFF">
-																		<Border.Style>
-																			<Style TargetType="{x:Type Border}">
-																				<Setter Property="Visibility"
-																						Value="Collapsed" />
-																				<Style.Triggers>
-																					<DataTrigger Binding="{Binding IsStarter}"
-																								 Value="True">
-																						<Setter Property="Visibility"
-																								Value="Visible" />
-																					</DataTrigger>
-																					<DataTrigger Binding="{Binding IsProbablePitcher}"
-																								 Value="True">
-																						<Setter Property="Visibility"
-																								Value="Visible" />
-																					</DataTrigger>
-																				</Style.Triggers>
-																			</Style>
-																		</Border.Style>
-																		<TextBlock Text="Starter" />
-																	</Border>
-																	<TextBlock Grid.Column="3"
-																			   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
-																	<TextBlock Grid.Column="5"
-																			   Text="{Binding Team}" />
-																	<TextBlock Grid.Column="7"
-																			   Text="{Binding Salary, StringFormat={}{0:C}}" />
-																</Grid>
-															</Border>
-															<ControlTemplate.Triggers>
-																<Trigger Property="IsMouseOver"
-																		 Value="False">
-																	<Setter Property="Background"
-																			Value="White" />
-																</Trigger>
-																<Trigger Property="IsChecked"
-																		 Value="True">
-																	<Setter Property="Background"
-																			Value="#C0C6EB" />
-																</Trigger>
-																<Trigger Property="IsMouseOver"
-																		 Value="True">
-																	<Setter Property="Background"
-																			Value="#DADDED" />
-																</Trigger>
-															</ControlTemplate.Triggers>
-														</ControlTemplate>
-													</ToggleButton.Template>
-												</ToggleButton>
-											</DataTemplate>
-										</ItemsControl.ItemTemplate>
-									</ItemsControl>
-								</ScrollViewer>
+																		<TextBlock Grid.Column="3"
+																				   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
+																		<TextBlock Grid.Column="5"
+																				   Text="{Binding Team}" />
+																		<TextBlock Grid.Column="7"
+																				   Text="{Binding Salary, StringFormat={}{0:C}}" />
+																	</Grid>
+																</Border>
+																<ControlTemplate.Triggers>
+																	<Trigger Property="IsMouseOver"
+																			 Value="False">
+																		<Setter Property="Background"
+																				Value="White" />
+																	</Trigger>
+																	<Trigger Property="IsChecked"
+																			 Value="True">
+																		<Setter Property="Background"
+																				Value="#C0C6EB" />
+																	</Trigger>
+																	<Trigger Property="IsMouseOver"
+																			 Value="True">
+																		<Setter Property="Background"
+																				Value="#DADDED" />
+																	</Trigger>
+																</ControlTemplate.Triggers>
+															</ControlTemplate>
+														</ToggleButton.Template>
+													</ToggleButton>
+												</DataTemplate>
+											</ItemsControl.ItemTemplate>
+										</ItemsControl>
+									</ScrollViewer>
+								</Grid>
 							</DataTemplate>
 						</TabControl.ContentTemplate>
 					</TabControl>
