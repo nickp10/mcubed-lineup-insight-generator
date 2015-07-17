@@ -80,6 +80,9 @@
 											<ColumnDefinition Width="10" />
 											<ColumnDefinition Width="*" />
 											<ColumnDefinition Width="Auto"
+															  SharedSizeGroup="BattingOrderColumn" />
+											<ColumnDefinition Width="50" />
+											<ColumnDefinition Width="Auto"
 															  SharedSizeGroup="StarterColumn" />
 											<ColumnDefinition Width="50" />
 											<ColumnDefinition Width="Auto"
@@ -97,19 +100,37 @@
 															  ItemsSource="{Binding PlayersView}"
 															  Text="Name" />
 										<local:SortColumnLink Grid.Column="2"
+															  SortProperty="BattingOrder"
+															  ItemsSource="{Binding PlayersView}"
+															  Text="Batting">
+											<local:SortColumnLink.Style>
+												<Style TargetType="{x:Type local:SortColumnLink}">
+													<Setter Property="Visibility"
+															Value="Collapsed" />
+													<Style.Triggers>
+														<DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectedContest.Sport}"
+																	 Value="MLB">
+															<Setter Property="Visibility"
+																	Value="Visible" />
+														</DataTrigger>
+													</Style.Triggers>
+												</Style>
+											</local:SortColumnLink.Style>
+										</local:SortColumnLink>
+										<local:SortColumnLink Grid.Column="4"
 															  SortProperty="IsPlaying"
 															  ItemsSource="{Binding PlayersView}"
 															  Text="Starter" />
-										<local:SortColumnLink Grid.Column="4"
+										<local:SortColumnLink Grid.Column="6"
 															  SortProperty="ProjectedPoints"
 															  InitialSortDirection="Descending"
 															  ItemsSource="{Binding PlayersView}"
 															  Text="Projection" />
-										<local:SortColumnLink Grid.Column="6"
+										<local:SortColumnLink Grid.Column="8"
 															  SortProperty="Team"
 															  ItemsSource="{Binding PlayersView}"
 															  Text="Team" />
-										<local:SortColumnLink Grid.Column="8"
+										<local:SortColumnLink Grid.Column="10"
 															  SortProperty="Salary"
 															  InitialSortDirection="Descending"
 															  ItemsSource="{Binding PlayersView}"
@@ -133,6 +154,9 @@
 																	<Grid>
 																		<Grid.ColumnDefinitions>
 																			<ColumnDefinition Width="*" />
+																			<ColumnDefinition Width="Auto"
+																							  SharedSizeGroup="BattingOrderColumn" />
+																			<ColumnDefinition Width="50" />
 																			<ColumnDefinition Width="Auto"
 																							  SharedSizeGroup="StarterColumn" />
 																			<ColumnDefinition Width="50" />
@@ -196,6 +220,28 @@
 																				BorderThickness="1"
 																				BorderBrush="#87C213"
 																				Background="#87C213"
+																				HorizontalAlignment="Left"
+																				TextElement.Foreground="#FFF">
+																			<Border.Style>
+																				<Style TargetType="{x:Type Border}">
+																					<Setter Property="Visibility"
+																							Value="Visible" />
+																					<Style.Triggers>
+																						<DataTrigger Binding="{Binding BattingOrder}"
+																									 Value="{x:Null}">
+																							<Setter Property="Visibility"
+																									Value="Collapsed" />
+																						</DataTrigger>
+																					</Style.Triggers>
+																				</Style>
+																			</Border.Style>
+																			<TextBlock Text="{Binding BattingOrder}" />
+																		</Border>
+																		<Border Grid.Column="3"
+																				Padding="5,0"
+																				BorderThickness="1"
+																				BorderBrush="#87C213"
+																				Background="#87C213"
 																				TextElement.Foreground="#FFF">
 																			<Border.Style>
 																				<Style TargetType="{x:Type Border}">
@@ -212,11 +258,11 @@
 																			</Border.Style>
 																			<TextBlock Text="Starter" />
 																		</Border>
-																		<TextBlock Grid.Column="3"
-																				   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
 																		<TextBlock Grid.Column="5"
-																				   Text="{Binding Team}" />
+																				   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
 																		<TextBlock Grid.Column="7"
+																				   Text="{Binding Team}" />
+																		<TextBlock Grid.Column="9"
 																				   Text="{Binding Salary, StringFormat={}{0:C}}" />
 																	</Grid>
 																</Border>

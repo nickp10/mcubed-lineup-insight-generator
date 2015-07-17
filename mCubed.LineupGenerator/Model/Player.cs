@@ -23,6 +23,24 @@ namespace mCubed.LineupGenerator.Model
 
 		#region Properties
 
+		#region BattingOrder
+
+		private string _battingOrder;
+		public string BattingOrder
+		{
+			get { return _battingOrder; }
+			set
+			{
+				if (_battingOrder != value)
+				{
+					_battingOrder = value;
+					RaisePropertyChanged("BattingOrder");
+				}
+			}
+		}
+
+		#endregion
+
 		#region IncludeInLineups
 
 		private bool _includeInLineups;

@@ -155,6 +155,37 @@ namespace mCubed.LineupGenerator.ContestRetrievers
 			return null;
 		}
 
+		private string ParseBattingOrder(JToken startingOrder)
+		{
+			int order = 0;
+			var orderString = (string)startingOrder;
+			if (orderString == null || !int.TryParse(orderString, out order))
+			{
+				var orderInt = (int?)startingOrder;
+				if (orderInt != null)
+				{
+					order = orderInt.Value;
+				}
+			}
+			if (order == 1)
+			{
+				return "1st";
+			}
+			else if (order == 2)
+			{
+				return "2nd";
+			}
+			else if (order == 3)
+			{
+				return "3rd";
+			}
+			else if (order >= 4 && order <= 9)
+			{
+				return order + "th";
+			}
+			return null;
+		}
+
 		private IEnumerable<Player> ParsePlayers(JObject jsonData)
 		{
 			var players = jsonData["players"] as JArray;
@@ -179,6 +210,7 @@ namespace mCubed.LineupGenerator.ContestRetrievers
 							}
 						},
 						Team = _teams[team],
+						BattingOrder = ParseBattingOrder(player["starting_order"]),
 						Injury = ParseInjury((bool)player["injured"], (string)player["injury_status"]),
 						IsProbablePitcher = (bool)player["probable_pitcher"]
 					};
