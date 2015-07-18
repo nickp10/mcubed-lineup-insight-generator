@@ -8,7 +8,7 @@ using mCubed.LineupGenerator.Utilities;
 
 namespace mCubed.LineupGenerator.Model
 {
-	public abstract class Contest : INotifyPropertyChanged
+	public abstract class Contest : INotifyPropertyChanged, ISortable
 	{
 		#region Properties
 
@@ -254,6 +254,38 @@ namespace mCubed.LineupGenerator.Model
 			if (handler != null)
 			{
 				handler(this, new PropertyChangedEventArgs(property));
+			}
+		}
+
+		#endregion
+
+		#region ISortable Members
+
+		public void Sort(string property, ListSortDirection initialSortDirection = ListSortDirection.Ascending)
+		{
+			foreach (var p in PlayersGrouped)
+			{
+				p.Sort(property, initialSortDirection);
+			}
+			RaisePropertyChanged("SortDirection");
+			RaisePropertyChanged("SortProperty");
+		}
+
+		public ListSortDirection? SortDirection
+		{
+			get
+			{
+				var p = PlayersGrouped.FirstOrDefault();
+				return p == null ? null : p.SortDirection;
+			}
+		}
+
+		public string SortProperty
+		{
+			get
+			{
+				var p = PlayersGrouped.FirstOrDefault();
+				return p == null ? null : p.SortProperty;
 			}
 		}
 

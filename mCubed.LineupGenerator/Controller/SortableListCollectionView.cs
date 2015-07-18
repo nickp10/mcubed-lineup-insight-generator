@@ -2,10 +2,11 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using mCubed.LineupGenerator.Model;
 
 namespace mCubed.LineupGenerator.Controller
 {
-	public class SortableListCollectionView : ListCollectionView
+	public class SortableListCollectionView : ListCollectionView, ISortable
 	{
 		#region Constructors
 
@@ -58,7 +59,7 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Methods
 
-		public void Sort(string property, ListSortDirection initialSortDirection = ListSortDirection.Ascending)
+		public void Sort(string property, ListSortDirection initialSortDirection)
 		{
 			ListSortDirection? sortDirection = null;
 			var existingSort = SortDescriptions.FirstOrDefault(s => s.PropertyName == property);

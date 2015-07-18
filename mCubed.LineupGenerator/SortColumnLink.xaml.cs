@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using mCubed.LineupGenerator.Controller;
+using mCubed.LineupGenerator.Model;
 
 namespace mCubed.LineupGenerator
 {
@@ -22,19 +22,6 @@ namespace mCubed.LineupGenerator
 
 		#endregion
 
-		#region ItemsSource
-
-		public static readonly DependencyProperty ItemsSourceProperty =
-			DependencyProperty.Register("ItemsSource", typeof(SortableListCollectionView), typeof(SortColumnLink), new PropertyMetadata(null));
-
-		public SortableListCollectionView ItemsSource
-		{
-			get { return (SortableListCollectionView)GetValue(ItemsSourceProperty); }
-			set { SetValue(ItemsSourceProperty, value); }
-		}
-
-		#endregion
-
 		#region SortProperty
 
 		public static readonly DependencyProperty SortPropertyProperty =
@@ -44,6 +31,19 @@ namespace mCubed.LineupGenerator
 		{
 			get { return (string)GetValue(SortPropertyProperty); }
 			set { SetValue(SortPropertyProperty, value); }
+		}
+
+		#endregion
+
+		#region SortSource
+
+		public static readonly DependencyProperty SortSourceProperty =
+			DependencyProperty.Register("SortSource", typeof(ISortable), typeof(SortColumnLink), new PropertyMetadata(null));
+
+		public ISortable SortSource
+		{
+			get { return (ISortable)GetValue(SortSourceProperty); }
+			set { SetValue(SortSourceProperty, value); }
 		}
 
 		#endregion
@@ -76,7 +76,7 @@ namespace mCubed.LineupGenerator
 
 		private void OnClick(object sender, RoutedEventArgs e)
 		{
-			var source = ItemsSource;
+			var source = SortSource;
 			if (source != null)
 			{
 				source.Sort(SortProperty, InitialSortDirection);

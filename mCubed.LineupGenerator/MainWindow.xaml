@@ -31,7 +31,7 @@
 					</Grid.ColumnDefinitions>
 					<Label Grid.Row="0"
 						   Grid.Column="0"
-						   Content="Game ID:"
+						   Content="Contest:"
 						   VerticalAlignment="Center" />
 					<ComboBox Grid.Row="0"
 							  Grid.Column="2"
@@ -75,6 +75,7 @@
 										<RowDefinition />
 									</Grid.RowDefinitions>
 									<Grid HorizontalAlignment="Left"
+										  DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectedContest}"
 										  Width="{Binding ElementName=PlayersViewScroll, Path=ViewportWidth}">
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition Width="10" />
@@ -97,18 +98,18 @@
 										</Grid.ColumnDefinitions>
 										<local:SortColumnLink Grid.Column="1"
 															  SortProperty="Name"
-															  ItemsSource="{Binding PlayersView}"
+															  SortSource="{Binding}"
 															  Text="Name" />
 										<local:SortColumnLink Grid.Column="2"
 															  SortProperty="BattingOrder"
-															  ItemsSource="{Binding PlayersView}"
+															  SortSource="{Binding}"
 															  Text="Batting">
 											<local:SortColumnLink.Style>
 												<Style TargetType="{x:Type local:SortColumnLink}">
 													<Setter Property="Visibility"
 															Value="Collapsed" />
 													<Style.Triggers>
-														<DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectedContest.Sport}"
+														<DataTrigger Binding="{Binding Path=Sport}"
 																	 Value="MLB">
 															<Setter Property="Visibility"
 																	Value="Visible" />
@@ -119,21 +120,22 @@
 										</local:SortColumnLink>
 										<local:SortColumnLink Grid.Column="4"
 															  SortProperty="IsPlaying"
-															  ItemsSource="{Binding PlayersView}"
+															  InitialSortDirection="Descending"
+															  SortSource="{Binding}"
 															  Text="Starter" />
 										<local:SortColumnLink Grid.Column="6"
 															  SortProperty="ProjectedPoints"
 															  InitialSortDirection="Descending"
-															  ItemsSource="{Binding PlayersView}"
+															  SortSource="{Binding}"
 															  Text="Projection" />
 										<local:SortColumnLink Grid.Column="8"
 															  SortProperty="Team"
-															  ItemsSource="{Binding PlayersView}"
+															  SortSource="{Binding}"
 															  Text="Team" />
 										<local:SortColumnLink Grid.Column="10"
 															  SortProperty="Salary"
 															  InitialSortDirection="Descending"
-															  ItemsSource="{Binding PlayersView}"
+															  SortSource="{Binding}"
 															  Text="Salary" />
 									</Grid>
 									<ScrollViewer Grid.Row="2"

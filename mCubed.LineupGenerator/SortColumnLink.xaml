@@ -18,8 +18,8 @@
 					<MultiBinding Converter="{StaticResource PathVisibilityConverter}"
 								  ConverterParameter="Ascending">
 						<Binding Path="SortProperty" />
-						<Binding Path="ItemsSource.SortProperty" />
-						<Binding Path="ItemsSource.SortDirection" />
+						<Binding Path="SortSource.SortProperty" />
+						<Binding Path="SortSource.SortDirection" />
 					</MultiBinding>
 				</TextBlock.Visibility>
 				<Run> </Run>
@@ -30,8 +30,8 @@
 					<MultiBinding Converter="{StaticResource PathVisibilityConverter}"
 								  ConverterParameter="Descending">
 						<Binding Path="SortProperty" />
-						<Binding Path="ItemsSource.SortProperty" />
-						<Binding Path="ItemsSource.SortDirection" />
+						<Binding Path="SortSource.SortProperty" />
+						<Binding Path="SortSource.SortDirection" />
 					</MultiBinding>
 				</TextBlock.Visibility>
 				<Run> </Run>

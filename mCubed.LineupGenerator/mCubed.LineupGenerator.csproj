@@ -123,6 +123,7 @@
     <Compile Include="Model\FanDuelContest.cs" />
     <Compile Include="Model\InjuryData.cs" />
     <Compile Include="Model\InjuryType.cs" />
+    <Compile Include="Model\ISortable.cs" />
     <Compile Include="Model\Lineup.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\PlayerNameComparer.cs" />

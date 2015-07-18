@@ -5,7 +5,7 @@ using mCubed.LineupGenerator.Utilities;
 
 namespace mCubed.LineupGenerator.Model
 {
-	public class PositionPlayers : INotifyPropertyChanged
+	public class PositionPlayers : INotifyPropertyChanged, ISortable
 	{
 		#region Properties
 
@@ -88,6 +88,25 @@ namespace mCubed.LineupGenerator.Model
 			{
 				handler(this, new PropertyChangedEventArgs(property));
 			}
+		}
+
+		#endregion
+
+		#region ISortable Members
+
+		public void Sort(string property, ListSortDirection initialSortDirection)
+		{
+			PlayersView.Sort(property, initialSortDirection);
+		}
+
+		public ListSortDirection? SortDirection
+		{
+			get { return PlayersView.SortDirection; }
+		}
+
+		public string SortProperty
+		{
+			get { return PlayersView.SortProperty; }
 		}
 
 		#endregion
