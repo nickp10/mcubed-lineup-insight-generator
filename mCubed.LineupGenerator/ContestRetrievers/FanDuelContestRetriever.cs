@@ -183,7 +183,7 @@ namespace mCubed.LineupGenerator.ContestRetrievers
 			{
 				return order + "th";
 			}
-			return null;
+			return "NA";
 		}
 
 		private IEnumerable<Player> ParsePlayers(JObject jsonData)

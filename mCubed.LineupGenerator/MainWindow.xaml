@@ -230,7 +230,7 @@
 																							Value="Visible" />
 																					<Style.Triggers>
 																						<DataTrigger Binding="{Binding BattingOrder}"
-																									 Value="{x:Null}">
+																									 Value="NA">
 																							<Setter Property="Visibility"
 																									Value="Collapsed" />
 																						</DataTrigger>
