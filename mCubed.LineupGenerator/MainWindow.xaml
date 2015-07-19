@@ -74,36 +74,35 @@
 										<RowDefinition Height="5" />
 										<RowDefinition />
 									</Grid.RowDefinitions>
-									<Grid HorizontalAlignment="Left"
-										  DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectedContest}"
-										  Width="{Binding ElementName=PlayersViewScroll, Path=ViewportWidth}">
+									<Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectedContest}">
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition Width="10" />
 											<ColumnDefinition Width="*" />
 											<ColumnDefinition Width="Auto"
 															  SharedSizeGroup="BattingOrderColumn" />
-											<ColumnDefinition Width="50" />
+											<ColumnDefinition Width="25" />
 											<ColumnDefinition Width="Auto"
 															  SharedSizeGroup="StarterColumn" />
-											<ColumnDefinition Width="50" />
+											<ColumnDefinition Width="25" />
 											<ColumnDefinition Width="Auto"
 															  SharedSizeGroup="ProjectedColumn" />
-											<ColumnDefinition Width="50" />
+											<ColumnDefinition Width="25" />
 											<ColumnDefinition Width="Auto"
 															  SharedSizeGroup="TeamColumn" />
-											<ColumnDefinition Width="50" />
+											<ColumnDefinition Width="25" />
 											<ColumnDefinition Width="Auto"
 															  SharedSizeGroup="SalaryColumn" />
 											<ColumnDefinition Width="10" />
+											<ColumnDefinition Width="Auto" />
 										</Grid.ColumnDefinitions>
 										<view:SortColumnLink Grid.Column="1"
-															  SortProperty="Name"
-															  SortSource="{Binding}"
-															  Text="Name" />
+															 SortProperty="Name"
+															 SortSource="{Binding}"
+															 Text="Name" />
 										<view:SortColumnLink Grid.Column="2"
-															  SortProperty="BattingOrder"
-															  SortSource="{Binding}"
-															  Text="Batting">
+															 SortProperty="BattingOrder"
+															 SortSource="{Binding}"
+															 Text="Batting">
 											<view:SortColumnLink.Style>
 												<Style TargetType="{x:Type view:SortColumnLink}">
 													<Setter Property="Visibility"
@@ -119,179 +118,193 @@
 											</view:SortColumnLink.Style>
 										</view:SortColumnLink>
 										<view:SortColumnLink Grid.Column="4"
-															  SortProperty="IsPlaying"
-															  InitialSortDirection="Descending"
-															  SortSource="{Binding}"
-															  Text="Starter" />
+															 SortProperty="IsPlaying"
+															 InitialSortDirection="Descending"
+															 SortSource="{Binding}"
+															 Text="Starter" />
 										<view:SortColumnLink Grid.Column="6"
-															  SortProperty="ProjectedPoints"
-															  InitialSortDirection="Descending"
-															  SortSource="{Binding}"
-															  Text="Projection" />
+															 SortProperty="ProjectedPoints"
+															 InitialSortDirection="Descending"
+															 SortSource="{Binding}"
+															 Text="Projection" />
 										<view:SortColumnLink Grid.Column="8"
-															  SortProperty="Team"
-															  SortSource="{Binding}"
-															  Text="Team" />
+															 SortProperty="Team"
+															 SortSource="{Binding}"
+															 Text="Team" />
 										<view:SortColumnLink Grid.Column="10"
-															  SortProperty="Salary"
-															  InitialSortDirection="Descending"
-															  SortSource="{Binding}"
-															  Text="Salary" />
+															 SortProperty="Salary"
+															 InitialSortDirection="Descending"
+															 SortSource="{Binding}"
+															 Text="Salary" />
+										<Grid Grid.Column="12"
+											  Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
 									</Grid>
-									<ScrollViewer Grid.Row="2"
-												  x:Name="PlayersViewScroll">
-										<ItemsControl Focusable="False"
-													  ItemsSource="{Binding PlayersView}">
-											<ItemsControl.ItemTemplate>
-												<DataTemplate>
-													<ToggleButton IsChecked="{Binding IncludeInLineups, Mode=TwoWay}">
-														<ToggleButton.Template>
-															<ControlTemplate TargetType="{x:Type ToggleButton}">
-																<Border Background="{TemplateBinding Background}"
-																		BorderBrush="#CCC"
-																		BorderThickness="1"
-																		Margin="0,1"
-																		Padding="10,8"
-																		Cursor="Hand">
-																	<Grid>
-																		<Grid.ColumnDefinitions>
-																			<ColumnDefinition Width="*" />
-																			<ColumnDefinition Width="Auto"
-																							  SharedSizeGroup="BattingOrderColumn" />
-																			<ColumnDefinition Width="50" />
-																			<ColumnDefinition Width="Auto"
-																							  SharedSizeGroup="StarterColumn" />
-																			<ColumnDefinition Width="50" />
-																			<ColumnDefinition Width="Auto"
-																							  SharedSizeGroup="ProjectedColumn" />
-																			<ColumnDefinition Width="50" />
-																			<ColumnDefinition Width="Auto"
-																							  SharedSizeGroup="TeamColumn" />
-																			<ColumnDefinition Width="50" />
-																			<ColumnDefinition Width="Auto"
-																							  SharedSizeGroup="SalaryColumn" />
-																		</Grid.ColumnDefinitions>
-																		<WrapPanel Grid.Column="0">
-																			<TextBlock Text="{Binding Name}" />
-																			<Border Margin="10,0,0,0"
-																					Padding="5,0">
-																				<Border.Style>
-																					<Style TargetType="{x:Type Border}">
-																						<Setter Property="BorderThickness"
-																								Value="0" />
-																						<Setter Property="BorderBrush"
-																								Value="Transparent" />
-																						<Setter Property="TextElement.Foreground"
-																								Value="Black" />
-																						<Style.Triggers>
-																							<DataTrigger Binding="{Binding Injury.InjuryType}"
-																										 Value="Out">
-																								<Setter Property="BorderThickness"
-																										Value="1" />
-																								<Setter Property="BorderBrush"
-																										Value="#9B1010" />
-																								<Setter Property="TextElement.Foreground"
-																										Value="#9B1010" />
-																							</DataTrigger>
-																							<DataTrigger Binding="{Binding Injury.InjuryType}"
-																										 Value="Possible">
-																								<Setter Property="BorderThickness"
-																										Value="1" />
-																								<Setter Property="BorderBrush"
-																										Value="#EB8500" />
-																								<Setter Property="TextElement.Foreground"
-																										Value="#EB8500" />
-																							</DataTrigger>
-																							<DataTrigger Binding="{Binding Injury.InjuryType}"
-																										 Value="Probable">
-																								<Setter Property="BorderThickness"
-																										Value="1" />
-																								<Setter Property="BorderBrush"
-																										Value="#53A31A" />
-																								<Setter Property="TextElement.Foreground"
-																										Value="#53A31A" />
-																							</DataTrigger>
-																						</Style.Triggers>
-																					</Style>
-																				</Border.Style>
-																				<TextBlock Text="{Binding Injury.Display}" />
-																			</Border>
-																		</WrapPanel>
-																		<Border Grid.Column="1"
-																				Padding="5,0"
-																				BorderThickness="1"
-																				BorderBrush="#87C213"
-																				Background="#87C213"
-																				HorizontalAlignment="Left"
-																				TextElement.Foreground="#FFF">
+									<ItemsControl Grid.Row="2"
+												  Focusable="False"
+												  ItemsSource="{Binding PlayersView}"
+												  ScrollViewer.CanContentScroll="True"
+												  VirtualizingStackPanel.IsVirtualizing="True">
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<ToggleButton IsChecked="{Binding IncludeInLineups, Mode=TwoWay}">
+													<ToggleButton.Template>
+														<ControlTemplate TargetType="{x:Type ToggleButton}">
+															<Border Background="{TemplateBinding Background}"
+																	BorderBrush="#CCC"
+																	BorderThickness="1"
+																	Margin="0,1"
+																	Padding="10,7"
+																	Cursor="Hand">
+																<Grid>
+																	<Grid.ColumnDefinitions>
+																		<ColumnDefinition Width="*" />
+																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="BattingOrderColumn" />
+																		<ColumnDefinition Width="25" />
+																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="StarterColumn" />
+																		<ColumnDefinition Width="25" />
+																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="ProjectedColumn" />
+																		<ColumnDefinition Width="25" />
+																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="TeamColumn" />
+																		<ColumnDefinition Width="25" />
+																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="SalaryColumn" />
+																	</Grid.ColumnDefinitions>
+																	<WrapPanel Grid.Column="0">
+																		<TextBlock Text="{Binding Name}" />
+																		<Border Margin="10,0,0,0"
+																				Padding="5,0">
 																			<Border.Style>
 																				<Style TargetType="{x:Type Border}">
-																					<Setter Property="Visibility"
-																							Value="Visible" />
+																					<Setter Property="BorderThickness"
+																							Value="0" />
+																					<Setter Property="BorderBrush"
+																							Value="Transparent" />
+																					<Setter Property="TextElement.Foreground"
+																							Value="Black" />
 																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding BattingOrder}"
-																									 Value="NA">
-																							<Setter Property="Visibility"
-																									Value="Collapsed" />
+																						<DataTrigger Binding="{Binding Injury.InjuryType}"
+																									 Value="Out">
+																							<Setter Property="BorderThickness"
+																									Value="1" />
+																							<Setter Property="BorderBrush"
+																									Value="#9B1010" />
+																							<Setter Property="TextElement.Foreground"
+																									Value="#9B1010" />
+																						</DataTrigger>
+																						<DataTrigger Binding="{Binding Injury.InjuryType}"
+																									 Value="Possible">
+																							<Setter Property="BorderThickness"
+																									Value="1" />
+																							<Setter Property="BorderBrush"
+																									Value="#EB8500" />
+																							<Setter Property="TextElement.Foreground"
+																									Value="#EB8500" />
+																						</DataTrigger>
+																						<DataTrigger Binding="{Binding Injury.InjuryType}"
+																									 Value="Probable">
+																							<Setter Property="BorderThickness"
+																									Value="1" />
+																							<Setter Property="BorderBrush"
+																									Value="#53A31A" />
+																							<Setter Property="TextElement.Foreground"
+																									Value="#53A31A" />
 																						</DataTrigger>
 																					</Style.Triggers>
 																				</Style>
 																			</Border.Style>
-																			<TextBlock Text="{Binding BattingOrder}" />
+																			<TextBlock Text="{Binding Injury.Display}" />
 																		</Border>
-																		<Border Grid.Column="3"
-																				Padding="5,0"
-																				BorderThickness="1"
-																				BorderBrush="#87C213"
-																				Background="#87C213"
-																				TextElement.Foreground="#FFF">
-																			<Border.Style>
-																				<Style TargetType="{x:Type Border}">
-																					<Setter Property="Visibility"
-																							Value="Collapsed" />
-																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding IsPlaying}"
-																									 Value="True">
-																							<Setter Property="Visibility"
-																									Value="Visible" />
-																						</DataTrigger>
-																					</Style.Triggers>
-																				</Style>
-																			</Border.Style>
-																			<TextBlock Text="Starter" />
-																		</Border>
-																		<TextBlock Grid.Column="5"
-																				   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
-																		<TextBlock Grid.Column="7"
-																				   Text="{Binding Team}" />
-																		<TextBlock Grid.Column="9"
-																				   Text="{Binding Salary, StringFormat={}{0:C}}" />
-																	</Grid>
-																</Border>
-																<ControlTemplate.Triggers>
-																	<Trigger Property="IsMouseOver"
-																			 Value="False">
-																		<Setter Property="Background"
-																				Value="White" />
-																	</Trigger>
-																	<Trigger Property="IsChecked"
-																			 Value="True">
-																		<Setter Property="Background"
-																				Value="#C0C6EB" />
-																	</Trigger>
-																	<Trigger Property="IsMouseOver"
-																			 Value="True">
-																		<Setter Property="Background"
-																				Value="#DADDED" />
-																	</Trigger>
-																</ControlTemplate.Triggers>
-															</ControlTemplate>
-														</ToggleButton.Template>
-													</ToggleButton>
-												</DataTemplate>
-											</ItemsControl.ItemTemplate>
-										</ItemsControl>
-									</ScrollViewer>
+																	</WrapPanel>
+																	<Border Grid.Column="1"
+																			Padding="5,0"
+																			BorderThickness="1"
+																			BorderBrush="#87C213"
+																			Background="#87C213"
+																			HorizontalAlignment="Left"
+																			TextElement.Foreground="#FFF">
+																		<Border.Style>
+																			<Style TargetType="{x:Type Border}">
+																				<Setter Property="Visibility"
+																						Value="Visible" />
+																				<Style.Triggers>
+																					<DataTrigger Binding="{Binding BattingOrder}"
+																								 Value="NA">
+																						<Setter Property="Visibility"
+																								Value="Collapsed" />
+																					</DataTrigger>
+																				</Style.Triggers>
+																			</Style>
+																		</Border.Style>
+																		<TextBlock Text="{Binding BattingOrder}" />
+																	</Border>
+																	<Border Grid.Column="3"
+																			Padding="5,0"
+																			BorderThickness="1"
+																			BorderBrush="#87C213"
+																			Background="#87C213"
+																			TextElement.Foreground="#FFF">
+																		<Border.Style>
+																			<Style TargetType="{x:Type Border}">
+																				<Setter Property="Visibility"
+																						Value="Collapsed" />
+																				<Style.Triggers>
+																					<DataTrigger Binding="{Binding IsPlaying}"
+																								 Value="True">
+																						<Setter Property="Visibility"
+																								Value="Visible" />
+																					</DataTrigger>
+																				</Style.Triggers>
+																			</Style>
+																		</Border.Style>
+																		<TextBlock Text="Starter" />
+																	</Border>
+																	<TextBlock Grid.Column="5"
+																			   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
+																	<TextBlock Grid.Column="7"
+																			   Text="{Binding Team}" />
+																	<TextBlock Grid.Column="9"
+																			   Text="{Binding Salary, StringFormat={}{0:C}}" />
+																</Grid>
+															</Border>
+															<ControlTemplate.Triggers>
+																<Trigger Property="IsMouseOver"
+																		 Value="False">
+																	<Setter Property="Background"
+																			Value="White" />
+																</Trigger>
+																<Trigger Property="IsChecked"
+																		 Value="True">
+																	<Setter Property="Background"
+																			Value="#C0C6EB" />
+																</Trigger>
+																<Trigger Property="IsMouseOver"
+																		 Value="True">
+																	<Setter Property="Background"
+																			Value="#DADDED" />
+																</Trigger>
+															</ControlTemplate.Triggers>
+														</ControlTemplate>
+													</ToggleButton.Template>
+												</ToggleButton>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+										<ItemsControl.ItemsPanel>
+											<ItemsPanelTemplate>
+												<VirtualizingStackPanel />
+											</ItemsPanelTemplate>
+										</ItemsControl.ItemsPanel>
+										<ItemsControl.Template>
+											<ControlTemplate>
+												<ScrollViewer VerticalScrollBarVisibility="Visible">
+													<ItemsPresenter />
+												</ScrollViewer>
+											</ControlTemplate>
+										</ItemsControl.Template>
+									</ItemsControl>
 								</Grid>
 							</DataTemplate>
 						</TabControl.ContentTemplate>
@@ -310,7 +323,167 @@
 			</WrapPanel>
 			<GroupBox Grid.Row="3"
 					  Header="Lineups">
-				<ListView ItemsSource="{Binding Lineups}"
+				<Grid Grid.IsSharedSizeScope="True"
+					  Margin="5">
+					<Grid.Style>
+						<Style TargetType="{x:Type Grid}">
+							<Setter Property="Visibility"
+									Value="Visible" />
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding LineupsView.Count}"
+											 Value="0">
+									<Setter Property="Visibility"
+											Value="Collapsed" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</Grid.Style>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="5" />
+						<RowDefinition />
+					</Grid.RowDefinitions>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="10" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="25" />
+							<ColumnDefinition Width="Auto"
+											  SharedSizeGroup="ProjectedPointsColumn" />
+							<ColumnDefinition Width="25" />
+							<ColumnDefinition Width="Auto"
+											  SharedSizeGroup="RecentAveragePointsColumn" />
+							<ColumnDefinition Width="25" />
+							<ColumnDefinition Width="Auto"
+											  SharedSizeGroup="SeasonAveragePointsColumn" />
+							<ColumnDefinition Width="25" />
+							<ColumnDefinition Width="Auto"
+											  SharedSizeGroup="RatingColumn" />
+							<ColumnDefinition Width="25" />
+							<ColumnDefinition Width="Auto"
+											  SharedSizeGroup="SalaryColumn" />
+							<ColumnDefinition Width="10" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						<view:SortColumnLink Grid.Column="1"
+											 SortProperty="PlayersString"
+											 SortSource="{Binding LineupsView}"
+											 Text="Lineup" />
+						<view:SortColumnLink Grid.Column="3"
+											 SortProperty="TotalProjectedPoints"
+											 InitialSortDirection="Descending"
+											 SortSource="{Binding LineupsView}"
+											 Text="Projected" />
+						<view:SortColumnLink Grid.Column="5"
+											 SortProperty="TotalRecentAveragePoints"
+											 InitialSortDirection="Descending"
+											 SortSource="{Binding LineupsView}"
+											 Text="Recent PPG" />
+						<view:SortColumnLink Grid.Column="7"
+											 SortProperty="TotalSeasonAveragePoints"
+											 InitialSortDirection="Descending"
+											 SortSource="{Binding LineupsView}"
+											 Text="Season PPG" />
+						<view:SortColumnLink Grid.Column="9"
+											 SortProperty="Rating"
+											 InitialSortDirection="Descending"
+											 SortSource="{Binding LineupsView}"
+											 Text="Rating" />
+						<view:SortColumnLink Grid.Column="11"
+											 SortProperty="TotalSalary"
+											 InitialSortDirection="Descending"
+											 SortSource="{Binding LineupsView}"
+											 Text="Salary" />
+						<Grid Grid.Column="13"
+							  Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+					</Grid>
+					<ItemsControl Grid.Row="2"
+								  Focusable="False"
+								  ItemsSource="{Binding LineupsView}"
+								  ScrollViewer.CanContentScroll="True"
+								  VirtualizingStackPanel.IsVirtualizing="True">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<ToggleButton IsChecked="{Binding IsSelected, Mode=TwoWay}">
+									<ToggleButton.Template>
+										<ControlTemplate TargetType="{x:Type ToggleButton}">
+											<Border Background="{TemplateBinding Background}"
+													BorderBrush="#CCC"
+													BorderThickness="1"
+													Margin="0,1"
+													Padding="10,5"
+													Cursor="Hand">
+												<Grid>
+													<Grid.ColumnDefinitions>
+														<ColumnDefinition Width="*" />
+														<ColumnDefinition Width="25" />
+														<ColumnDefinition Width="Auto"
+																		  SharedSizeGroup="ProjectedPointsColumn" />
+														<ColumnDefinition Width="25" />
+														<ColumnDefinition Width="Auto"
+																		  SharedSizeGroup="RecentAveragePointsColumn" />
+														<ColumnDefinition Width="25" />
+														<ColumnDefinition Width="Auto"
+																		  SharedSizeGroup="SeasonAveragePointsColumn" />
+														<ColumnDefinition Width="25" />
+														<ColumnDefinition Width="Auto"
+																		  SharedSizeGroup="RatingColumn" />
+														<ColumnDefinition Width="25" />
+														<ColumnDefinition Width="Auto"
+																		  SharedSizeGroup="SalaryColumn" />
+													</Grid.ColumnDefinitions>
+													<TextBlock Grid.Column="0"
+															   Text="{Binding PlayersString}"
+															   TextWrapping="Wrap" />
+													<TextBlock Grid.Column="2"
+															   Text="{Binding TotalProjectedPoints, StringFormat={}{0:0.##}}" />
+													<TextBlock Grid.Column="4"
+															   Text="{Binding TotalRecentAveragePoints, StringFormat={}{0:0.##}}" />
+													<TextBlock Grid.Column="6"
+															   Text="{Binding TotalSeasonAveragePoints, StringFormat={}{0:0.##}}" />
+													<TextBlock Grid.Column="8"
+															   Text="{Binding Rating}" />
+													<TextBlock Grid.Column="10"
+															   Text="{Binding TotalSalary, StringFormat={}{0:C}}" />
+												</Grid>
+											</Border>
+											<ControlTemplate.Triggers>
+												<Trigger Property="IsMouseOver"
+														 Value="False">
+													<Setter Property="Background"
+															Value="White" />
+												</Trigger>
+												<Trigger Property="IsChecked"
+														 Value="True">
+													<Setter Property="Background"
+															Value="#C0C6EB" />
+												</Trigger>
+												<Trigger Property="IsMouseOver"
+														 Value="True">
+													<Setter Property="Background"
+															Value="#DADDED" />
+												</Trigger>
+											</ControlTemplate.Triggers>
+										</ControlTemplate>
+									</ToggleButton.Template>
+								</ToggleButton>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<VirtualizingStackPanel />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.Template>
+							<ControlTemplate>
+								<ScrollViewer VerticalScrollBarVisibility="Visible">
+									<ItemsPresenter />
+								</ScrollViewer>
+							</ControlTemplate>
+						</ItemsControl.Template>
+					</ItemsControl>
+				</Grid>
+				<!--<ListView ItemsSource="{Binding Lineups}"
 						  Margin="10"
 						  x:Name="LineupsListView">
 					<ListView.View>
@@ -364,7 +537,7 @@
 							</GridViewColumn>
 						</GridView>
 					</ListView.View>
-				</ListView>
+				</ListView>-->
 			</GroupBox>
 		</Grid>
 		<Border Background="#AA000000">

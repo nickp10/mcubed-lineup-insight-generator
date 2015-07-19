@@ -49,8 +49,8 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Lineups
 
-		private IEnumerable<Lineup> _lineups = Enumerable.Empty<Lineup>();
-		public IEnumerable<Lineup> Lineups
+		private List<Lineup> _lineups = new List<Lineup>();
+		public List<Lineup> Lineups
 		{
 			get { return _lineups; }
 			private set
@@ -59,6 +59,36 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					_lineups = value;
 					RaisePropertyChanged("Lineups");
+					LineupsView = null;
+				}
+			}
+		}
+
+		#endregion
+
+		#region LineupsView
+
+		private SortableListCollectionView _lineupsView;
+		public SortableListCollectionView LineupsView
+		{
+			get
+			{
+				if (_lineupsView == null)
+				{
+					Utils.DispatcherInvoke(() =>
+					{
+						_lineupsView = new SortableListCollectionView(Lineups);
+						_lineupsView.Sort("TotalProjectedPoints", ListSortDirection.Descending);
+					});
+				}
+				return _lineupsView;
+			}
+			private set
+			{
+				if (_lineupsView != value)
+				{
+					_lineupsView = value;
+					RaisePropertyChanged("LineupsView");
 				}
 			}
 		}
@@ -153,10 +183,10 @@ namespace mCubed.LineupGenerator.Controller
 				CurrentProcess = "Generating lineups...";
 				ThreadPool.QueueUserWorkItem(q =>
 				{
-					var lineups = LineupGenerator.GenerateLineups(contest).ToArray();
-					lineups.AddRating(l => l.TotalProjectedPoints, lineups.Length, RatingTolerance);
-					lineups.AddRating(l => l.TotalRecentAveragePoints, lineups.Length, RatingTolerance);
-					lineups.AddRating(l => l.TotalSeasonAveragePoints, lineups.Length, RatingTolerance);
+					var lineups = LineupGenerator.GenerateLineups(contest).ToList();
+					lineups.AddRating(l => l.TotalProjectedPoints, lineups.Count, RatingTolerance);
+					lineups.AddRating(l => l.TotalRecentAveragePoints, lineups.Count, RatingTolerance);
+					lineups.AddRating(l => l.TotalSeasonAveragePoints, lineups.Count, RatingTolerance);
 					Lineups = lineups;
 					CurrentProcess = null;
 				});

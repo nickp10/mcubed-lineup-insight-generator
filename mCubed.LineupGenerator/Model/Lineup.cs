@@ -18,6 +18,24 @@ namespace mCubed.LineupGenerator.Model
 
 		#region Properties
 
+		#region IsSelected
+
+		private bool _isSelected;
+		public bool IsSelected
+		{
+			get { return _isSelected; }
+			set
+			{
+				if (_isSelected != value)
+				{
+					_isSelected = value;
+					RaisePropertyChanged("IsSelected");
+				}
+			}
+		}
+
+		#endregion
+
 		#region Players
 
 		private ObservableCollection<Player> _players;
