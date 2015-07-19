@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://67.177.29.96/Apps/mCubed.LineupGenerator/</InstallUrl>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>17</ApplicationRevision>
+    <ApplicationRevision>18</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -139,7 +139,7 @@
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="View\PathVisibilityConverter.cs" />
     <Compile Include="View\SortColumnLink.xaml.cs">
-      <DependentUpon>View\SortColumnLink.xaml</DependentUpon>
+      <DependentUpon>SortColumnLink.xaml</DependentUpon>
     </Compile>
     <Page Include="View\SortColumnLink.xaml">
       <SubType>Designer</SubType>
