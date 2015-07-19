@@ -483,61 +483,6 @@
 						</ItemsControl.Template>
 					</ItemsControl>
 				</Grid>
-				<!--<ListView ItemsSource="{Binding Lineups}"
-						  Margin="10"
-						  x:Name="LineupsListView">
-					<ListView.View>
-						<GridView>
-							<GridViewColumn Width="400">
-								<GridViewColumn.Header>
-									<GridViewColumnHeader Tag="PlayersString"
-														  Click="GridViewColumnHeaderClickedHandler">Lineup</GridViewColumnHeader>
-								</GridViewColumn.Header>
-								<GridViewColumn.CellTemplate>
-									<DataTemplate>
-										<TextBlock Text="{Binding PlayersString}"
-												   TextWrapping="Wrap" />
-									</DataTemplate>
-								</GridViewColumn.CellTemplate>
-							</GridViewColumn>
-							<GridViewColumn DisplayMemberBinding="{Binding TotalProjectedPoints, StringFormat={}{0:0.##}}"
-											Width="100">
-								<GridViewColumn.Header>
-									<GridViewColumnHeader Tag="TotalProjectedPoints,Descending"
-														  Click="GridViewColumnHeaderClickedHandler">Projected</GridViewColumnHeader>
-								</GridViewColumn.Header>
-							</GridViewColumn>
-							<GridViewColumn DisplayMemberBinding="{Binding TotalRecentAveragePoints, StringFormat={}{0:0.##}}"
-											Width="100">
-								<GridViewColumn.Header>
-									<GridViewColumnHeader Tag="TotalRecentAveragePoints,Descending"
-														  Click="GridViewColumnHeaderClickedHandler">Recent PPG</GridViewColumnHeader>
-								</GridViewColumn.Header>
-							</GridViewColumn>
-							<GridViewColumn DisplayMemberBinding="{Binding TotalSeasonAveragePoints, StringFormat={}{0:0.##}}"
-											Width="100">
-								<GridViewColumn.Header>
-									<GridViewColumnHeader Tag="TotalSeasonAveragePoints,Descending"
-														  Click="GridViewColumnHeaderClickedHandler">Season PPG</GridViewColumnHeader>
-								</GridViewColumn.Header>
-							</GridViewColumn>
-							<GridViewColumn DisplayMemberBinding="{Binding Rating}"
-											Width="75">
-								<GridViewColumn.Header>
-									<GridViewColumnHeader Tag="Rating,Descending"
-														  Click="GridViewColumnHeaderClickedHandler">Rating</GridViewColumnHeader>
-								</GridViewColumn.Header>
-							</GridViewColumn>
-							<GridViewColumn DisplayMemberBinding="{Binding TotalSalary, StringFormat={}{0:C}}"
-											Width="80">
-								<GridViewColumn.Header>
-									<GridViewColumnHeader Tag="TotalSalary,Descending"
-														  Click="GridViewColumnHeaderClickedHandler">Salary</GridViewColumnHeader>
-								</GridViewColumn.Header>
-							</GridViewColumn>
-						</GridView>
-					</ListView.View>
-				</ListView>-->
 			</GroupBox>
 		</Grid>
 		<Border Background="#AA000000">
