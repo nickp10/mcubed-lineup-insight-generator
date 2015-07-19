@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace mCubed.LineupGenerator
+namespace mCubed.LineupGenerator.View
 {
 	public class PathVisibilityConverter : IMultiValueConverter
 	{

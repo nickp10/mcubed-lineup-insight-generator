@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using mCubed.LineupGenerator.Model;
 
-namespace mCubed.LineupGenerator
+namespace mCubed.LineupGenerator.View
 {
 	public partial class SortColumnLink : UserControl
 	{

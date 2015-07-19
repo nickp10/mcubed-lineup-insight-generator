@@ -1,7 +1,7 @@
 ﻿<Window x:Class="mCubed.LineupGenerator.MainWindow"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:local="clr-namespace:mCubed.LineupGenerator"
+		xmlns:view="clr-namespace:mCubed.LineupGenerator.View"
 		FocusManager.FocusedElement="{Binding ElementName=ContestComboBox}"
 		Title="mCubed: Lineup Generator"
 		Height="800"
@@ -96,16 +96,16 @@
 															  SharedSizeGroup="SalaryColumn" />
 											<ColumnDefinition Width="10" />
 										</Grid.ColumnDefinitions>
-										<local:SortColumnLink Grid.Column="1"
+										<view:SortColumnLink Grid.Column="1"
 															  SortProperty="Name"
 															  SortSource="{Binding}"
 															  Text="Name" />
-										<local:SortColumnLink Grid.Column="2"
+										<view:SortColumnLink Grid.Column="2"
 															  SortProperty="BattingOrder"
 															  SortSource="{Binding}"
 															  Text="Batting">
-											<local:SortColumnLink.Style>
-												<Style TargetType="{x:Type local:SortColumnLink}">
+											<view:SortColumnLink.Style>
+												<Style TargetType="{x:Type view:SortColumnLink}">
 													<Setter Property="Visibility"
 															Value="Collapsed" />
 													<Style.Triggers>
@@ -116,23 +116,23 @@
 														</DataTrigger>
 													</Style.Triggers>
 												</Style>
-											</local:SortColumnLink.Style>
-										</local:SortColumnLink>
-										<local:SortColumnLink Grid.Column="4"
+											</view:SortColumnLink.Style>
+										</view:SortColumnLink>
+										<view:SortColumnLink Grid.Column="4"
 															  SortProperty="IsPlaying"
 															  InitialSortDirection="Descending"
 															  SortSource="{Binding}"
 															  Text="Starter" />
-										<local:SortColumnLink Grid.Column="6"
+										<view:SortColumnLink Grid.Column="6"
 															  SortProperty="ProjectedPoints"
 															  InitialSortDirection="Descending"
 															  SortSource="{Binding}"
 															  Text="Projection" />
-										<local:SortColumnLink Grid.Column="8"
+										<view:SortColumnLink Grid.Column="8"
 															  SortProperty="Team"
 															  SortSource="{Binding}"
 															  Text="Team" />
-										<local:SortColumnLink Grid.Column="10"
+										<view:SortColumnLink Grid.Column="10"
 															  SortProperty="Salary"
 															  InitialSortDirection="Descending"
 															  SortSource="{Binding}"

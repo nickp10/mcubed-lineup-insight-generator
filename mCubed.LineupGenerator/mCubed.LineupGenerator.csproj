@@ -130,10 +130,6 @@
     <Compile Include="Model\PlayerStats.cs" />
     <Compile Include="Model\PositionPlayers.cs" />
     <Compile Include="Model\StatsInfo.cs" />
-    <Compile Include="PathVisibilityConverter.cs" />
-    <Compile Include="SortColumnLink.xaml.cs">
-      <DependentUpon>SortColumnLink.xaml</DependentUpon>
-    </Compile>
     <Compile Include="StartingPlayerRetrievers\IStartingPlayerRetriever.cs" />
     <Compile Include="StartingPlayerRetrievers\RotoWireStartingPlayerRetriever.cs" />
     <Compile Include="StatRetrievers\IStatRetriever.cs" />
@@ -141,7 +137,11 @@
     <Compile Include="StatRetrievers\RotoWireStatRetriever.cs" />
     <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\Utils.cs" />
-    <Page Include="SortColumnLink.xaml">
+    <Compile Include="View\PathVisibilityConverter.cs" />
+    <Compile Include="View\SortColumnLink.xaml.cs">
+      <DependentUpon>View\SortColumnLink.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\SortColumnLink.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
