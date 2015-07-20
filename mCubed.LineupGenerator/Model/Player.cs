@@ -25,7 +25,7 @@ namespace mCubed.LineupGenerator.Model
 
 		#region BattingOrder
 
-		private string _battingOrder;
+		private string _battingOrder = "NA";
 		public string BattingOrder
 		{
 			get { return _battingOrder; }

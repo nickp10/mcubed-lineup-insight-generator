@@ -86,5 +86,14 @@ namespace mCubed.LineupGenerator.Utilities
 		}
 
 		#endregion
+
+		#region Batting Order Methods
+
+		public static bool IsBattingOrder(string battingOrder)
+		{
+			return !string.IsNullOrWhiteSpace(battingOrder) && !string.Equals(battingOrder, "NA", StringComparison.OrdinalIgnoreCase);
+		}
+
+		#endregion
 	}
 }

@@ -201,7 +201,7 @@ namespace mCubed.LineupGenerator.ContestRetrievers
 						Position = (string)player["position"],
 						Salary = (int)player["salary"],
 						Stats = new[]
-						{ 
+						{
 							new PlayerStats
 							{
 								Name = name,

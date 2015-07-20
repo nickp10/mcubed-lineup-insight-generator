@@ -15,6 +15,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 		private readonly string _regex;
 		private readonly int _nameGroupIndex;
 		private readonly int _projectedGroupIndex;
+		private readonly int _battingOrderGroupIndex;
 		private IEnumerable<PlayerStats> _stats;
 
 		#endregion
@@ -22,11 +23,17 @@ namespace mCubed.LineupGenerator.StatRetrievers
 		#region Constructors
 
 		public RotoWireStatRetriever(string regex, int nameGroupIndex, int projectedGroupIndex, string url)
+			: this(regex, nameGroupIndex, projectedGroupIndex, -1, url)
+		{
+		}
+
+		public RotoWireStatRetriever(string regex, int nameGroupIndex, int projectedGroupIndex, int battingOrderGroupIndex, string url)
 		{
 			_url = url;
 			_regex = regex;
 			_nameGroupIndex = nameGroupIndex;
 			_projectedGroupIndex = projectedGroupIndex;
+			_battingOrderGroupIndex = battingOrderGroupIndex;
 		}
 
 		#endregion
@@ -56,6 +63,21 @@ namespace mCubed.LineupGenerator.StatRetrievers
 			return parts.Length == 2 ? parts[1] + " " + parts[0] : name;
 		}
 
+		private string ParseBattingOrder(Match match, int index)
+		{
+			var order = Utils.ParseGroupValue(match, index);
+			if (order != null)
+			{
+				var regex = new Regex(".*?>(.*?)</", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+				var subMatch = regex.Match(order);
+				if (subMatch.Success)
+				{
+					return Utils.ParseGroupValue(subMatch, 1);
+				}
+			}
+			return null;
+		}
+
 		private IEnumerable<PlayerStats> ParsePlayerStats(string data)
 		{
 			var regex = new Regex(_regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -67,7 +89,8 @@ namespace mCubed.LineupGenerator.StatRetrievers
 				{
 					Name = name,
 					Source = "RotoWire",
-					ProjectedPoints = Utils.ParseGroupDouble(match, _projectedGroupIndex)
+					ProjectedPoints = Utils.ParseGroupDouble(match, _projectedGroupIndex),
+					BattingOrder = ParseBattingOrder(match, _battingOrderGroupIndex)
 				};
 				match = match.NextMatch();
 			}

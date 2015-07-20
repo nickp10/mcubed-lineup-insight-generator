@@ -4,6 +4,7 @@ using mCubed.LineupGenerator.ContestRetrievers;
 using mCubed.LineupGenerator.Model;
 using mCubed.LineupGenerator.StartingPlayerRetrievers;
 using mCubed.LineupGenerator.StatRetrievers;
+using mCubed.LineupGenerator.Utilities;
 
 namespace mCubed.LineupGenerator.Controller
 {
@@ -65,7 +66,7 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					StatRetrievers = new IStatRetriever[]
 					{
-						new RotoWireStatRetriever("<a.*?baseball/player.*?>(.*?)</(.*?<td){9}.*?>(.*?)</td>", 1, 3,
+						new RotoWireStatRetriever("<a.*?baseball/player.*?>(.*?)</(.*?<td){3}.*?>(.*?)</td>(.*?<td){6}.*?>(.*?)</td>", 1, 5, 3,
 							"http://www.rotowire.com/daily/mlb/optimizer.htm"),
 						new NumberFireStatRetriever("players", "mlb_player_id", "projections", "fanduel_fp",
 							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/batters",
@@ -162,6 +163,10 @@ namespace mCubed.LineupGenerator.Controller
 					else
 					{
 						player.Stats = existingStats.Concat(new[] { stats }).ToArray();
+					}
+					if (Utils.IsBattingOrder(stats.BattingOrder) && !Utils.IsBattingOrder(player.BattingOrder))
+					{
+						player.BattingOrder = stats.BattingOrder;
 					}
 				}
 			}
