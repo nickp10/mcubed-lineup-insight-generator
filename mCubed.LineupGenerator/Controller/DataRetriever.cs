@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using mCubed.LineupGenerator.ContestRetrievers;
 using mCubed.LineupGenerator.Model;
@@ -70,7 +71,11 @@ namespace mCubed.LineupGenerator.Controller
 							"http://www.rotowire.com/daily/mlb/optimizer.htm"),
 						new NumberFireStatRetriever("players", "mlb_player_id", "projections", "fanduel_fp",
 							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/batters",
-							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/pitchers")
+							"https://www.numberfire.com/mlb/fantasy/fantasy-baseball-projections/pitchers"),
+						// Batters - Last 7 days
+						new RotoGuruStatRetriever("http://rotoguru1.com/cgi-bin/stats.cgi?pos=8&sort=4&game=d&colA=0&daypt=3&denom=3&xavg=4&inact=0&maxprc=99999&sched=0&starters=0&hithand=0&numlist=c"),
+						// Pitchers - Last 30 days
+						new RotoGuruStatRetriever("http://rotoguru1.com/cgi-bin/stats.cgi?pos=1&sort=4&game=d&colA=0&daypt=1&denom=3&xavg=4&inact=0&maxprc=99999&sched=0&starters=0&hithand=0&numlist=c")
 					},
 					StartingPlayerRetriever = new RotoWireStartingPlayerRetriever("http://www.rotowire.com/baseball/daily_lineups.htm",
 						@":\s<.*?baseball/player\..*?>(.*?)</",
@@ -210,6 +215,19 @@ namespace mCubed.LineupGenerator.Controller
 					return player;
 				}
 			}
+
+			// Check if specified as Last, First exists as First Last
+			var parts = name.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+			if (parts.Length == 2)
+			{
+				var firstNameFirst = parts[1] + " " + parts[0];
+				if (players.TryGetValue(firstNameFirst, out player))
+				{
+					return player;
+				}
+			}
+
+			// Check if specified as First Last exists as Last, First
 			var lastNameIndex = name.LastIndexOf(' ');
 			var lastNameFirst = name.Substring(lastNameIndex + 1) + ", " + name.Substring(0, lastNameIndex);
 			if (players.TryGetValue(lastNameFirst, out player))

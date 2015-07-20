@@ -134,6 +134,7 @@
     <Compile Include="StartingPlayerRetrievers\RotoWireStartingPlayerRetriever.cs" />
     <Compile Include="StatRetrievers\IStatRetriever.cs" />
     <Compile Include="StatRetrievers\NumberFireStatRetriever.cs" />
+    <Compile Include="StatRetrievers\RotoGuruStatRetriever.cs" />
     <Compile Include="StatRetrievers\RotoWireStatRetriever.cs" />
     <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\Utils.cs" />
