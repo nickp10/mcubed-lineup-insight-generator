@@ -41,6 +41,24 @@ namespace mCubed.LineupGenerator.Model
 
 		#endregion
 
+		#region ESPNID
+
+		private string _espnid;
+		public string ESPNID
+		{
+			get { return _espnid; }
+			set
+			{
+				if (_espnid != value)
+				{
+					_espnid = value;
+					RaisePropertyChanged("ESPNID");
+				}
+			}
+		}
+
+		#endregion
+
 		#region IncludeInLineups
 
 		private bool _includeInLineups;

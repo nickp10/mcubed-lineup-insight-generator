@@ -173,6 +173,10 @@ namespace mCubed.LineupGenerator.Controller
 					{
 						player.BattingOrder = stats.BattingOrder;
 					}
+					if (stats.ESPNID != null && player.ESPNID == null)
+					{
+						player.ESPNID = stats.ESPNID;
+					}
 				}
 			}
 		}

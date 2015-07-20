@@ -79,6 +79,9 @@
 											<ColumnDefinition Width="10" />
 											<ColumnDefinition Width="*" />
 											<ColumnDefinition Width="Auto"
+															  SharedSizeGroup="ESPNColumn" />
+											<ColumnDefinition Width="25" />
+											<ColumnDefinition Width="Auto"
 															  SharedSizeGroup="BattingOrderColumn" />
 											<ColumnDefinition Width="25" />
 											<ColumnDefinition Width="Auto"
@@ -100,6 +103,11 @@
 															 SortSource="{Binding}"
 															 Text="Name" />
 										<view:SortColumnLink Grid.Column="2"
+															 SortProperty="ESPNID"
+															 InitialSortDirection="Descending"
+															 SortSource="{Binding}"
+															 Text="ESPN" />
+										<view:SortColumnLink Grid.Column="4"
 															 SortProperty="BattingOrder"
 															 SortSource="{Binding}"
 															 Text="Batting">
@@ -117,26 +125,26 @@
 												</Style>
 											</view:SortColumnLink.Style>
 										</view:SortColumnLink>
-										<view:SortColumnLink Grid.Column="4"
+										<view:SortColumnLink Grid.Column="6"
 															 SortProperty="IsPlaying"
 															 InitialSortDirection="Descending"
 															 SortSource="{Binding}"
 															 Text="Starter" />
-										<view:SortColumnLink Grid.Column="6"
+										<view:SortColumnLink Grid.Column="8"
 															 SortProperty="ProjectedPoints"
 															 InitialSortDirection="Descending"
 															 SortSource="{Binding}"
 															 Text="Projection" />
-										<view:SortColumnLink Grid.Column="8"
+										<view:SortColumnLink Grid.Column="10"
 															 SortProperty="Team"
 															 SortSource="{Binding}"
 															 Text="Team" />
-										<view:SortColumnLink Grid.Column="10"
+										<view:SortColumnLink Grid.Column="12"
 															 SortProperty="Salary"
 															 InitialSortDirection="Descending"
 															 SortSource="{Binding}"
 															 Text="Salary" />
-										<Grid Grid.Column="12"
+										<Grid Grid.Column="14"
 											  Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
 									</Grid>
 									<ItemsControl Grid.Row="2"
@@ -158,6 +166,9 @@
 																<Grid>
 																	<Grid.ColumnDefinitions>
 																		<ColumnDefinition Width="*" />
+																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="ESPNColumn" />
+																		<ColumnDefinition Width="25" />
 																		<ColumnDefinition Width="Auto"
 																						  SharedSizeGroup="BattingOrderColumn" />
 																		<ColumnDefinition Width="25" />
@@ -219,7 +230,24 @@
 																			<TextBlock Text="{Binding Injury.Display}" />
 																		</Border>
 																	</WrapPanel>
-																	<Border Grid.Column="1"
+																	<TextBlock Grid.Column="1">
+																		<TextBlock.Style>
+																			<Style TargetType="{x:Type TextBlock}">
+																				<Setter Property="Visibility"
+																						Value="Visible" />
+																				<Style.Triggers>
+																					<DataTrigger Binding="{Binding ESPNID}"
+																								 Value="{x:Null}">
+																						<Setter Property="Visibility"
+																								Value="Collapsed" />
+																					</DataTrigger>
+																				</Style.Triggers>
+																			</Style>
+																		</TextBlock.Style>
+																		<Hyperlink Tag="{Binding ESPNID}"
+																				   Click="OnESPNViewClick">View</Hyperlink>
+																	</TextBlock>
+																	<Border Grid.Column="3"
 																			Padding="5,0"
 																			BorderThickness="1"
 																			BorderBrush="#87C213"
@@ -241,7 +269,7 @@
 																		</Border.Style>
 																		<TextBlock Text="{Binding BattingOrder}" />
 																	</Border>
-																	<Border Grid.Column="3"
+																	<Border Grid.Column="5"
 																			Padding="5,0"
 																			BorderThickness="1"
 																			BorderBrush="#87C213"
@@ -262,11 +290,11 @@
 																		</Border.Style>
 																		<TextBlock Text="Starter" />
 																	</Border>
-																	<TextBlock Grid.Column="5"
-																			   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
 																	<TextBlock Grid.Column="7"
-																			   Text="{Binding Team}" />
+																			   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
 																	<TextBlock Grid.Column="9"
+																			   Text="{Binding Team}" />
+																	<TextBlock Grid.Column="11"
 																			   Text="{Binding Salary, StringFormat={}{0:C}}" />
 																</Grid>
 															</Border>
