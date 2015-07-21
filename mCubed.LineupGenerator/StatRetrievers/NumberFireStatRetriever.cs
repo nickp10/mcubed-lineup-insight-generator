@@ -17,7 +17,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 		private readonly string _projections;
 		private readonly string _projectedPoints;
 		private readonly IEnumerable<string> _urls;
-		private IEnumerable<PlayerStats> _stats;
+		private IEnumerable<Player> _stats;
 
 		#endregion
 
@@ -41,7 +41,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 
 		#region IStatRetriever Members
 
-		public IEnumerable<PlayerStats> RetrieveStats
+		public IEnumerable<Player> RetrieveStats
 		{
 			get
 			{
@@ -62,7 +62,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 			return players.ToDictionary(pair => pair.Key, pair => (string)(pair.Value["name"]));
 		}
 
-		private IEnumerable<PlayerStats> ParseStats(IDictionary<string, string> players, JArray projections)
+		private IEnumerable<Player> ParseStats(IDictionary<string, string> players, JArray projections)
 		{
 			foreach (JObject projection in projections)
 			{
@@ -73,18 +73,23 @@ namespace mCubed.LineupGenerator.StatRetrievers
 					string playerName;
 					if (players.TryGetValue(playerID, out playerName))
 					{
-						yield return new PlayerStats
+						yield return new Player(playerName)
 						{
-							Name = playerName,
-							Source = "NumberFire",
-							ProjectedPoints = projectedPoints.Value
+							Stats = new[]
+							{
+								new PlayerStats
+								{
+									Source = "NumberFire",
+									ProjectedPoints = projectedPoints.Value
+								}
+							}
 						};
 					}
 				}
 			}
 		}
 
-		private IEnumerable<PlayerStats> ParsePlayerStats(string data)
+		private IEnumerable<Player> ParsePlayerStats(string data)
 		{
 			var regex = new Regex(@"NF_DATA\s*=\s*(.*?}|]);", RegexOptions.Singleline);
 			var match = regex.Match(data);
@@ -103,7 +108,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 					}
 				}
 			}
-			return Enumerable.Empty<PlayerStats>();
+			return Enumerable.Empty<Player>();
 		}
 
 		#endregion

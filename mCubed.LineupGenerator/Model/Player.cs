@@ -8,15 +8,19 @@ namespace mCubed.LineupGenerator.Model
 	{
 		#region Constructors
 
-		public Player()
+		public Player(string name)
 		{
-		}
-
-		public Player(string name, string position, int salary)
-		{
+			if (name != null)
+			{
+				var index = name.IndexOf(", ");
+				if (index >= 0)
+				{
+					var last = name.Substring(0, index);
+					var first = name.Substring(index + 2);
+					name = first + " " + last;
+				}
+			}
 			Name = name;
-			Position = position;
-			Salary = salary;
 		}
 
 		#endregion
@@ -139,7 +143,7 @@ namespace mCubed.LineupGenerator.Model
 		public string Name
 		{
 			get { return _name; }
-			set
+			private set
 			{
 				if (_name != value)
 				{

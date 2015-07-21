@@ -17,20 +17,55 @@ namespace mCubed.LineupGenerator.Controller
 		/// Key - The name from the stat URLs.
 		/// Value - The name from the contest URL.
 		/// </summary>
-		private static readonly IDictionary<string, string> _alternateNames = new Dictionary<string, string>
+		private static readonly IDictionary<string, string> _alternateNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
 			/* MLB */
+			{ "Alejandro Aza", "Alejandro De Aza" },
 			{ "Alex Guerrero", "Alexander Guerrero" },
+			{ "Alex Torres", "Alexander Torres" },
 			{ "B.J. Upton", "Melvin Upton" },
-			{ "Delino DeShields Jr.", "Delino Deshields Jr." },
+			{ "Brad Boxberger", "Bradley Boxberger" },
+			{ "Dan Murphy", "Daniel Murphy" },
+			{ "Danny Santana", "Daniel Santana" },
+			{ "Delino Jr.", "Delino Deshields Jr." },
+			{ "D.J. LeMahieu", "DJ LeMahieu" },
+			{ "Drew Hutchison", "Andrew Hutchison" },
+			{ "Ivan DeJesus", "Ivan De Jesus" },
+			{ "Jake Elmore", "Jacob Elmore" },
 			{ "Jake Lamb", "Jacob Lamb" },
+			{ "Jake Marisnick", "Jacob Marisnick" },
+			{ "Jake Petricka", "Jacob Petricka" },
+			{ "James Happ", "J.A. Happ" },
+			{ "John Ryan Murphy", "John Murphy" },
+			{ "Jon Herrera", "Jonathan Herrera" },
+			{ "J.R. Murphy", "John Murphy" },
 			{ "J.T. Realmuto", "Jacob Realmuto" },
 			{ "JT Realmuto", "Jacob Realmuto" },
+			{ "Jumbo Diaz", "Jose Diaz" },
 			{ "Jung Ho Kang", "Jung-ho Kang" },
 			{ "Jung-Ho Kang", "Jung-ho Kang" },
+			{ "Kike Hernandez", "Enrique Hernandez" },
+			{ "Matt Dekker", "Matt den Dekker" },
+			{ "Matt Stites", "Matthew Stites" },
+			{ "Matthew Duffy", "Matt Duffy" },
+			{ "Matthew Joyce", "Matt Joyce" },
 			{ "Melvin Upton Jr.", "Melvin Upton" },
+			{ "Michael A. Taylor", "Michael Taylor" },
+			{ "Michael Zunino", "Mike Zunino" },
+			{ "Mike Bolsinger", "Michael Bolsinger" },
+			{ "Mike Dunn", "Michael Dunn" },
 			{ "Mike McKenry", "Michael McKenry" },
+			{ "Mike Morin", "Michael Morin" },
+			{ "Nate Karns", "Nathan Karns" },
+			{ "Nick Martinez", "Nicholas Martinez" },
+			{ "Patrick Neshek", "Pat Neshek" },
+			{ "Rubby Rosa", "Rubby de la Rosa" },
+			{ "Ryan Tepera", "Dennis Tepera" },
+			{ "Sam Tuivailala", "Samuel Tuivailala" },
+			{ "Steven Pearce", "Steve Pearce" },
 			{ "Steven Souza", "Steve Souza" },
+			{ "Tommy Milone", "Tom Milone" },
+			{ "Will Smith", "William Smith" },
 
 			/* NBA */
 			{ "Bill Walker", "Henry Walker" },
@@ -142,42 +177,51 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Methods
 
-		private static IEnumerable<PlayerStats> ReadStatsData(Contest contest)
+		private static void MergePlayer(IDictionary<string, Player> players, Player player)
+		{
+			var targetPlayer = GetPlayer(players, player.Name);
+			if (targetPlayer != null)
+			{
+				var sourceStats = player.Stats;
+				if (sourceStats != null)
+				{
+					var targetStats = targetPlayer.Stats;
+					if (targetStats == null)
+					{
+						targetPlayer.Stats = sourceStats;
+					}
+					else
+					{
+						targetPlayer.Stats = targetStats.Concat(sourceStats).ToArray();
+					}
+				}
+				if (Utils.IsBattingOrder(player.BattingOrder) && !Utils.IsBattingOrder(targetPlayer.BattingOrder))
+				{
+					targetPlayer.BattingOrder = player.BattingOrder;
+				}
+				if (!string.IsNullOrWhiteSpace(player.ESPNID) && string.IsNullOrWhiteSpace(targetPlayer.ESPNID))
+				{
+					targetPlayer.ESPNID = player.ESPNID;
+				}
+			}
+		}
+
+		private static IEnumerable<Player> ReadStatsData(Contest contest)
 		{
 			StatsInfo info;
 			if (_statsInfos.TryGetValue(contest.Sport, out info) && info != null)
 			{
 				return info.StatRetrievers.SelectMany(s => s.RetrieveStats).ToArray();
 			}
-			return Enumerable.Empty<PlayerStats>();
+			return Enumerable.Empty<Player>();
 		}
 
 		public static void ParseStats(Contest contest)
 		{
 			var players = contest.PlayersDictionary;
-			foreach (var stats in ReadStatsData(contest))
+			foreach (var player in ReadStatsData(contest))
 			{
-				var player = GetPlayer(players, stats.Name);
-				if (player != null)
-				{
-					var existingStats = player.Stats;
-					if (existingStats == null)
-					{
-						player.Stats = new[] { stats };
-					}
-					else
-					{
-						player.Stats = existingStats.Concat(new[] { stats }).ToArray();
-					}
-					if (Utils.IsBattingOrder(stats.BattingOrder) && !Utils.IsBattingOrder(player.BattingOrder))
-					{
-						player.BattingOrder = stats.BattingOrder;
-					}
-					if (stats.ESPNID != null && player.ESPNID == null)
-					{
-						player.ESPNID = stats.ESPNID;
-					}
-				}
+				MergePlayer(players, player);
 			}
 		}
 
@@ -196,10 +240,10 @@ namespace mCubed.LineupGenerator.Controller
 			var players = contest.PlayersDictionary;
 			foreach (var player in ReadStartingPlayers(contest))
 			{
-				var p = GetPlayer(players, player);
-				if (p != null)
+				var targetPlayer = GetPlayer(players, player);
+				if (targetPlayer != null)
 				{
-					p.IsStarter = true;
+					targetPlayer.IsStarter = true;
 				}
 			}
 		}
@@ -218,25 +262,6 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					return player;
 				}
-			}
-
-			// Check if specified as Last, First exists as First Last
-			var parts = name.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-			if (parts.Length == 2)
-			{
-				var firstNameFirst = parts[1] + " " + parts[0];
-				if (players.TryGetValue(firstNameFirst, out player))
-				{
-					return player;
-				}
-			}
-
-			// Check if specified as First Last exists as Last, First
-			var lastNameIndex = name.LastIndexOf(' ');
-			var lastNameFirst = name.Substring(lastNameIndex + 1) + ", " + name.Substring(0, lastNameIndex);
-			if (players.TryGetValue(lastNameFirst, out player))
-			{
-				return player;
 			}
 			return null;
 		}

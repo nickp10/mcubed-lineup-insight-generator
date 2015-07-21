@@ -16,7 +16,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 		private readonly int _nameGroupIndex;
 		private readonly int _projectedGroupIndex;
 		private readonly int _battingOrderGroupIndex;
-		private IEnumerable<PlayerStats> _stats;
+		private IEnumerable<Player> _stats;
 
 		#endregion
 
@@ -40,7 +40,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 
 		#region IStatRetriever Members
 
-		public IEnumerable<PlayerStats> RetrieveStats
+		public IEnumerable<Player> RetrieveStats
 		{
 			get
 			{
@@ -68,7 +68,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 			var order = Utils.ParseGroupValue(match, index);
 			if (order != null)
 			{
-				var regex = new Regex(".*?>(.*?)</", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+				var regex = new Regex(".*?>(.*?)</a", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 				var subMatch = regex.Match(order);
 				if (subMatch.Success)
 				{
@@ -78,19 +78,24 @@ namespace mCubed.LineupGenerator.StatRetrievers
 			return null;
 		}
 
-		private IEnumerable<PlayerStats> ParsePlayerStats(string data)
+		private IEnumerable<Player> ParsePlayerStats(string data)
 		{
 			var regex = new Regex(_regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 			var match = regex.Match(data);
 			while (match.Success)
 			{
 				var name = ParsePlayerName(match, _nameGroupIndex);
-				yield return new PlayerStats
+				yield return new Player(name)
 				{
-					Name = name,
-					Source = "RotoWire",
-					ProjectedPoints = Utils.ParseGroupDouble(match, _projectedGroupIndex),
-					BattingOrder = ParseBattingOrder(match, _battingOrderGroupIndex)
+					BattingOrder = ParseBattingOrder(match, _battingOrderGroupIndex),
+					Stats = new[]
+					{
+						new PlayerStats
+						{
+							Source = "RotoWire",
+							ProjectedPoints = Utils.ParseGroupDouble(match, _projectedGroupIndex)
+						}
+					}
 				};
 				match = match.NextMatch();
 			}

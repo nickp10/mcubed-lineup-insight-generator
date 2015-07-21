@@ -12,7 +12,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 		#region Data Members
 
 		private readonly string _url;
-		private IEnumerable<PlayerStats> _stats;
+		private IEnumerable<Player> _stats;
 
 		#endregion
 
@@ -27,7 +27,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 
 		#region IStatRetriever Members
 
-		public IEnumerable<PlayerStats> RetrieveStats
+		public IEnumerable<Player> RetrieveStats
 		{
 			get
 			{
@@ -54,7 +54,7 @@ namespace mCubed.LineupGenerator.StatRetrievers
 			return null;
 		}
 
-		private IEnumerable<PlayerStats> ParsePlayerStats(string data)
+		private IEnumerable<Player> ParsePlayerStats(string data)
 		{
 			var regex = new Regex("<P>(GID.*?)<", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 			var match = regex.Match(data);
@@ -76,12 +76,17 @@ namespace mCubed.LineupGenerator.StatRetrievers
 							else
 							{
 								var lineParts = line.Split(';');
-								yield return new PlayerStats
+								yield return new Player(lineParts[2])
 								{
-									Name = lineParts[2],
-									Source = "RotoGuru",
-									RecentAveragePoints = ParsePoints(lineParts, 10),
-									ESPNID = lineParts[16]
+									ESPNID = lineParts[16],
+									Stats = new[]
+									{
+										new PlayerStats
+										{
+											Source = "RotoGuru",
+											RecentAveragePoints = ParsePoints(lineParts, 10)
+										}
+									}
 								};
 							}
 						}

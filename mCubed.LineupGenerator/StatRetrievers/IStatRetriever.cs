@@ -5,6 +5,6 @@ namespace mCubed.LineupGenerator.StatRetrievers
 {
 	public interface IStatRetriever
 	{
-		IEnumerable<PlayerStats> RetrieveStats { get; }
+		IEnumerable<Player> RetrieveStats { get; }
 	}
 }

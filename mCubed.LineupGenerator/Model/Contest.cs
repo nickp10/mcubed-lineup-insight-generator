@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -94,7 +95,14 @@ namespace mCubed.LineupGenerator.Model
 				if (_playersDictionary == null)
 				{
 					var players = Players;
-					_playersDictionary = players == null ? new Dictionary<string, Player>() : players.Distinct(new PlayerNameComparer()).ToDictionary(k => k.Name, v => v);
+					if (players == null)
+					{
+						_playersDictionary = new Dictionary<string, Player>(StringComparer.OrdinalIgnoreCase);
+					}
+					else
+					{
+						_playersDictionary = players.Distinct(new PlayerNameComparer()).ToDictionary(k => k.Name, v => v, StringComparer.OrdinalIgnoreCase);
+					}
 				}
 				return _playersDictionary;
 			}

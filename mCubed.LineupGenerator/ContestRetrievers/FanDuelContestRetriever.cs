@@ -195,16 +195,14 @@ namespace mCubed.LineupGenerator.ContestRetrievers
 				{
 					var name = (string)player["first_name"] + " " + (string)player["last_name"];
 					var team = (string)((JArray)((JObject)player["team"])["_members"])[0];
-					yield return new Player
+					yield return new Player(name)
 					{
-						Name = name,
 						Position = (string)player["position"],
 						Salary = (int)player["salary"],
 						Stats = new[]
 						{
 							new PlayerStats
 							{
-								Name = name,
 								Source = "FanDuel",
 								SeasonAveragePoints = (double?)player["fppg"]
 							}
