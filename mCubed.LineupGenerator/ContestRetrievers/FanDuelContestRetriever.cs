@@ -63,18 +63,18 @@ namespace mCubed.LineupGenerator.ContestRetrievers
 			var jsonData = JsonConvert.DeserializeObject(data) as JObject;
 			if (jsonData != null)
 			{
-				var contests = jsonData["fixture_lists"] as JArray;
+				var contests = jsonData.Value<JArray>("fixture_lists");
 				if (contests != null)
 				{
 					foreach (var contest in contests)
 					{
 						yield return new FanDuelContest
 						{
-							ContestURL = (string)contest["_url"],
-							Label = (string)contest["label"],
-							MaxSalary = (int)contest["salary_cap"],
-							PlayersURL = (string)((JObject)contest["players"])["_url"],
-							Sport = (string)contest["sport"]
+							ContestURL = contest.Value<string>("_url"),
+							Label = contest.Value<string>("label"),
+							MaxSalary = contest.Value<int>("salary_cap"),
+							PlayersURL = contest.Value<JObject>("players").Value<string>("_url"),
+							Sport = contest.Value<string>("sport")
 						};
 					}
 				}
@@ -104,18 +104,18 @@ namespace mCubed.LineupGenerator.ContestRetrievers
 
 		private IEnumerable<string> ParsePositions(JObject jsonData)
 		{
-			var contests = jsonData["fixture_lists"] as JArray;
+			var contests = jsonData.Value<JArray>("fixture_lists");
 			if (contests != null)
 			{
 				var contest = contests.FirstOrDefault();
 				if (contest != null)
 				{
-					var positions = contest["roster_positions"] as JArray;
+					var positions = contest.Value<JArray>("roster_positions");
 					if (positions != null)
 					{
 						foreach (var position in positions)
 						{
-							yield return (string)position["abbr"];
+							yield return position.Value<string>("abbr");
 						}
 					}
 				}
@@ -124,12 +124,12 @@ namespace mCubed.LineupGenerator.ContestRetrievers
 
 		private void ParseTeams(JObject jsonData)
 		{
-			var teams = jsonData["teams"] as JArray;
+			var teams = jsonData.Value<JArray>("teams");
 			if (teams != null)
 			{
 				foreach (var team in teams)
 				{
-					_teams[(string)team["id"]] = ((string)team["code"]).ToUpper();
+					_teams[team.Value<string>("id")] = team.Value<string>("code").ToUpper();
 				}
 			}
 		}
@@ -155,62 +155,56 @@ namespace mCubed.LineupGenerator.ContestRetrievers
 			return null;
 		}
 
-		private string ParseBattingOrder(JToken startingOrder)
+		private string ParseBattingOrder(string startingOrder)
 		{
 			int order = 0;
-			var orderString = (string)startingOrder;
-			if (orderString == null || !int.TryParse(orderString, out order))
+			if (int.TryParse(startingOrder, out order))
 			{
-				var orderInt = (int?)startingOrder;
-				if (orderInt != null)
+				if (order == 1)
 				{
-					order = orderInt.Value;
+					return "1st";
 				}
-			}
-			if (order == 1)
-			{
-				return "1st";
-			}
-			else if (order == 2)
-			{
-				return "2nd";
-			}
-			else if (order == 3)
-			{
-				return "3rd";
-			}
-			else if (order >= 4 && order <= 9)
-			{
-				return order + "th";
+				else if (order == 2)
+				{
+					return "2nd";
+				}
+				else if (order == 3)
+				{
+					return "3rd";
+				}
+				else if (order >= 4 && order <= 9)
+				{
+					return order + "th";
+				}
 			}
 			return "NA";
 		}
 
 		private IEnumerable<Player> ParsePlayers(JObject jsonData)
 		{
-			var players = jsonData["players"] as JArray;
+			var players = jsonData.Value<JArray>("players");
 			if (players != null)
 			{
 				foreach (var player in players)
 				{
-					var name = (string)player["first_name"] + " " + (string)player["last_name"];
-					var team = (string)((JArray)((JObject)player["team"])["_members"])[0];
+					var name = player.Value<string>("first_name") + " " + player.Value<string>("last_name");
+					var team = (string)player.Value<JObject>("team").Value<JArray>("_members")[0];
 					yield return new Player(name)
 					{
-						Position = (string)player["position"],
-						Salary = (int)player["salary"],
+						Position = player.Value<string>("position"),
+						Salary = player.Value<int>("salary"),
 						Stats = new[]
 						{
 							new PlayerStats
 							{
 								Source = "FanDuel",
-								SeasonAveragePoints = (double?)player["fppg"]
+								SeasonAveragePoints = player.Value<double?>("fppg")
 							}
 						},
 						Team = _teams[team],
-						BattingOrder = ParseBattingOrder(player["starting_order"]),
-						Injury = ParseInjury((bool)player["injured"], (string)player["injury_status"]),
-						IsProbablePitcher = (bool)player["probable_pitcher"]
+						BattingOrder = ParseBattingOrder(player.Value<string>("starting_order")),
+						Injury = ParseInjury(player.Value<bool>("injured"), player.Value<string>("injury_status")),
+						IsProbablePitcher = player.Value<bool>("probable_pitcher")
 					};
 				}
 			}

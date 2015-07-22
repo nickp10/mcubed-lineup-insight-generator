@@ -208,6 +208,36 @@ namespace mCubed.LineupGenerator.Controller
 			}
 		}
 
+		public void RefreshRatings(double ratingTolerance)
+		{
+			var lineups = Lineups;
+			if (lineups != null && lineups.Any())
+			{
+				CurrentProcess = "Updating ratings...";
+				ThreadPool.QueueUserWorkItem(q =>
+				{
+					// Reset the ratings back to the default.
+					foreach (var lineup in lineups)
+					{
+						lineup.Rating = 1;
+					}
+
+					// Re-rate the lineups.
+					lineups.AddRating(l => l.TotalProjectedPoints, lineups.Count, ratingTolerance);
+					lineups.AddRating(l => l.TotalRecentAveragePoints, lineups.Count, ratingTolerance);
+					lineups.AddRating(l => l.TotalSeasonAveragePoints, lineups.Count, ratingTolerance);
+
+					// Refresh the Lineups view to re-sort based on the new ratings.
+					Utils.DispatcherInvoke(() =>
+					{
+						LineupsView.Refresh();
+					});
+
+					CurrentProcess = null;
+				});
+			}
+		}
+
 		#endregion
 
 		#region INotifyPropertyChanged Members

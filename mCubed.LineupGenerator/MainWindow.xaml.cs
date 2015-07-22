@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using mCubed.LineupGenerator.Controller;
 
 namespace mCubed.LineupGenerator
@@ -37,6 +39,40 @@ namespace mCubed.LineupGenerator
 					var url = "http://espn.go.com/" + contest.Sport.ToLower() + "/player/_/id/" + id;
 					Process.Start(new ProcessStartInfo(url));
 				}
+			}
+		}
+
+		#endregion
+
+		#region Slider Event Handlers
+
+		private bool isDragging;
+
+		private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+		{
+			DoWork(sender, ((Slider)sender).Value);
+			isDragging = false;
+		}
+
+		private void Slider_DragStarted(object sender, DragStartedEventArgs e)
+		{
+			isDragging = true;
+		}
+
+		private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			if (!isDragging)
+			{
+				DoWork(sender, e.NewValue);
+			}
+		}
+
+		private void DoWork(object sender, double value)
+		{
+			var viewModel = ((Slider)sender).DataContext as LineupViewModel;
+			if (viewModel != null)
+			{
+				viewModel.RefreshRatings(value);
 			}
 		}
 

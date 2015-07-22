@@ -53,7 +53,10 @@
 							TickFrequency="0.01"
 							TickPlacement="BottomRight"
 							VerticalAlignment="Center"
-							Value="{Binding RatingTolerance, UpdateSourceTrigger=PropertyChanged}" />
+							Value="{Binding RatingTolerance, UpdateSourceTrigger=PropertyChanged}"
+							ValueChanged="Slider_ValueChanged"
+							Thumb.DragStarted="Slider_DragStarted"
+							Thumb.DragCompleted="Slider_DragCompleted" />
 					<TabControl Grid.Row="4"
 								Grid.ColumnSpan="3"
 								DisplayMemberPath="Position"

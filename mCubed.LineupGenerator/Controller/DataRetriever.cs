@@ -64,6 +64,7 @@ namespace mCubed.LineupGenerator.Controller
 			{ "Sam Tuivailala", "Samuel Tuivailala" },
 			{ "Steven Pearce", "Steve Pearce" },
 			{ "Steven Souza", "Steve Souza" },
+			{ "Steven Souza Jr.", "Steve Souza" },
 			{ "Tommy Milone", "Tom Milone" },
 			{ "Will Smith", "William Smith" },
 
