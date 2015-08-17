@@ -11,8 +11,8 @@ namespace mCubed.LineupGenerator.Model
 
 		#region Players
 
-		private List<Player> _players;
-		public List<Player> Players
+		private List<PlayerViewModel> _players;
+		public List<PlayerViewModel> Players
 		{
 			get { return _players; }
 			set
@@ -40,7 +40,7 @@ namespace mCubed.LineupGenerator.Model
 					Utils.DispatcherInvoke(() =>
 					{
 						_playersView = new SortableListCollectionView(Players);
-						_playersView.Sort("Salary", ListSortDirection.Descending);
+						_playersView.Sort("Player.Salary", ListSortDirection.Descending);
 					});
 				}
 				return _playersView;

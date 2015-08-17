@@ -36,7 +36,7 @@ namespace mCubed.LineupGenerator
 				var id = element == null ? null : element.Tag as string;
 				if (id != null)
 				{
-					var url = "http://espn.go.com/" + contest.Sport.ToLower() + "/player/_/id/" + id;
+					var url = "http://espn.go.com/" + contest.Contest.Sport.ToLower() + "/player/_/id/" + id;
 					Process.Start(new ProcessStartInfo(url));
 				}
 			}

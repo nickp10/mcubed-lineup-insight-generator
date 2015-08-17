@@ -2,6 +2,7 @@
 using System.Linq;
 using mCubed.Combinatorics;
 using mCubed.LineupGenerator.Model;
+using mCubed.Services.Core.Model;
 
 namespace mCubed.LineupGenerator.Controller
 {
@@ -9,20 +10,20 @@ namespace mCubed.LineupGenerator.Controller
 	{
 		#region Methods
 
-		public static IEnumerable<Lineup> GenerateLineups(Contest contest)
+		public static IEnumerable<Lineup> GenerateLineups(ContestViewModel contest)
 		{
-			var maxSalary = contest.MaxSalary;
-			var maxPlayersPerTeam = contest.MaxPlayersPerTeam;
+			var maxSalary = contest.Contest.MaxSalary;
+			var maxPlayersPerTeam = contest.Contest.MaxPlayersPerTeam;
 			return GenerateLineupsForContest(contest).
 				Where(l => l.TotalSalary <= maxSalary).
 				Where(l => l.Players.GroupBy(p => p.Team).All(g => g.Count() <= maxPlayersPerTeam)).
 				OrderByDescending(l => l.TotalSalary);
 		}
 
-		private static IEnumerable<Lineup> GenerateLineupsForContest(Contest contest)
+		private static IEnumerable<Lineup> GenerateLineupsForContest(ContestViewModel contest)
 		{
-			var players = contest.Players;
-			var positions = contest.Positions;
+			var players = contest.PlayersGrouped.SelectMany(p => p.Players);
+			var positions = contest.Contest.Positions;
 			if (players != null && positions != null)
 			{
 				var combinations = new List<Combinations<Player>>();
@@ -30,7 +31,7 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					var position = positionGroup.Key;
 					var playersNeededForPosition = positionGroup.Count();
-					var possiblePlayersForPosition = players.Where(p => p.IncludeInLineups && p.Position == position).ToList();
+					var possiblePlayersForPosition = players.Where(p => p.IncludeInLineups && p.Player.Position == position).Select(p => p.Player).ToList();
 					combinations.Add(new Combinations<Player>(possiblePlayersForPosition, playersNeededForPosition));
 				}
 				var totalLineups = combinations.Select(c => c.Count).Aggregate((c1, c2) => c1 * c2);

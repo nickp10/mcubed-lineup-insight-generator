@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using mCubed.LineupGenerator.Model;
 using mCubed.LineupGenerator.Utilities;
+using mCubed.Services.Core;
 
 namespace mCubed.LineupGenerator.Controller
 {
@@ -13,8 +14,8 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Contests
 
-		private IEnumerable<Contest> _contests = Enumerable.Empty<Contest>();
-		public IEnumerable<Contest> Contests
+		private IEnumerable<ContestViewModel> _contests = Enumerable.Empty<ContestViewModel>();
+		public IEnumerable<ContestViewModel> Contests
 		{
 			get { return _contests; }
 			private set
@@ -115,8 +116,8 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region SelectedContest
 
-		private Contest _selectedContest;
-		public Contest SelectedContest
+		private ContestViewModel _selectedContest;
+		public ContestViewModel SelectedContest
 		{
 			get { return _selectedContest; }
 			set
@@ -124,7 +125,6 @@ namespace mCubed.LineupGenerator.Controller
 				if (_selectedContest != value)
 				{
 					_selectedContest = value;
-					RetrieveContestData(_selectedContest);
 					RaisePropertyChanged("SelectedContest");
 				}
 			}
@@ -138,41 +138,22 @@ namespace mCubed.LineupGenerator.Controller
 
 		public LineupViewModel()
 		{
-			RetrieveContestList();
+			RetrieveContests();
 		}
 
 		#endregion
 
 		#region Methods
 
-		public void RetrieveContestList()
+		public void RetrieveContests()
 		{
 			CurrentProcess = "Retrieving contests...";
 			ThreadPool.QueueUserWorkItem(q =>
 			{
-				Contests = DataRetriever.ContestRetrievers.SelectMany(c => c.Contests).ToArray();
+				var service = new LineupAggregatorService();
+				Contests = service.Contests.Select(c => new ContestViewModel(c)).ToArray();
 				CurrentProcess = null;
 			});
-		}
-
-		public void RetrieveContestData(Contest contest)
-		{
-			if (contest != null && !contest.IsDataRetrieved)
-			{
-				CurrentProcess = "Retrieving contest data...";
-				ThreadPool.QueueUserWorkItem(q =>
-				{
-					var retriever = DataRetriever.ContestRetrievers.FirstOrDefault(c => c.ContestType == contest.GetType());
-					if (retriever != null)
-					{
-						retriever.FillAdditionalContestData(contest);
-						contest.IsDataRetrieved = true;
-					}
-					DataRetriever.ParseStartingPlayers(contest);
-					DataRetriever.ParseStats(contest);
-					CurrentProcess = null;
-				});
-			}
 		}
 
 		public void GenerateLineups()
@@ -200,9 +181,9 @@ namespace mCubed.LineupGenerator.Controller
 			{
 				ThreadPool.QueueUserWorkItem(q =>
 				{
-					foreach (var player in contest.Players)
+					foreach (var player in contest.PlayersGrouped.SelectMany(p => p.Players))
 					{
-						player.IncludeInLineups = player.IsProbablePitcher || player.IsStarter;
+						player.IncludeInLineups = player.Player.IsProbablePitcher || player.Player.IsStarter;
 					}
 				});
 			}

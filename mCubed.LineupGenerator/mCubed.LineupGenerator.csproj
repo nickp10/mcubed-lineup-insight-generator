@@ -112,30 +112,15 @@
     <Compile Include="Combinatorics\Permutations.cs" />
     <Compile Include="Combinatorics\SmallPrimeUtility.cs" />
     <Compile Include="Combinatorics\Variations.cs" />
-    <Compile Include="ContestRetrievers\FanDuelContestRetriever.cs" />
-    <Compile Include="ContestRetrievers\IContestRetriever.cs" />
-    <Compile Include="Controller\DataRetriever.cs" />
+    <Compile Include="Controller\ContestViewModel.cs" />
     <Compile Include="Controller\LineupGenerator.cs" />
     <Compile Include="Controller\LineupViewModel.cs" />
+    <Compile Include="Controller\PlayerViewModel.cs" />
     <Compile Include="Controller\PositionComparer.cs" />
     <Compile Include="Controller\SortableListCollectionView.cs" />
-    <Compile Include="Model\Contest.cs" />
-    <Compile Include="Model\FanDuelContest.cs" />
-    <Compile Include="Model\InjuryData.cs" />
-    <Compile Include="Model\InjuryType.cs" />
     <Compile Include="Model\ISortable.cs" />
     <Compile Include="Model\Lineup.cs" />
-    <Compile Include="Model\Player.cs" />
-    <Compile Include="Model\PlayerNameComparer.cs" />
-    <Compile Include="Model\PlayerStats.cs" />
     <Compile Include="Model\PositionPlayers.cs" />
-    <Compile Include="Model\StatsInfo.cs" />
-    <Compile Include="StartingPlayerRetrievers\IStartingPlayerRetriever.cs" />
-    <Compile Include="StartingPlayerRetrievers\RotoWireStartingPlayerRetriever.cs" />
-    <Compile Include="StatRetrievers\IStatRetriever.cs" />
-    <Compile Include="StatRetrievers\NumberFireStatRetriever.cs" />
-    <Compile Include="StatRetrievers\RotoGuruStatRetriever.cs" />
-    <Compile Include="StatRetrievers\RotoWireStatRetriever.cs" />
     <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="View\PathVisibilityConverter.cs" />
@@ -171,6 +156,12 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\mCubed.Services.Core\mCubed.Services.Core.csproj">
+      <Project>{e93861fb-c23a-417d-b6e3-48b8dafc55a3}</Project>
+      <Name>mCubed.Services.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforePublish">

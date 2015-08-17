@@ -99,11 +99,11 @@
 											<ColumnDefinition Width="Auto" />
 										</Grid.ColumnDefinitions>
 										<view:SortColumnLink Grid.Column="1"
-															 SortProperty="Name"
+															 SortProperty="Player.Name"
 															 SortSource="{Binding}"
 															 Text="Name" />
 										<view:SortColumnLink Grid.Column="2"
-															 SortProperty="BattingOrder"
+															 SortProperty="Player.BattingOrder"
 															 SortSource="{Binding}"
 															 Text="Batting">
 											<view:SortColumnLink.Style>
@@ -111,7 +111,7 @@
 													<Setter Property="Visibility"
 															Value="Collapsed" />
 													<Style.Triggers>
-														<DataTrigger Binding="{Binding Path=Sport}"
+														<DataTrigger Binding="{Binding Path=Contest.Sport}"
 																	 Value="MLB">
 															<Setter Property="Visibility"
 																	Value="Visible" />
@@ -121,21 +121,21 @@
 											</view:SortColumnLink.Style>
 										</view:SortColumnLink>
 										<view:SortColumnLink Grid.Column="4"
-															 SortProperty="IsPlaying"
+															 SortProperty="Player.IsPlaying"
 															 InitialSortDirection="Descending"
 															 SortSource="{Binding}"
 															 Text="Starter" />
 										<view:SortColumnLink Grid.Column="6"
-															 SortProperty="ProjectedPoints"
+															 SortProperty="Player.ProjectedPoints"
 															 InitialSortDirection="Descending"
 															 SortSource="{Binding}"
 															 Text="Projection" />
 										<view:SortColumnLink Grid.Column="8"
-															 SortProperty="Team"
+															 SortProperty="Player.Team"
 															 SortSource="{Binding}"
 															 Text="Team" />
 										<view:SortColumnLink Grid.Column="10"
-															 SortProperty="Salary"
+															 SortProperty="Player.Salary"
 															 InitialSortDirection="Descending"
 															 SortSource="{Binding}"
 															 Text="Salary" />
@@ -177,13 +177,13 @@
 																						  SharedSizeGroup="SalaryColumn" />
 																	</Grid.ColumnDefinitions>
 																	<WrapPanel Grid.Column="0">
-																		<TextBlock Text="{Binding Name, Mode=OneWay}">
+																		<TextBlock Text="{Binding Player.Name, Mode=OneWay}">
 																			<TextBlock.Style>
 																				<Style TargetType="{x:Type TextBlock}">
 																					<Setter Property="Visibility"
 																							Value="Collapsed" />
 																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding ESPNID}"
+																						<DataTrigger Binding="{Binding Player.ESPNID}"
 																									 Value="{x:Null}">
 																							<Setter Property="Visibility"
 																									Value="Visible" />
@@ -198,7 +198,7 @@
 																					<Setter Property="Visibility"
 																							Value="Visible" />
 																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding ESPNID}"
+																						<DataTrigger Binding="{Binding Player.ESPNID}"
 																									 Value="{x:Null}">
 																							<Setter Property="Visibility"
 																									Value="Collapsed" />
@@ -206,9 +206,9 @@
 																					</Style.Triggers>
 																				</Style>
 																			</TextBlock.Style>
-																			<Hyperlink Tag="{Binding ESPNID}"
+																			<Hyperlink Tag="{Binding Player.ESPNID}"
 																					   Click="OnESPNViewClick">
-																				<Run Text="{Binding Name, Mode=OneWay}" />
+																				<Run Text="{Binding Player.Name, Mode=OneWay}" />
 																			</Hyperlink>
 																		</TextBlock>
 																		<Border Margin="10,0,0,0"
@@ -222,7 +222,7 @@
 																					<Setter Property="TextElement.Foreground"
 																							Value="Black" />
 																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding Injury.InjuryType}"
+																						<DataTrigger Binding="{Binding Player.Injury.InjuryType}"
 																									 Value="Out">
 																							<Setter Property="BorderThickness"
 																									Value="1" />
@@ -231,7 +231,7 @@
 																							<Setter Property="TextElement.Foreground"
 																									Value="#9B1010" />
 																						</DataTrigger>
-																						<DataTrigger Binding="{Binding Injury.InjuryType}"
+																						<DataTrigger Binding="{Binding Player.Injury.InjuryType}"
 																									 Value="Possible">
 																							<Setter Property="BorderThickness"
 																									Value="1" />
@@ -240,7 +240,7 @@
 																							<Setter Property="TextElement.Foreground"
 																									Value="#EB8500" />
 																						</DataTrigger>
-																						<DataTrigger Binding="{Binding Injury.InjuryType}"
+																						<DataTrigger Binding="{Binding Player.Injury.InjuryType}"
 																									 Value="Probable">
 																							<Setter Property="BorderThickness"
 																									Value="1" />
@@ -252,7 +252,7 @@
 																					</Style.Triggers>
 																				</Style>
 																			</Border.Style>
-																			<TextBlock Text="{Binding Injury.Display}" />
+																			<TextBlock Text="{Binding Player.Injury.Display}" />
 																		</Border>
 																	</WrapPanel>
 																	<Border Grid.Column="1"
@@ -267,7 +267,7 @@
 																				<Setter Property="Visibility"
 																						Value="Visible" />
 																				<Style.Triggers>
-																					<DataTrigger Binding="{Binding BattingOrder}"
+																					<DataTrigger Binding="{Binding Player.BattingOrder}"
 																								 Value="NA">
 																						<Setter Property="Visibility"
 																								Value="Collapsed" />
@@ -275,7 +275,7 @@
 																				</Style.Triggers>
 																			</Style>
 																		</Border.Style>
-																		<TextBlock Text="{Binding BattingOrder}" />
+																		<TextBlock Text="{Binding Player.BattingOrder}" />
 																	</Border>
 																	<Border Grid.Column="3"
 																			Padding="5,0"
@@ -288,7 +288,7 @@
 																				<Setter Property="Visibility"
 																						Value="Collapsed" />
 																				<Style.Triggers>
-																					<DataTrigger Binding="{Binding IsPlaying}"
+																					<DataTrigger Binding="{Binding Player.IsPlaying}"
 																								 Value="True">
 																						<Setter Property="Visibility"
 																								Value="Visible" />
@@ -299,11 +299,11 @@
 																		<TextBlock Text="Starter" />
 																	</Border>
 																	<TextBlock Grid.Column="5"
-																			   Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
+																			   Text="{Binding Player.ProjectedPoints, StringFormat={}{0:0.##}}" />
 																	<TextBlock Grid.Column="7"
-																			   Text="{Binding Team}" />
+																			   Text="{Binding Player.Team}" />
 																	<TextBlock Grid.Column="9"
-																			   Text="{Binding Salary, StringFormat={}{0:C}}" />
+																			   Text="{Binding Player.Salary, StringFormat={}{0:C}}" />
 																</Grid>
 															</Border>
 															<ControlTemplate.Triggers>
