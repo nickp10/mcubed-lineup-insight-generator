@@ -174,6 +174,26 @@ namespace mCubed.LineupGenerator.Controller
 			}
 		}
 
+		public void SelectRecommended()
+		{
+			var contest = SelectedContest;
+			if (contest != null)
+			{
+				ThreadPool.QueueUserWorkItem(q =>
+				{
+					foreach (var playerGroup in contest.PlayersGrouped)
+					{
+						var playersNeededForPosition = contest.Contest.Positions.Count(p => p == playerGroup.Position);
+						var recommendedPlayers = playersNeededForPosition * 4;
+						foreach (var player in playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPointsPerDollar))
+						{
+							player.IncludeInLineups = player.Player.IsPlaying && recommendedPlayers-- > 0;
+						}
+					}
+				});
+			}
+		}
+
 		public void SelectStarters()
 		{
 			var contest = SelectedContest;

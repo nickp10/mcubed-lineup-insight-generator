@@ -91,6 +91,9 @@
 															  SharedSizeGroup="ProjectedColumn" />
 											<ColumnDefinition Width="25" />
 											<ColumnDefinition Width="Auto"
+															  SharedSizeGroup="ProjectedPointsPerDollarColumn" />
+											<ColumnDefinition Width="25" />
+											<ColumnDefinition Width="Auto"
 															  SharedSizeGroup="TeamColumn" />
 											<ColumnDefinition Width="25" />
 											<ColumnDefinition Width="Auto"
@@ -131,15 +134,20 @@
 															 SortSource="{Binding}"
 															 Text="Projection" />
 										<view:SortColumnLink Grid.Column="8"
+															 SortProperty="Player.ProjectedPointsPerDollar"
+															 InitialSortDirection="Descending"
+															 SortSource="{Binding}"
+															 Text="P/$" />
+										<view:SortColumnLink Grid.Column="10"
 															 SortProperty="Player.Team"
 															 SortSource="{Binding}"
 															 Text="Team" />
-										<view:SortColumnLink Grid.Column="10"
+										<view:SortColumnLink Grid.Column="12"
 															 SortProperty="Player.Salary"
 															 InitialSortDirection="Descending"
 															 SortSource="{Binding}"
 															 Text="Salary" />
-										<Grid Grid.Column="12"
+										<Grid Grid.Column="14"
 											  Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
 									</Grid>
 									<ItemsControl Grid.Row="2"
@@ -169,6 +177,9 @@
 																		<ColumnDefinition Width="25" />
 																		<ColumnDefinition Width="Auto"
 																						  SharedSizeGroup="ProjectedColumn" />
+																		<ColumnDefinition Width="25" />
+																		<ColumnDefinition Width="Auto"
+																						  SharedSizeGroup="ProjectedPointsPerDollarColumn" />
 																		<ColumnDefinition Width="25" />
 																		<ColumnDefinition Width="Auto"
 																						  SharedSizeGroup="TeamColumn" />
@@ -301,8 +312,10 @@
 																	<TextBlock Grid.Column="5"
 																			   Text="{Binding Player.ProjectedPoints, StringFormat={}{0:0.##}}" />
 																	<TextBlock Grid.Column="7"
-																			   Text="{Binding Player.Team}" />
+																			   Text="{Binding Player.ProjectedPointsPerDollar, StringFormat={}{0:0.##}}" />
 																	<TextBlock Grid.Column="9"
+																			   Text="{Binding Player.Team}" />
+																	<TextBlock Grid.Column="11"
 																			   Text="{Binding Player.Salary, StringFormat={}{0:C}}" />
 																</Grid>
 															</Border>
@@ -349,8 +362,8 @@
 			</GroupBox>
 			<WrapPanel Grid.Row="2"
 					   HorizontalAlignment="Center">
-				<Button Content="Select Starters"
-						Click="OnSelectStartersClick"
+				<Button Content="Select Recommended"
+						Click="OnSelectRecommendedClick"
 						Padding="5"
 						Margin="0,0,10,0" />
 				<Button Content="Generate Lineups"

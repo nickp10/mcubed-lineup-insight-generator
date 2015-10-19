@@ -16,9 +16,9 @@ namespace mCubed.LineupGenerator
 
 		#region Event Handlers
 
-		private void OnSelectStartersClick(object sender, RoutedEventArgs e)
+		private void OnSelectRecommendedClick(object sender, RoutedEventArgs e)
 		{
-			((LineupViewModel)DataContext).SelectStarters();
+			((LineupViewModel)DataContext).SelectRecommended();
 		}
 
 		private void OnGenerateLineupsClick(object sender, RoutedEventArgs e)
