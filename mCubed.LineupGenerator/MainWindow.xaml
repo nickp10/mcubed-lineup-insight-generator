@@ -20,8 +20,6 @@
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto" />
 						<RowDefinition Height="10" />
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="10" />
 						<RowDefinition Height="*" />
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
@@ -40,24 +38,7 @@
 							  SelectedItem="{Binding SelectedContest}"
 							  DisplayMemberPath="Title"
 							  x:Name="ContestComboBox" />
-					<Label Grid.Row="2"
-						   Grid.Column="0"
-						   Content="Rating Tolerance:"
-						   VerticalAlignment="Center" />
-					<Slider Grid.Row="2"
-							Grid.Column="2"
-							AutoToolTipPlacement="BottomRight"
-							AutoToolTipPrecision="3"
-							Minimum="0"
-							Maximum="0.05"
-							TickFrequency="0.01"
-							TickPlacement="BottomRight"
-							VerticalAlignment="Center"
-							Value="{Binding RatingTolerance, UpdateSourceTrigger=PropertyChanged}"
-							ValueChanged="Slider_ValueChanged"
-							Thumb.DragStarted="Slider_DragStarted"
-							Thumb.DragCompleted="Slider_DragCompleted" />
-					<TabControl Grid.Row="4"
+					<TabControl Grid.Row="2"
 								Grid.ColumnSpan="3"
 								DisplayMemberPath="Position"
 								IsSynchronizedWithCurrentItem="True"
@@ -491,7 +472,7 @@
 													<TextBlock Grid.Column="6"
 															   Text="{Binding TotalSeasonAveragePoints, StringFormat={}{0:0.##}}" />
 													<TextBlock Grid.Column="8"
-															   Text="{Binding Rating}" />
+															   Text="{Binding Rating, StringFormat={}{0:0.##}%}" />
 													<TextBlock Grid.Column="10"
 															   Text="{Binding TotalSalary, StringFormat={}{0:C}}" />
 												</Grid>

@@ -9,31 +9,34 @@ namespace mCubed.LineupGenerator.Utilities
 	{
 		#region Data Members
 
-		public const double DEFAULT_RATING_TOLERANCE = 0.025d;
+		public const double PROJECTED_POINTS_PERCENT = 0.5d;
+		public const double RECENT_POINTS_PERCENT = 0.35d;
+		public const double SEASON_POINTS_PERCENT = 0.15d;
 
 		#endregion
 
 		#region Methods
 
-		public static void AddRating(this IEnumerable<Lineup> lineups, Func<Lineup, double> lineupRating, double ratingTolerance = DEFAULT_RATING_TOLERANCE)
+		public static void UpdateRating(this IEnumerable<Lineup> lineups, int count)
 		{
-			lineups.AddRating(lineupRating, lineups.Count(), ratingTolerance);
+			foreach (var lineup in lineups)
+			{
+				lineup.Rating = 100;
+			}
+			lineups.UpdateRating(l => l.TotalProjectedPoints, count, PROJECTED_POINTS_PERCENT);
+			lineups.UpdateRating(l => l.TotalRecentAveragePoints, count, RECENT_POINTS_PERCENT);
+			lineups.UpdateRating(l => l.TotalSeasonAveragePoints, count, SEASON_POINTS_PERCENT);
 		}
 
-		public static void AddRating(this IEnumerable<Lineup> lineups, Func<Lineup, double> lineupRating, int count, double ratingTolerance = DEFAULT_RATING_TOLERANCE)
+		public static void UpdateRating(this IEnumerable<Lineup> lineups, Func<Lineup, double> lineupRating, int count, double percentage)
 		{
 			var lineupCount = 0;
-			var topLineupEndCount = Math.Max(1, (int)Math.Floor(count * ratingTolerance));
-			var bottomLineupStartCount = topLineupEndCount * 3;
-			var bottomLineupEndCount = bottomLineupStartCount * 2;
 			foreach (var lineup in lineups.OrderByDescending(lineupRating).Where(lineup => lineupRating(lineup) > 0))
 			{
-				lineup.Rating += (lineupCount < topLineupEndCount) ? 3 : ((lineupCount < bottomLineupStartCount) ? 2 : 1);
+				var percentile = (double)lineupCount / (double)count;
+				var proratedPercentile = percentile * percentage * 100;
+				lineup.Rating -= proratedPercentile;
 				lineupCount++;
-				if (lineupCount >= bottomLineupEndCount)
-				{
-					break;
-				}
 			}
 		}
 

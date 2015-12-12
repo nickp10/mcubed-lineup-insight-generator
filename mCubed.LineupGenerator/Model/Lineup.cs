@@ -84,8 +84,8 @@ namespace mCubed.LineupGenerator.Model
 
 		#region Rating
 
-		private int _rating = 1;
-		public int Rating
+		private double _rating;
+		public double Rating
 		{
 			get { return _rating; }
 			set

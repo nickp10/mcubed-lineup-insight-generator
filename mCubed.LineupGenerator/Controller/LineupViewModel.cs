@@ -96,24 +96,6 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
-		#region RatingTolerance
-
-		private double _ratingTolerance = IEnumerableExtensions.DEFAULT_RATING_TOLERANCE;
-		public double RatingTolerance
-		{
-			get { return _ratingTolerance; }
-			set
-			{
-				if (_ratingTolerance != value)
-				{
-					_ratingTolerance = value;
-					RaisePropertyChanged("RatingTolerance");
-				}
-			}
-		}
-
-		#endregion
-
 		#region SelectedContest
 
 		private ContestViewModel _selectedContest;
@@ -165,9 +147,7 @@ namespace mCubed.LineupGenerator.Controller
 				ThreadPool.QueueUserWorkItem(q =>
 				{
 					var lineups = LineupGenerator.GenerateLineups(contest).ToList();
-					lineups.AddRating(l => l.TotalProjectedPoints, lineups.Count, RatingTolerance);
-					lineups.AddRating(l => l.TotalRecentAveragePoints, lineups.Count, RatingTolerance);
-					lineups.AddRating(l => l.TotalSeasonAveragePoints, lineups.Count, RatingTolerance);
+					lineups.UpdateRating(lineups.Count);
 					Lineups = lineups;
 					CurrentProcess = null;
 				});
@@ -188,6 +168,11 @@ namespace mCubed.LineupGenerator.Controller
 						foreach (var player in playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPointsPerDollar))
 						{
 							player.IncludeInLineups = player.Player.IsPlaying && recommendedPlayers-- > 0;
+						}
+						var topPlayer = playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPoints).FirstOrDefault(p => p.Player.IsPlaying);
+						if (topPlayer != null)
+						{
+							topPlayer.IncludeInLineups = true;
 						}
 					}
 				});
@@ -217,16 +202,8 @@ namespace mCubed.LineupGenerator.Controller
 				CurrentProcess = "Updating ratings...";
 				ThreadPool.QueueUserWorkItem(q =>
 				{
-					// Reset the ratings back to the default.
-					foreach (var lineup in lineups)
-					{
-						lineup.Rating = 1;
-					}
-
 					// Re-rate the lineups.
-					lineups.AddRating(l => l.TotalProjectedPoints, lineups.Count, ratingTolerance);
-					lineups.AddRating(l => l.TotalRecentAveragePoints, lineups.Count, ratingTolerance);
-					lineups.AddRating(l => l.TotalSeasonAveragePoints, lineups.Count, ratingTolerance);
+					lineups.UpdateRating(lineups.Count);
 
 					// Refresh the Lineups view to re-sort based on the new ratings.
 					Utils.DispatcherInvoke(() =>
