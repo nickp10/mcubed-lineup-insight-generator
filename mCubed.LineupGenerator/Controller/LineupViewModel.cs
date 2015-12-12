@@ -79,7 +79,7 @@ namespace mCubed.LineupGenerator.Controller
 					Utils.DispatcherInvoke(() =>
 					{
 						_lineupsView = new SortableListCollectionView(Lineups);
-						_lineupsView.Sort("TotalProjectedPoints", ListSortDirection.Descending);
+						_lineupsView.Sort("Rating", ListSortDirection.Descending);
 					});
 				}
 				return _lineupsView;

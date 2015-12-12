@@ -16,8 +16,7 @@ namespace mCubed.LineupGenerator.Controller
 			var maxPlayersPerTeam = contest.Contest.MaxPlayersPerTeam;
 			return GenerateLineupsForContest(contest).
 				Where(l => l.TotalSalary <= maxSalary).
-				Where(l => l.Players.GroupBy(p => p.Team).All(g => g.Count() <= maxPlayersPerTeam)).
-				OrderByDescending(l => l.TotalSalary);
+				Where(l => l.Players.GroupBy(p => p.Team).All(g => g.Count() <= maxPlayersPerTeam));
 		}
 
 		private static IEnumerable<Lineup> GenerateLineupsForContest(ContestViewModel contest)
