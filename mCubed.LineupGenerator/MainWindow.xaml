@@ -6,6 +6,11 @@
 		Title="mCubed: Lineup Generator"
 		Height="800"
 		Width="1000">
+	<Window.Resources>
+		<view:BoolToVisibilityConverter TrueValue="Collapsed"
+										FalseValue="Visible"
+										x:Key="HasProjectionsConverter" />
+	</Window.Resources>
 	<Grid>
 		<Grid Margin="10">
 			<Grid.RowDefinitions>
@@ -290,8 +295,48 @@
 																		</Border.Style>
 																		<TextBlock Text="Starter" />
 																	</Border>
-																	<TextBlock Grid.Column="5"
-																			   Text="{Binding Player.ProjectedPoints, StringFormat={}{0:0.##}}" />
+																	<Grid Grid.Column="5">
+																		<ToggleButton x:Name="ProjectedPointsToggle">
+																			<ToggleButton.Template>
+																				<ControlTemplate>
+																					<TextBlock Text="{Binding Player.ProjectedPoints, StringFormat={}{0:0.##}}"
+																							   TextDecorations="Underline"
+																							   Cursor="Hand"
+																							   Foreground="{x:Static SystemColors.HotTrackBrush}" />
+																				</ControlTemplate>
+																			</ToggleButton.Template>
+																		</ToggleButton>
+																		<Popup AllowsTransparency="True"
+																			   IsOpen="{Binding ElementName=ProjectedPointsToggle, Path=IsChecked, Mode=TwoWay}"
+																			   PlacementTarget="{Binding ElementName=ProjectedPointsToggle}"
+																			   HorizontalOffset="-15"
+																			   Placement="Right"
+																			   StaysOpen="False">
+																			<Border BorderThickness="1"
+																					BorderBrush="Black"
+																					Background="White"
+																					Padding="10"
+																					Margin="0,0,5,5">
+																				<Border.Effect>
+																					<DropShadowEffect BlurRadius="5" />
+																				</Border.Effect>
+																				<StackPanel>
+																					<TextBlock Text="No projections found for this player"
+																							   Visibility="{Binding HasProjections, Converter={StaticResource HasProjectionsConverter}}" />
+																					<ItemsControl ItemsSource="{Binding Projections}">
+																						<ItemsControl.ItemTemplate>
+																							<DataTemplate>
+																								<TextBlock>
+																									<Run Text="{Binding ProjectedPoints, StringFormat={}{0:0.##}}" />
+																									<Run>(</Run><Run Text="{Binding Source}" /><Run>)</Run>
+																								</TextBlock>
+																							</DataTemplate>
+																						</ItemsControl.ItemTemplate>
+																					</ItemsControl>
+																				</StackPanel>
+																			</Border>
+																		</Popup>
+																	</Grid>
 																	<TextBlock Grid.Column="7"
 																			   Text="{Binding Player.ProjectedPointsPerDollar, StringFormat={}{0:0.##}}" />
 																	<TextBlock Grid.Column="9"

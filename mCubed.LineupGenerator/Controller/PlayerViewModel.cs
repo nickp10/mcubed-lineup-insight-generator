@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using mCubed.Services.Core.Model;
 
 namespace mCubed.LineupGenerator.Controller
@@ -6,6 +8,15 @@ namespace mCubed.LineupGenerator.Controller
 	public class PlayerViewModel : INotifyPropertyChanged
 	{
 		#region Properties
+
+		#region HasProjections
+
+		public bool HasProjections
+		{
+			get { return Player.Stats.Any(s => s.ProjectedPoints != null); }
+		}
+
+		#endregion
 
 		#region IncludeInLineups
 
@@ -28,6 +39,15 @@ namespace mCubed.LineupGenerator.Controller
 		#region Player
 
 		public Player Player { get; private set; }
+
+		#endregion
+
+		#region Projections
+
+		public IEnumerable<PlayerStats> Projections
+		{
+			get { return Player.Stats.Where(s => s.ProjectedPoints != null); }
+		}
 
 		#endregion
 

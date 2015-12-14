@@ -123,6 +123,7 @@
     <Compile Include="Model\PositionPlayers.cs" />
     <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="View\BoolToVisibilityConverter.cs" />
     <Compile Include="View\PathVisibilityConverter.cs" />
     <Compile Include="View\SortColumnLink.xaml.cs">
       <DependentUpon>SortColumnLink.xaml</DependentUpon>
