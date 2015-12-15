@@ -559,6 +559,35 @@
 					</ItemsControl>
 				</Grid>
 			</GroupBox>
+			<Border Background="#AA000000"
+					Grid.Row="2"
+					Grid.RowSpan="2">
+				<Border.Style>
+					<Style TargetType="{x:Type Border}">
+						<Setter Property="Visibility"
+								Value="Visible" />
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding CurrentLineupProcess}"
+										 Value="{x:Null}">
+								<Setter Property="Visibility"
+										Value="Collapsed" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Border.Style>
+				<Border Background="White"
+						BorderBrush="Black"
+						BorderThickness="1"
+						CornerRadius="5"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						Opacity="1"
+						Padding="100,50">
+					<TextBlock FontWeight="Bold"
+							   FontSize="16"
+							   Text="{Binding CurrentLineupProcess}" />
+				</Border>
+			</Border>
 		</Grid>
 		<Border Background="#AA000000">
 			<Border.Style>
@@ -566,7 +595,7 @@
 					<Setter Property="Visibility"
 							Value="Visible" />
 					<Style.Triggers>
-						<DataTrigger Binding="{Binding CurrentProcess}"
+						<DataTrigger Binding="{Binding CurrentFullScreenProcess}"
 									 Value="{x:Null}">
 							<Setter Property="Visibility"
 									Value="Collapsed" />
@@ -584,7 +613,7 @@
 					Padding="100,50">
 				<TextBlock FontWeight="Bold"
 						   FontSize="16"
-						   Text="{Binding CurrentProcess}" />
+						   Text="{Binding CurrentFullScreenProcess}" />
 			</Border>
 		</Border>
 	</Grid>

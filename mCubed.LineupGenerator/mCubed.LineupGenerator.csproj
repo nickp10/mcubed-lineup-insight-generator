@@ -77,6 +77,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -124,6 +126,7 @@
     <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="View\BoolToVisibilityConverter.cs" />
+    <Compile Include="View\MessageBoxEx.cs" />
     <Compile Include="View\PathVisibilityConverter.cs" />
     <Compile Include="View\SortColumnLink.xaml.cs">
       <DependentUpon>SortColumnLink.xaml</DependentUpon>

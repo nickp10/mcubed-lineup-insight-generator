@@ -1,12 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
+using System.Windows.Interop;
 using mCubed.LineupGenerator.Controller;
 
 namespace mCubed.LineupGenerator
 {
-	public partial class MainWindow : Window
+	public partial class MainWindow : Window, System.Windows.Forms.IWin32Window
 	{
 		public MainWindow()
 		{
@@ -44,36 +44,11 @@ namespace mCubed.LineupGenerator
 
 		#endregion
 
-		#region Slider Event Handlers
+		#region IWin32Window Members
 
-		private bool isDragging;
-
-		private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+		public IntPtr Handle
 		{
-			DoWork(sender, ((Slider)sender).Value);
-			isDragging = false;
-		}
-
-		private void Slider_DragStarted(object sender, DragStartedEventArgs e)
-		{
-			isDragging = true;
-		}
-
-		private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-		{
-			if (!isDragging)
-			{
-				DoWork(sender, e.NewValue);
-			}
-		}
-
-		private void DoWork(object sender, double value)
-		{
-			var viewModel = ((Slider)sender).DataContext as LineupViewModel;
-			if (viewModel != null)
-			{
-				viewModel.RefreshRatings(value);
-			}
+			get { return new WindowInteropHelper(this).Handle; }
 		}
 
 		#endregion

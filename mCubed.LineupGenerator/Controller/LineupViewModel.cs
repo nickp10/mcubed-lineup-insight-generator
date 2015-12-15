@@ -2,8 +2,10 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using System.Windows;
 using mCubed.LineupGenerator.Model;
 using mCubed.LineupGenerator.Utilities;
+using mCubed.LineupGenerator.View;
 using mCubed.Services.Core;
 
 namespace mCubed.LineupGenerator.Controller
@@ -30,18 +32,36 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
-		#region CurrentProcess
+		#region CurrentFullScreenProcess
 
-		private string _currentProcess;
-		public string CurrentProcess
+		private string _currentFullScreenProcess;
+		public string CurrentFullScreenProcess
 		{
-			get { return _currentProcess; }
+			get { return _currentFullScreenProcess; }
 			private set
 			{
-				if (_currentProcess != value)
+				if (_currentFullScreenProcess != value)
 				{
-					_currentProcess = value;
-					RaisePropertyChanged("CurrentProcess");
+					_currentFullScreenProcess = value;
+					RaisePropertyChanged("CurrentFullScreenProcess");
+				}
+			}
+		}
+
+		#endregion
+
+		#region CurrentLineupProcess
+
+		private string _currentLineupProcess;
+		public string CurrentLineupProcess
+		{
+			get { return _currentLineupProcess; }
+			private set
+			{
+				if (_currentLineupProcess != value)
+				{
+					_currentLineupProcess = value;
+					RaisePropertyChanged("CurrentLineupProcess");
 				}
 			}
 		}
@@ -129,28 +149,50 @@ namespace mCubed.LineupGenerator.Controller
 
 		public void RetrieveContests()
 		{
-			CurrentProcess = "Retrieving contests...";
+			CurrentFullScreenProcess = "Retrieving contests...";
 			ThreadPool.QueueUserWorkItem(q =>
 			{
 				var service = new LineupAggregatorService();
 				Contests = service.Contests.Select(c => new ContestViewModel(c)).ToArray();
-				CurrentProcess = null;
+				CurrentFullScreenProcess = null;
 			});
+		}
+
+		private void LineupError(string error)
+		{
+			MessageBoxEx.Show((MainWindow)Application.Current.MainWindow, error);
+			Lineups = new List<Lineup>();
 		}
 
 		public void GenerateLineups()
 		{
 			var contest = SelectedContest;
-			if (contest != null)
+			if (contest == null)
 			{
-				CurrentProcess = "Generating lineups...";
-				ThreadPool.QueueUserWorkItem(q =>
+				LineupError("Select a contest to choose players from.");
+			}
+			else
+			{
+				var includePlayers = contest.PlayersGrouped.SelectMany(p => p.Players).Where(p => p.IncludeInLineups).Select(p => p.Player).ToArray();
+				if (includePlayers.Length < contest.Contest.Positions.Count)
 				{
-					var lineups = LineupGenerator.GenerateLineups(contest).ToList();
-					lineups.UpdateRating(lineups.Count);
-					Lineups = lineups;
-					CurrentProcess = null;
-				});
+					LineupError(string.Format("Select at least {0} players to generate lineups from.", contest.Contest.Positions.Count));
+				}
+				else if (includePlayers.Length > LineupGenerator.MAX_PLAYERS_TO_INCLUDE)
+				{
+					LineupError(string.Format("Select at most {0} players to generate lineups from for performance purposes.", LineupGenerator.MAX_PLAYERS_TO_INCLUDE));
+				}
+				else
+				{
+					CurrentLineupProcess = "Generating lineups...";
+					ThreadPool.QueueUserWorkItem(q =>
+					{
+						var lineups = LineupGenerator.GenerateLineups(contest, includePlayers).ToList();
+						lineups.UpdateRating(lineups.Count);
+						Lineups = lineups;
+						CurrentLineupProcess = null;
+					});
+				}
 			}
 		}
 
@@ -190,28 +232,6 @@ namespace mCubed.LineupGenerator.Controller
 					{
 						player.IncludeInLineups = player.Player.IsProbablePitcher || player.Player.IsStarter;
 					}
-				});
-			}
-		}
-
-		public void RefreshRatings(double ratingTolerance)
-		{
-			var lineups = Lineups;
-			if (lineups != null && lineups.Any())
-			{
-				CurrentProcess = "Updating ratings...";
-				ThreadPool.QueueUserWorkItem(q =>
-				{
-					// Re-rate the lineups.
-					lineups.UpdateRating(lineups.Count);
-
-					// Refresh the Lineups view to re-sort based on the new ratings.
-					Utils.DispatcherInvoke(() =>
-					{
-						LineupsView.Refresh();
-					});
-
-					CurrentProcess = null;
 				});
 			}
 		}
