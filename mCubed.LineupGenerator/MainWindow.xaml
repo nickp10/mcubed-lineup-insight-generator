@@ -24,27 +24,53 @@
 				<Grid Margin="10">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto" />
-						<RowDefinition Height="10" />
+						<RowDefinition Height="5" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="5" />
 						<RowDefinition Height="*" />
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="10" />
 						<ColumnDefinition Width="*" />
 					</Grid.ColumnDefinitions>
-					<Label Grid.Row="0"
-						   Grid.Column="0"
-						   Content="Contest:"
-						   VerticalAlignment="Center" />
-					<ComboBox Grid.Row="0"
-							  Grid.Column="2"
-							  Padding="5"
-							  ItemsSource="{Binding Contests}"
-							  SelectedItem="{Binding SelectedContest}"
-							  DisplayMemberPath="Title"
-							  x:Name="ContestComboBox" />
-					<TabControl Grid.Row="2"
-								Grid.ColumnSpan="3"
+					<Grid Grid.Row="0">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="10" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0"
+								   FontWeight="Bold"
+								   Text="Contest:"
+								   VerticalAlignment="Center" />
+						<ComboBox Grid.Column="2"
+								  Padding="5"
+								  ItemsSource="{Binding Contests}"
+								  SelectedItem="{Binding SelectedContest}"
+								  DisplayMemberPath="Title"
+								  x:Name="ContestComboBox" />
+					</Grid>
+					<Grid Grid.Row="2">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0">
+							<Run FontWeight="Bold">Player Update Time:</Run>
+							<Run Text="{Binding SelectedContest.Contest.PlayerUpdateTime, FallbackValue=N/A, TargetNullValue=N/A, StringFormat={}{0:h:mm tt (MMM d)}}" />
+						</TextBlock>
+						<TextBlock Grid.Column="2">
+							<Run FontWeight="Bold">Stat Update Time:</Run>
+							<Run Text="{Binding SelectedContest.Contest.StatUpdateTime, FallbackValue=N/A, TargetNullValue=N/A, StringFormat={}{0:h:mm tt (MMM d)}}" />
+						</TextBlock>
+						<TextBlock Grid.Column="4">
+							<Run FontWeight="Bold">Contest Start Time:</Run>
+							<Run Text="{Binding SelectedContest.Contest.StartTime, FallbackValue=N/A, TargetNullValue=N/A, StringFormat={}{0:h:mm tt (MMM d)}}" />
+						</TextBlock>
+					</Grid>
+					<TabControl Grid.Row="4"
 								DisplayMemberPath="Position"
 								IsSynchronizedWithCurrentItem="True"
 								ItemsSource="{Binding SelectedContest.PlayersGroupedView}">
