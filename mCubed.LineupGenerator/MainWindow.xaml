@@ -15,7 +15,6 @@
 		<Grid Margin="10">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="3*" />
-				<RowDefinition Height="10" />
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="2*" />
 			</Grid.RowDefinitions>
@@ -412,7 +411,12 @@
 					</TabControl>
 				</Grid>
 			</GroupBox>
-			<WrapPanel Grid.Row="2"
+			<GridSplitter Grid.Row="1"
+						  Height="3"
+						  Margin="0,11,0,0"
+						  HorizontalAlignment="Stretch" />
+			<WrapPanel Grid.Row="1"
+					   Margin="0,10,0,0"
 					   HorizontalAlignment="Center">
 				<Button Content="Select Recommended"
 						Click="OnSelectRecommendedClick"
@@ -422,7 +426,7 @@
 						Click="OnGenerateLineupsClick"
 						Padding="5" />
 			</WrapPanel>
-			<GroupBox Grid.Row="3"
+			<GroupBox Grid.Row="2"
 					  Header="Lineups">
 				<Grid Grid.IsSharedSizeScope="True"
 					  Margin="5">
