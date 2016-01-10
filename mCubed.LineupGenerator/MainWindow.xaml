@@ -57,12 +57,12 @@
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
 						<TextBlock Grid.Column="0">
-							<Run FontWeight="Bold">Player Update Time:</Run>
-							<Run Text="{Binding SelectedContest.Contest.PlayerUpdateTime, FallbackValue=N/A, TargetNullValue=N/A, StringFormat={}{0:h:mm tt (MMM d)}}" />
+							<Run FontWeight="Bold">Data Last Updated:</Run>
+							<Run Text="{Binding SelectedContest.Contest.PlayerDataLastUpdateTime, FallbackValue=N/A, TargetNullValue=N/A, StringFormat={}{0:h:mm tt (MMM d)}}" />
 						</TextBlock>
 						<TextBlock Grid.Column="2">
-							<Run FontWeight="Bold">Stat Update Time:</Run>
-							<Run Text="{Binding SelectedContest.Contest.StatUpdateTime, FallbackValue=N/A, TargetNullValue=N/A, StringFormat={}{0:h:mm tt (MMM d)}}" />
+							<Run FontWeight="Bold">Next Data Update:</Run>
+							<Run Text="{Binding SelectedContest.Contest.PlayerDataNextUpdateTime, FallbackValue=N/A, TargetNullValue=N/A, StringFormat={}{0:h:mm tt (MMM d)}}" />
 						</TextBlock>
 						<TextBlock Grid.Column="4">
 							<Run FontWeight="Bold">Contest Start Time:</Run>
@@ -415,17 +415,21 @@
 						  Height="3"
 						  Margin="0,11,0,0"
 						  HorizontalAlignment="Stretch" />
-			<WrapPanel Grid.Row="1"
-					   Margin="0,10,0,0"
-					   HorizontalAlignment="Center">
-				<Button Content="Select Recommended"
-						Click="OnSelectRecommendedClick"
-						Padding="5"
-						Margin="0,0,10,0" />
-				<Button Content="Generate Lineups"
-						Click="OnGenerateLineupsClick"
-						Padding="5" />
-			</WrapPanel>
+			<Border Grid.Row="1"
+					Background="White"
+					Margin="0,10,0,0"
+					Padding="10,0"
+					HorizontalAlignment="Center">
+				<WrapPanel>
+					<Button Content="Select Recommended"
+							Click="OnSelectRecommendedClick"
+							Padding="5"
+							Margin="0,0,10,0" />
+					<Button Content="Generate Lineups"
+							Click="OnGenerateLineupsClick"
+							Padding="5" />
+				</WrapPanel>
+			</Border>
 			<GroupBox Grid.Row="2"
 					  Header="Lineups">
 				<Grid Grid.IsSharedSizeScope="True"
