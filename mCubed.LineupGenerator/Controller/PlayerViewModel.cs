@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using mCubed.Services.Core;
 using mCubed.Services.Core.Model;
 
 namespace mCubed.LineupGenerator.Controller
@@ -8,6 +9,12 @@ namespace mCubed.LineupGenerator.Controller
 	public class PlayerViewModel : INotifyPropertyChanged
 	{
 		#region Properties
+
+		#region Contest
+
+		public Contest Contest { get; private set; }
+
+		#endregion
 
 		#region HasProjections
 
@@ -36,9 +43,46 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
+		#region IsExpanded
+
+		private bool _isExpanded;
+		public bool IsExpanded
+		{
+			get { return _isExpanded; }
+			set
+			{
+				if (_isExpanded != value)
+				{
+					_isExpanded = value;
+					RaisePropertyChanged("IsExpanded");
+					RaisePropertyChanged("PlayerCard");
+				}
+			}
+		}
+
+		#endregion
+
 		#region Player
 
 		public Player Player { get; private set; }
+
+		#endregion
+
+		#region PlayerCard
+
+		private PlayerCard _playerCard;
+		public PlayerCard PlayerCard
+		{
+			get
+			{
+				if (_playerCard == null && IsExpanded)
+				{
+					var service = new PlayerCardService(Contest, Player);
+					_playerCard = service.PlayerCard;
+				}
+				return _playerCard;
+			}
+		}
 
 		#endregion
 
@@ -55,8 +99,9 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Constructors
 
-		public PlayerViewModel(Player player)
+		public PlayerViewModel(Contest contest, Player player)
 		{
+			Contest = contest;
 			Player = player;
 		}
 

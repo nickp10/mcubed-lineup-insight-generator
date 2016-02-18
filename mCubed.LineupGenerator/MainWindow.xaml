@@ -198,7 +198,66 @@
 																		<ColumnDefinition Width="Auto"
 																						  SharedSizeGroup="SalaryColumn" />
 																	</Grid.ColumnDefinitions>
-																	<WrapPanel Grid.Column="0">
+																	<Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+																			  Grid.ColumnSpan="12">
+																		<Grid DataContext="{Binding PlayerCard}">
+																			<Grid.ColumnDefinitions>
+																				<ColumnDefinition Width="Auto" />
+																				<ColumnDefinition Width="10" />
+																				<ColumnDefinition Width="*" />
+																			</Grid.ColumnDefinitions>
+																			<ItemsControl Grid.Column="0"
+																						  ItemsSource="{Binding Gamelog}"
+																						  x:Name="GamelogControl">
+																				<ItemsControl.ItemTemplate>
+																					<DataTemplate>
+																						<Grid>
+																							<Grid.ColumnDefinitions>
+																								<ColumnDefinition Width="Auto"
+																												  SharedSizeGroup="PlayerCardDate" />
+																								<ColumnDefinition Width="10" />
+																								<ColumnDefinition Width="Auto"
+																												  SharedSizeGroup="PlayerCardOpponent" />
+																								<ColumnDefinition Width="10" />
+																								<ColumnDefinition Width="Auto"
+																												  SharedSizeGroup="PlayerCardPoints" />
+																							</Grid.ColumnDefinitions>
+																							<TextBlock Grid.Column="0"
+																									   Text="{Binding Date}" />
+																							<TextBlock Grid.Column="2"
+																									   Text="{Binding Opponent}" />
+																							<TextBlock Grid.Column="4"
+																									   Text="{Binding Points, StringFormat={}{0:0.##}}" />
+																						</Grid>
+																					</DataTemplate>
+																				</ItemsControl.ItemTemplate>
+																			</ItemsControl>
+																			<ScrollViewer Grid.Column="2"
+																						  Height="{Binding ElementName=GamelogControl, Path=ActualHeight}"
+																						  VerticalScrollBarVisibility="Auto"
+																						  HorizontalScrollBarVisibility="Hidden"
+																						  x:Name="NewsScroll">
+																				<ItemsControl ItemsSource="{Binding News}">
+																					<ItemsControl.ItemTemplate>
+																						<DataTemplate>
+																							<StackPanel>
+																								<TextBlock FontWeight="Bold"
+																										   Text="{Binding Date, StringFormat={}{0:MM/dd/yyyy hh:mm tt}}" />
+																								<TextBlock MaxWidth="{Binding ElementName=NewsScroll, Path=ViewportWidth}"
+																										   TextWrapping="Wrap">
+																										<Run Text="{Binding Summary}" />
+																										<LineBreak />
+																										<Run Text="{Binding Text}" />
+																								</TextBlock>
+																							</StackPanel>
+																						</DataTemplate>
+																					</ItemsControl.ItemTemplate>
+																				</ItemsControl>
+																			</ScrollViewer>
+																		</Grid>
+																	</Expander>
+																	<WrapPanel Grid.Column="0"
+																			   Margin="30,0,0,0">
 																		<TextBlock Text="{Binding Player.Name, Mode=OneWay}">
 																			<TextBlock.Style>
 																				<Style TargetType="{x:Type TextBlock}">

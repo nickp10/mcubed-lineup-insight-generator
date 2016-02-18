@@ -41,7 +41,7 @@ namespace mCubed.LineupGenerator.Controller
 							Select(g => new PositionPlayers
 							{
 								Position = g.Key,
-								Players = g.Select(p => new PlayerViewModel(p)).ToList()
+								Players = g.Select(p => new PlayerViewModel(Contest, p)).ToList()
 							}).
 							OrderBy(g => g.Position, new PositionComparer(positions)).
 							ToList();
