@@ -10,6 +10,9 @@
 		<view:BoolToVisibilityConverter TrueValue="Collapsed"
 										FalseValue="Visible"
 										x:Key="HasProjectionsConverter" />
+		<view:BoolToVisibilityConverter TrueValue="Visible"
+										FalseValue="Collapsed"
+										x:Key="BoolToVisibilityConverter" />
 	</Window.Resources>
 	<Grid>
 		<Grid Margin="10">
@@ -168,7 +171,7 @@
 												  VirtualizingStackPanel.IsVirtualizing="True">
 										<ItemsControl.ItemTemplate>
 											<DataTemplate>
-												<ToggleButton IsChecked="{Binding IncludeInLineups, Mode=TwoWay}">
+												<ToggleButton IsChecked="{Binding PlayerCard.IsExpanded, Mode=TwoWay}">
 													<ToggleButton.Template>
 														<ControlTemplate TargetType="{x:Type ToggleButton}">
 															<Border Background="{TemplateBinding Background}"
@@ -198,9 +201,57 @@
 																		<ColumnDefinition Width="Auto"
 																						  SharedSizeGroup="SalaryColumn" />
 																	</Grid.ColumnDefinitions>
-																	<Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
-																			  Grid.ColumnSpan="12">
-																		<Grid DataContext="{Binding PlayerCard}">
+																	<Grid.RowDefinitions>
+																		<RowDefinition Height="Auto" />
+																		<RowDefinition Height="Auto" />
+																	</Grid.RowDefinitions>
+																	<Grid Grid.ColumnSpan="12"
+																		  Grid.Row="1"
+																		  Margin="0,10,0,0">
+																		<Grid.Style>
+																			<Style TargetType="{x:Type Grid}">
+																				<Setter Property="Height"
+																						Value="0" />
+																				<Setter Property="Visibility"
+																						Value="Collapsed" />
+																				<Style.Triggers>
+																					<DataTrigger Binding="{Binding PlayerCard.IsExpanded}"
+																								 Value="True">
+																						<DataTrigger.EnterActions>
+																							<BeginStoryboard>
+																								<Storyboard>
+																									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+																																   Duration="0:0:0">
+																										<DiscreteObjectKeyFrame KeyTime="0:0:0"
+																																Value="{x:Static Visibility.Visible}" />
+																									</ObjectAnimationUsingKeyFrames>
+																									<DoubleAnimation Storyboard.TargetProperty="Height"
+																													 Duration="0:0:0.3"
+																													 From="0"
+																													 To="175" />
+																								</Storyboard>
+																							</BeginStoryboard>
+																						</DataTrigger.EnterActions>
+																						<DataTrigger.ExitActions>
+																							<BeginStoryboard>
+																								<Storyboard>
+																									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+																																   Duration="0:0:0.3">
+																										<DiscreteObjectKeyFrame KeyTime="0:0:0.3"
+																																Value="{x:Static Visibility.Collapsed}" />
+																									</ObjectAnimationUsingKeyFrames>
+																									<DoubleAnimation Storyboard.TargetProperty="Height"
+																													 Duration="0:0:0.3"
+																													 From="175"
+																													 To="0" />
+																								</Storyboard>
+																							</BeginStoryboard>
+																						</DataTrigger.ExitActions>
+																					</DataTrigger>
+																				</Style.Triggers>
+																			</Style>
+																		</Grid.Style>
+																		<Grid DataContext="{Binding PlayerCard.PlayerCard}">
 																			<Grid.ColumnDefinitions>
 																				<ColumnDefinition Width="Auto" />
 																				<ColumnDefinition Width="10" />
@@ -255,87 +306,150 @@
 																				</ItemsControl>
 																			</ScrollViewer>
 																		</Grid>
-																	</Expander>
-																	<WrapPanel Grid.Column="0"
-																			   Margin="30,0,0,0">
-																		<TextBlock Text="{Binding Player.Name, Mode=OneWay}">
-																			<TextBlock.Style>
-																				<Style TargetType="{x:Type TextBlock}">
-																					<Setter Property="Visibility"
-																							Value="Collapsed" />
-																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding Player.ESPNID}"
-																									 Value="{x:Null}">
-																							<Setter Property="Visibility"
-																									Value="Visible" />
-																						</DataTrigger>
-																					</Style.Triggers>
-																				</Style>
-																			</TextBlock.Style>
-																		</TextBlock>
-																		<TextBlock>
-																			<TextBlock.Style>
-																				<Style TargetType="{x:Type TextBlock}">
-																					<Setter Property="Visibility"
-																							Value="Visible" />
-																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding Player.ESPNID}"
-																									 Value="{x:Null}">
-																							<Setter Property="Visibility"
-																									Value="Collapsed" />
-																						</DataTrigger>
-																					</Style.Triggers>
-																				</Style>
-																			</TextBlock.Style>
-																			<Hyperlink Tag="{Binding Player.ESPNID}"
-																					   Click="OnESPNViewClick">
-																				<Run Text="{Binding Player.Name, Mode=OneWay}" />
-																			</Hyperlink>
-																		</TextBlock>
-																		<Border Margin="10,0,0,0"
-																				Padding="5,0">
-																			<Border.Style>
-																				<Style TargetType="{x:Type Border}">
-																					<Setter Property="BorderThickness"
-																							Value="0" />
-																					<Setter Property="BorderBrush"
-																							Value="Transparent" />
-																					<Setter Property="TextElement.Foreground"
-																							Value="Black" />
-																					<Style.Triggers>
-																						<DataTrigger Binding="{Binding Player.Injury.InjuryType}"
-																									 Value="Out">
-																							<Setter Property="BorderThickness"
-																									Value="1" />
-																							<Setter Property="BorderBrush"
-																									Value="#9B1010" />
-																							<Setter Property="TextElement.Foreground"
-																									Value="#9B1010" />
-																						</DataTrigger>
-																						<DataTrigger Binding="{Binding Player.Injury.InjuryType}"
-																									 Value="Possible">
-																							<Setter Property="BorderThickness"
-																									Value="1" />
-																							<Setter Property="BorderBrush"
-																									Value="#EB8500" />
-																							<Setter Property="TextElement.Foreground"
-																									Value="#EB8500" />
-																						</DataTrigger>
-																						<DataTrigger Binding="{Binding Player.Injury.InjuryType}"
-																									 Value="Probable">
-																							<Setter Property="BorderThickness"
-																									Value="1" />
-																							<Setter Property="BorderBrush"
-																									Value="#53A31A" />
-																							<Setter Property="TextElement.Foreground"
-																									Value="#53A31A" />
-																						</DataTrigger>
-																					</Style.Triggers>
-																				</Style>
-																			</Border.Style>
-																			<TextBlock Text="{Binding Player.Injury.Display}" />
+																		<Border Background="#AA000000"
+																				Visibility="{Binding PlayerCard.IsRetrievingPlayerCard, Converter={StaticResource BoolToVisibilityConverter}}">
+																			<Border Background="White"
+																					BorderBrush="Black"
+																					BorderThickness="1"
+																					CornerRadius="5"
+																					HorizontalAlignment="Center"
+																					VerticalAlignment="Center"
+																					Opacity="1"
+																					Padding="100,50">
+																				<TextBlock FontWeight="Bold"
+																						   FontSize="16"
+																						   Text="Retreiving player card..." />
+																			</Border>
 																		</Border>
-																	</WrapPanel>
+																	</Grid>
+																	<Grid Grid.Column="0">
+																		<Grid.ColumnDefinitions>
+																			<ColumnDefinition Width="Auto" />
+																			<ColumnDefinition Width="5" />
+																			<ColumnDefinition Width="Auto" />
+																			<ColumnDefinition Width="5" />
+																			<ColumnDefinition Width="Auto" />
+																		</Grid.ColumnDefinitions>
+																		<ToggleButton IsChecked="{Binding IncludeInLineups, Mode=TwoWay}">
+																			<ToggleButton.Template>
+																				<ControlTemplate TargetType="{x:Type ToggleButton}">
+																					<Grid Background="Transparent"
+																						  ToolTip="Generate lineups with this player">
+																						<Path Data="M0,10.5 L4.5,15 L15,4.5 L13.5,3 L4.5,12 L1.5,9 Z"
+																							  Stroke="#CCCCCC"
+																							  Fill="Transparent"
+																							  x:Name="PlayerIncludeCheckmarkPath" />
+																					</Grid>
+																					<ControlTemplate.Triggers>
+																						<DataTrigger Binding="{Binding IncludeInLineups}"
+																									 Value="True">
+																							<Setter TargetName="PlayerIncludeCheckmarkPath"
+																									Property="Fill"
+																									Value="#53A31A" />
+																							<Setter TargetName="PlayerIncludeCheckmarkPath"
+																									Property="Stroke"
+																									Value="#53A31A" />
+																						</DataTrigger>
+																					</ControlTemplate.Triggers>
+																				</ControlTemplate>
+																			</ToggleButton.Template>
+																		</ToggleButton>
+																		<Grid Grid.Column="2"
+																			  Background="Transparent"
+																			  ToolTip="Show more information about this player">
+																			<Ellipse Stroke="#A9A9A9"
+																					 Width="19"
+																					 Height="19"
+																					 HorizontalAlignment="Center"
+																					 VerticalAlignment="Center"
+																					 x:Name="PlayerCardArrowCircle" />
+																			<Path Data="M1,1.5L4.5,5 8,1.5"
+																				  Stroke="#666666"
+																				  StrokeThickness="2"
+																				  HorizontalAlignment="Center"
+																				  VerticalAlignment="Center"
+																				  x:Name="PlayerCardArrowPath" />
+																		</Grid>
+																		<WrapPanel Grid.Column="4">
+																			<TextBlock Text="{Binding Player.Name, Mode=OneWay}">
+																				<TextBlock.Style>
+																					<Style TargetType="{x:Type TextBlock}">
+																						<Setter Property="Visibility"
+																								Value="Collapsed" />
+																						<Style.Triggers>
+																							<DataTrigger Binding="{Binding Player.ESPNID}"
+																										 Value="{x:Null}">
+																								<Setter Property="Visibility"
+																										Value="Visible" />
+																							</DataTrigger>
+																						</Style.Triggers>
+																					</Style>
+																				</TextBlock.Style>
+																			</TextBlock>
+																			<TextBlock>
+																				<TextBlock.Style>
+																					<Style TargetType="{x:Type TextBlock}">
+																						<Setter Property="Visibility"
+																								Value="Visible" />
+																						<Style.Triggers>
+																							<DataTrigger Binding="{Binding Player.ESPNID}"
+																										 Value="{x:Null}">
+																								<Setter Property="Visibility"
+																										Value="Collapsed" />
+																							</DataTrigger>
+																						</Style.Triggers>
+																					</Style>
+																				</TextBlock.Style>
+																				<Hyperlink Tag="{Binding Player.ESPNID}"
+																						   Click="OnESPNViewClick">
+																					<Run Text="{Binding Player.Name, Mode=OneWay}" />
+																				</Hyperlink>
+																			</TextBlock>
+																			<Border Margin="10,0,0,0"
+																					Padding="5,0">
+																				<Border.Style>
+																					<Style TargetType="{x:Type Border}">
+																						<Setter Property="BorderThickness"
+																								Value="0" />
+																						<Setter Property="BorderBrush"
+																								Value="Transparent" />
+																						<Setter Property="TextElement.Foreground"
+																								Value="Black" />
+																						<Style.Triggers>
+																							<DataTrigger Binding="{Binding Player.Injury.InjuryType}"
+																										 Value="Out">
+																								<Setter Property="BorderThickness"
+																										Value="1" />
+																								<Setter Property="BorderBrush"
+																										Value="#9B1010" />
+																								<Setter Property="TextElement.Foreground"
+																										Value="#9B1010" />
+																							</DataTrigger>
+																							<DataTrigger Binding="{Binding Player.Injury.InjuryType}"
+																										 Value="Possible">
+																								<Setter Property="BorderThickness"
+																										Value="1" />
+																								<Setter Property="BorderBrush"
+																										Value="#EB8500" />
+																								<Setter Property="TextElement.Foreground"
+																										Value="#EB8500" />
+																							</DataTrigger>
+																							<DataTrigger Binding="{Binding Player.Injury.InjuryType}"
+																										 Value="Probable">
+																								<Setter Property="BorderThickness"
+																										Value="1" />
+																								<Setter Property="BorderBrush"
+																										Value="#53A31A" />
+																								<Setter Property="TextElement.Foreground"
+																										Value="#53A31A" />
+																							</DataTrigger>
+																						</Style.Triggers>
+																					</Style>
+																				</Border.Style>
+																				<TextBlock Text="{Binding Player.Injury.Display}" />
+																			</Border>
+																		</WrapPanel>
+																	</Grid>
 																	<Border Grid.Column="1"
 																			Padding="5,0"
 																			BorderThickness="1"
@@ -435,15 +549,22 @@
 																	<Setter Property="Background"
 																			Value="White" />
 																</Trigger>
-																<Trigger Property="IsChecked"
-																		 Value="True">
-																	<Setter Property="Background"
-																			Value="#C0C6EB" />
-																</Trigger>
 																<Trigger Property="IsMouseOver"
 																		 Value="True">
 																	<Setter Property="Background"
 																			Value="#DADDED" />
+																	<Setter TargetName="PlayerCardArrowCircle"
+																			Property="Stroke"
+																			Value="#3C7FB1" />
+																	<Setter TargetName="PlayerCardArrowPath"
+																			Property="Stroke"
+																			Value="#222222" />
+																</Trigger>
+																<Trigger Property="IsChecked"
+																		 Value="True">
+																	<Setter TargetName="PlayerCardArrowPath"
+																			Property="Data"
+																			Value="M1,4.5L4.5,1 8,4.5" />
 																</Trigger>
 															</ControlTemplate.Triggers>
 														</ControlTemplate>

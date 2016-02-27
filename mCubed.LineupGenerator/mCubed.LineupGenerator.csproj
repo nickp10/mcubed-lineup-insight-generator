@@ -117,6 +117,7 @@
     <Compile Include="Controller\ContestViewModel.cs" />
     <Compile Include="Controller\LineupGenerator.cs" />
     <Compile Include="Controller\LineupViewModel.cs" />
+    <Compile Include="Controller\PlayerCardViewModel.cs" />
     <Compile Include="Controller\PlayerViewModel.cs" />
     <Compile Include="Controller\PositionComparer.cs" />
     <Compile Include="Controller\SortableListCollectionView.cs" />

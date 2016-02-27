@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using mCubed.Services.Core;
 using mCubed.Services.Core.Model;
 
 namespace mCubed.LineupGenerator.Controller
@@ -43,25 +42,6 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
-		#region IsExpanded
-
-		private bool _isExpanded;
-		public bool IsExpanded
-		{
-			get { return _isExpanded; }
-			set
-			{
-				if (_isExpanded != value)
-				{
-					_isExpanded = value;
-					RaisePropertyChanged("IsExpanded");
-					RaisePropertyChanged("PlayerCard");
-				}
-			}
-		}
-
-		#endregion
-
 		#region Player
 
 		public Player Player { get; private set; }
@@ -70,15 +50,14 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region PlayerCard
 
-		private PlayerCard _playerCard;
-		public PlayerCard PlayerCard
+		private PlayerCardViewModel _playerCard;
+		public PlayerCardViewModel PlayerCard
 		{
 			get
 			{
-				if (_playerCard == null && IsExpanded)
+				if (_playerCard == null)
 				{
-					var service = new PlayerCardService(Contest, Player);
-					_playerCard = service.PlayerCard;
+					_playerCard = new PlayerCardViewModel(Contest, Player);
 				}
 				return _playerCard;
 			}
