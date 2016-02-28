@@ -336,7 +336,7 @@
 																					<Grid Background="Transparent"
 																						  ToolTip="Generate lineups with this player">
 																						<Path Data="M0,10.5 L4.5,15 L15,4.5 L13.5,3 L4.5,12 L1.5,9 Z"
-																							  Stroke="#CCCCCC"
+																							  Stroke="#AAA"
 																							  Fill="Transparent"
 																							  x:Name="PlayerIncludeCheckmarkPath" />
 																					</Grid>
@@ -405,7 +405,38 @@
 																					<Run Text="{Binding Player.Name, Mode=OneWay}" />
 																				</Hyperlink>
 																			</TextBlock>
-																			<Border Margin="10,0,0,0"
+																			<Path Data="M0,0 L12,0 L12,12 L0,12 Z M2,4 C4,5 8,3 10,4 M2,6 C4,7 8,5 10,6 M2,8 C4,9 8,7 10,8"
+																				  Margin="5,0,0,0"
+																				  Stroke="#AAA"
+																				  VerticalAlignment="Center">
+																				<Path.Style>
+																					<Style TargetType="{x:Type Path}">
+																						<Setter Property="Visibility"
+																								Value="Collapsed" />
+																						<Style.Triggers>
+																							<DataTrigger Binding="{Binding Player.NewsStatus}"
+																										 Value="Breaking">
+																								<Setter Property="Visibility"
+																										Value="Visible" />
+																								<Setter Property="ToolTip"
+																										Value="Breaking news available for this player" />
+																								<Setter Property="Fill"
+																										Value="Yellow" />
+																							</DataTrigger>
+																							<DataTrigger Binding="{Binding Player.NewsStatus}"
+																										 Value="Recent">
+																								<Setter Property="Visibility"
+																										Value="Visible" />
+																								<Setter Property="ToolTip"
+																										Value="Recent news available for this player" />
+																								<Setter Property="Fill"
+																										Value="White" />
+																							</DataTrigger>
+																						</Style.Triggers>
+																					</Style>
+																				</Path.Style>
+																			</Path>
+																			<Border Margin="5,0,0,0"
 																					Padding="5,0">
 																				<Border.Style>
 																					<Style TargetType="{x:Type Border}">
