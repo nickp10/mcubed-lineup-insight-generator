@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using mCubed.Services.Core.Model;
+using mCubed.LineupGenerator.Controller;
 
 namespace mCubed.LineupGenerator.Model
 {
@@ -10,9 +10,9 @@ namespace mCubed.LineupGenerator.Model
 	{
 		#region Constructors
 
-		public Lineup(params Player[] players)
+		public Lineup(params PlayerViewModel[] players)
 		{
-			_players = new ObservableCollection<Player>(players);
+			_players = new ObservableCollection<PlayerViewModel>(players);
 		}
 
 		#endregion
@@ -39,14 +39,14 @@ namespace mCubed.LineupGenerator.Model
 
 		#region Players
 
-		private ObservableCollection<Player> _players;
-		public ObservableCollection<Player> Players
+		private ObservableCollection<PlayerViewModel> _players;
+		public ObservableCollection<PlayerViewModel> Players
 		{
 			get
 			{
 				if (_players == null)
 				{
-					_players = new ObservableCollection<Player>();
+					_players = new ObservableCollection<PlayerViewModel>();
 					_players.CollectionChanged += new NotifyCollectionChangedEventHandler(OnPlayersCollectionChanged);
 				}
 				return _players;
@@ -66,7 +66,7 @@ namespace mCubed.LineupGenerator.Model
 			{
 				if (_playersString == null)
 				{
-					_playersString = Players.Any() ? Players.Select(p => p.Name).Aggregate((p1, p2) => p1 + ", " + p2) : string.Empty;
+					_playersString = Players.Any() ? Players.Select(p => p.Player.Name).Aggregate((p1, p2) => p1 + ", " + p2) : string.Empty;
 				}
 				return _playersString;
 			}
@@ -109,7 +109,7 @@ namespace mCubed.LineupGenerator.Model
 			{
 				if (_totalSalary == null)
 				{
-					_totalSalary = Players.Sum(p => p.Salary);
+					_totalSalary = Players.Sum(p => p.Player.Salary);
 				}
 				return _totalSalary.Value;
 			}
@@ -137,7 +137,7 @@ namespace mCubed.LineupGenerator.Model
 			{
 				if (_totalProjectedPoints == null)
 				{
-					_totalProjectedPoints = Players.Sum(p => p.ProjectedPoints);
+					_totalProjectedPoints = Players.Sum(p => p.Player.ProjectedPoints);
 				}
 				return _totalProjectedPoints.Value;
 			}
@@ -165,7 +165,7 @@ namespace mCubed.LineupGenerator.Model
 			{
 				if (_totalRecentAveragePoints == null)
 				{
-					_totalRecentAveragePoints = Players.Sum(p => p.RecentAveragePoints);
+					_totalRecentAveragePoints = Players.Sum(p => p.Player.RecentAveragePoints);
 				}
 				return _totalRecentAveragePoints.Value;
 			}
@@ -193,7 +193,7 @@ namespace mCubed.LineupGenerator.Model
 			{
 				if (_totalSeasonAveragePoints == null)
 				{
-					_totalSeasonAveragePoints = Players.Sum(p => p.SeasonAveragePoints);
+					_totalSeasonAveragePoints = Players.Sum(p => p.Player.SeasonAveragePoints);
 				}
 				return _totalSeasonAveragePoints.Value;
 			}

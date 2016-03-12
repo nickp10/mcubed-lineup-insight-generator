@@ -173,7 +173,7 @@ namespace mCubed.LineupGenerator.Controller
 			}
 			else
 			{
-				var includePlayers = contest.PlayersGrouped.SelectMany(p => p.Players).Where(p => p.IncludeInLineups).Select(p => p.Player).ToArray();
+				var includePlayers = contest.PlayersGrouped.SelectMany(p => p.Players).Where(p => p.IncludeInLineups).ToArray();
 				if (includePlayers.Length < contest.Contest.Positions.Count)
 				{
 					LineupError(string.Format("Select at least {0} players to generate lineups from.", contest.Contest.Positions.Count));
@@ -189,6 +189,11 @@ namespace mCubed.LineupGenerator.Controller
 					{
 						var lineups = LineupGenerator.GenerateLineups(contest, includePlayers).ToList();
 						lineups.UpdateRating(lineups.Count);
+						var likabilityID = lineups.UpdateLikability(lineups.Count);
+						foreach (var player in contest.PlayersGrouped.SelectMany(p => p.Players))
+						{
+							player.Likability.Calculate(likabilityID);
+						}
 						Lineups = lineups;
 						CurrentLineupProcess = null;
 					});

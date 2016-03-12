@@ -2,7 +2,6 @@
 using System.Linq;
 using mCubed.Combinatorics;
 using mCubed.LineupGenerator.Model;
-using mCubed.Services.Core.Model;
 
 namespace mCubed.LineupGenerator.Controller
 {
@@ -16,27 +15,27 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Methods
 
-		public static IEnumerable<Lineup> GenerateLineups(ContestViewModel contest, IEnumerable<Player> includePlayers)
+		public static IEnumerable<Lineup> GenerateLineups(ContestViewModel contest, IEnumerable<PlayerViewModel> includePlayers)
 		{
 			var maxSalary = contest.Contest.MaxSalary;
 			var maxPlayersPerTeam = contest.Contest.MaxPlayersPerTeam;
 			return GenerateLineupsForContest(contest, includePlayers).
 				Where(l => l.TotalSalary <= maxSalary).
-				Where(l => l.Players.GroupBy(p => p.Team).All(g => g.Count() <= maxPlayersPerTeam));
+				Where(l => l.Players.GroupBy(p => p.Player.Team).All(g => g.Count() <= maxPlayersPerTeam));
 		}
 
-		private static IEnumerable<Lineup> GenerateLineupsForContest(ContestViewModel contest, IEnumerable<Player> includePlayers)
+		private static IEnumerable<Lineup> GenerateLineupsForContest(ContestViewModel contest, IEnumerable<PlayerViewModel> includePlayers)
 		{
 			var positions = contest.Contest.Positions;
 			if (includePlayers != null && positions != null)
 			{
-				var combinations = new List<Combinations<Player>>();
+				var combinations = new List<Combinations<PlayerViewModel>>();
 				foreach (var positionGroup in positions.GroupBy(p => p))
 				{
 					var position = positionGroup.Key;
 					var playersNeededForPosition = positionGroup.Count();
-					var possiblePlayersForPosition = includePlayers.Where(p => p.Position == position).ToList();
-					combinations.Add(new Combinations<Player>(possiblePlayersForPosition, playersNeededForPosition));
+					var possiblePlayersForPosition = includePlayers.Where(p => p.Player.Position == position).ToList();
+					combinations.Add(new Combinations<PlayerViewModel>(possiblePlayersForPosition, playersNeededForPosition));
 				}
 				var totalLineups = combinations.Select(c => c.Count).Aggregate((c1, c2) => c1 * c2);
 				for (long i = 0; i < totalLineups; i++)

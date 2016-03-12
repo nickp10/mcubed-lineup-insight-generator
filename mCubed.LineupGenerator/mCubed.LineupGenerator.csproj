@@ -123,6 +123,7 @@
     <Compile Include="Controller\SortableListCollectionView.cs" />
     <Compile Include="Model\ISortable.cs" />
     <Compile Include="Model\Lineup.cs" />
+    <Compile Include="Model\Percentiles.cs" />
     <Compile Include="Model\PositionPlayers.cs" />
     <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\Utils.cs" />
