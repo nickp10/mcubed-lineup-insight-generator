@@ -189,11 +189,6 @@ namespace mCubed.LineupGenerator.Controller
 					{
 						var lineups = LineupGenerator.GenerateLineups(contest, includePlayers).ToList();
 						lineups.UpdateRating(lineups.Count);
-						var likabilityID = lineups.UpdateLikability(lineups.Count);
-						foreach (var player in contest.PlayersGrouped.SelectMany(p => p.Players))
-						{
-							player.Likability.Calculate(likabilityID);
-						}
 						Lineups = lineups;
 						CurrentLineupProcess = null;
 					});

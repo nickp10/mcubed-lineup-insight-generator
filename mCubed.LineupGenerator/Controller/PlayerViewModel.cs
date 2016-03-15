@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using mCubed.LineupGenerator.Model;
 using mCubed.Services.Core.Model;
 
 namespace mCubed.LineupGenerator.Controller
@@ -38,23 +37,6 @@ namespace mCubed.LineupGenerator.Controller
 					_includeInLineups = value;
 					RaisePropertyChanged("IncludeInLineups");
 				}
-			}
-		}
-
-		#endregion
-
-		#region Likability
-
-		private Percentiles _likability;
-		public Percentiles Likability
-		{
-			get
-			{
-				if (_likability == null)
-				{
-					_likability = new Percentiles();
-				}
-				return _likability;
 			}
 		}
 
