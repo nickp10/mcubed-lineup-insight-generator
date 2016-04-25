@@ -11,7 +11,8 @@
     <RootNamespace>mCubed.LineupGenerator</RootNamespace>
     <AssemblyName>mCubed.LineupGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -63,7 +64,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>C031484C3675A25E08FAFA3C064B11ADEF8A80BC</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>C11062F8AA27C4C4482C0C3D74C3748C8567BDC3</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>mCubed.LineupGenerator.pfx</ManifestKeyFile>
@@ -78,6 +79,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -123,6 +125,8 @@
     <Compile Include="Controller\SortableListCollectionView.cs" />
     <Compile Include="Model\ISortable.cs" />
     <Compile Include="Model\Lineup.cs" />
+    <Compile Include="Model\PlayerStatsGroup.cs" />
+    <Compile Include="Model\PlayerStatsGroupItem.cs" />
     <Compile Include="Model\PositionPlayers.cs" />
     <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\Utils.cs" />

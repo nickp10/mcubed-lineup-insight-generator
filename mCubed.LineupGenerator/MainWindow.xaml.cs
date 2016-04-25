@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Web;
 using System.Windows;
 using System.Windows.Interop;
 using mCubed.LineupGenerator.Controller;
@@ -26,20 +27,35 @@ namespace mCubed.LineupGenerator
 			((LineupViewModel)DataContext).GenerateLineups();
 		}
 
-		private void OnESPNViewClick(object sender, RoutedEventArgs e)
+		private void OnPlayerViewClick(object sender, RoutedEventArgs e)
 		{
 			var viewModel = DataContext as LineupViewModel;
 			var contest = viewModel == null ? null : viewModel.SelectedContest;
 			if (contest != null)
 			{
 				var element = sender as FrameworkContentElement;
-				var id = element == null ? null : element.Tag as string;
-				if (id != null)
+				var playerViewModel = element == null ? null : element.DataContext as PlayerViewModel;
+				if (playerViewModel != null)
 				{
-					var url = "http://espn.go.com/" + contest.Contest.Sport.ToLower() + "/player/_/id/" + id;
+					var url = "http://espn.go.com/" + contest.Contest.Sport.ToLower() + "/players?search=" + HttpUtility.UrlEncode(GetLastName(playerViewModel.Player.Name));
 					Process.Start(new ProcessStartInfo(url));
 				}
 			}
+		}
+
+		private string GetLastName(string name)
+		{
+			var index = name.LastIndexOf(' ');
+			if (index >= 0)
+			{
+				var lastName = name.Substring(index + 1);
+				if (lastName.EndsWith(".")) // Jr., Sr., etc.
+				{
+					return GetLastName(name.Substring(0, index));
+				}
+				return lastName;
+			}
+			return name;
 		}
 
 		#endregion

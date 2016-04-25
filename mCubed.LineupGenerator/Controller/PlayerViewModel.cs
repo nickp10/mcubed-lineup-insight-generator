@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using mCubed.LineupGenerator.Model;
 using mCubed.Services.Core.Model;
 
 namespace mCubed.LineupGenerator.Controller
@@ -15,11 +16,11 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
-		#region HasProjections
+		#region HasPlayerStats
 
-		public bool HasProjections
+		public bool HasPlayerStats
 		{
-			get { return Player.Stats.Any(s => s.ProjectedPoints != null); }
+			get { return PlayerStats.Length > 0; }
 		}
 
 		#endregion
@@ -65,11 +66,26 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
-		#region Projections
+		#region PlayerStats
 
-		public IEnumerable<PlayerStats> Projections
+		private PlayerStatsGroup[] _playerStats;
+		public PlayerStatsGroup[] PlayerStats
 		{
-			get { return Player.Stats.Where(s => s.ProjectedPoints != null); }
+			get
+			{
+				if (_playerStats == null)
+				{
+					_playerStats = new PlayerStatsGroup[]
+					{
+						CreatePlayerStatsGroup("Projections", p => p.ProjectedPoints),
+						CreatePlayerStatsGroup("Projected Floor", p => p.ProjectedFloor),
+						CreatePlayerStatsGroup("Projections", p => p.ProjectedCeiling),
+						CreatePlayerStatsGroup("Recent Points", p => p.RecentAveragePoints),
+						CreatePlayerStatsGroup("Season Points", p => p.SeasonAveragePoints)
+					}.Where(p => p != null).ToArray();
+				}
+				return _playerStats;
+			}
 		}
 
 		#endregion
@@ -82,6 +98,28 @@ namespace mCubed.LineupGenerator.Controller
 		{
 			Contest = contest;
 			Player = player;
+		}
+
+		#endregion
+
+		#region Methods
+
+		private PlayerStatsGroup CreatePlayerStatsGroup(string groupName, Func<PlayerStats, double?> valueFunc)
+		{
+			var stats = Player.Stats.Where(p => valueFunc(p) != null).ToArray();
+			if (stats.Length == 0)
+			{
+				return null;
+			}
+			return new PlayerStatsGroup
+			{
+				GroupName = groupName,
+				Stats = stats.Select(s => new PlayerStatsGroupItem
+				{
+					Source = s.Source,
+					Value = valueFunc(s).Value
+				})
+			};
 		}
 
 		#endregion
