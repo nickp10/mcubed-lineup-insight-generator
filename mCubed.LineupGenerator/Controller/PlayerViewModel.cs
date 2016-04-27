@@ -79,7 +79,7 @@ namespace mCubed.LineupGenerator.Controller
 					{
 						CreatePlayerStatsGroup("Projections", p => p.ProjectedPoints),
 						CreatePlayerStatsGroup("Projected Floor", p => p.ProjectedFloor),
-						CreatePlayerStatsGroup("Projections", p => p.ProjectedCeiling),
+						CreatePlayerStatsGroup("Projected Ceiling", p => p.ProjectedCeiling),
 						CreatePlayerStatsGroup("Recent Points", p => p.RecentAveragePoints),
 						CreatePlayerStatsGroup("Season Points", p => p.SeasonAveragePoints)
 					}.Where(p => p != null).ToArray();
