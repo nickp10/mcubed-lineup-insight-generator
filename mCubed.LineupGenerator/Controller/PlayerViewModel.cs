@@ -16,6 +16,12 @@ namespace mCubed.LineupGenerator.Controller
 
 		#endregion
 
+		#region Game
+
+		public Game Game { get; private set; }
+
+		#endregion
+
 		#region HasPlayerStats
 
 		public bool HasPlayerStats
@@ -40,6 +46,12 @@ namespace mCubed.LineupGenerator.Controller
 				}
 			}
 		}
+
+		#endregion
+
+		#region IsHomeTeam
+
+		public bool IsHomeTeam { get; private set; }
 
 		#endregion
 
@@ -94,9 +106,11 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Constructors
 
-		public PlayerViewModel(Contest contest, Player player)
+		public PlayerViewModel(Contest contest, Game game, bool isHomeTeam, Player player)
 		{
 			Contest = contest;
+			Game = game;
+			IsHomeTeam = isHomeTeam;
 			Player = player;
 		}
 

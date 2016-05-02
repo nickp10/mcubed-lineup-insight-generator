@@ -28,20 +28,27 @@ namespace mCubed.LineupGenerator.Controller
 			{
 				if (_playersGrouped == null)
 				{
-					var players = Contest.Players;
+					var games = Contest.Games;
 					var positions = Contest.Positions;
-					if (players == null || !players.Any() || positions == null)
+					if (games == null || !games.Any() || positions == null)
 					{
 						_playersGrouped = new List<PositionPlayers>();
 					}
 					else
 					{
+						var players = Enumerable.Empty<PlayerViewModel>();
+						foreach (var game in games)
+						{
+							players = players.
+								Concat(game.AwayTeam.Players.Select(p => new PlayerViewModel(Contest, game, false, p))).
+								Concat(game.HomeTeam.Players.Select(p => new PlayerViewModel(Contest, game, true, p)));
+						}
 						_playersGrouped = players.
-							GroupBy(p => p.Position).
+							GroupBy(p => p.Player.Position).
 							Select(g => new PositionPlayers
 							{
 								Position = g.Key,
-								Players = g.Select(p => new PlayerViewModel(Contest, p)).ToList()
+								Players = g.ToList()
 							}).
 							OrderBy(g => g.Position, new PositionComparer(positions)).
 							ToList();

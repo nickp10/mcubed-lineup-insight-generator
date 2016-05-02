@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -128,6 +129,44 @@ namespace mCubed.LineupGenerator.Model
 
 		#endregion
 
+		#region TotalProjectedCeiling
+
+		private bool _recalculateProjectedCeiling = true;
+		private double? _totalProjectedCeiling;
+		public double? TotalProjectedCeiling
+		{
+			get
+			{
+				if (_recalculateProjectedCeiling)
+				{
+					_totalProjectedCeiling = Sum(p => p.Player.ProjectedCeiling);
+					_recalculateProjectedCeiling = false;
+				}
+				return _totalProjectedCeiling;
+			}
+		}
+
+		#endregion
+
+		#region TotalProjectedFloor
+
+		private bool _recalculateProjectedFloor = true;
+		private double? _totalProjectedFloor;
+		public double? TotalProjectedFloor
+		{
+			get
+			{
+				if (_recalculateProjectedFloor)
+				{
+					_totalProjectedFloor = Sum(p => p.Player.ProjectedFloor);
+					_recalculateProjectedFloor = false;
+				}
+				return _totalProjectedFloor;
+			}
+		}
+
+		#endregion
+
 		#region TotalProjectedPoints
 
 		private double? _totalProjectedPoints;
@@ -220,9 +259,34 @@ namespace mCubed.LineupGenerator.Model
 		{
 			PlayersString = null;
 			TotalSalarySetter = null;
+			_recalculateProjectedCeiling = true;
+			RaisePropertyChanged("TotalProjectedCeiling");
+			_recalculateProjectedFloor = true;
+			RaisePropertyChanged("TotalProjectedFloor");
 			TotalProjectedPointsSetter = null;
 			TotalRecentAveragePointsSetter = null;
 			TotalSeasonAveragePointsSetter = null;
+		}
+
+		private double? Sum(Func<PlayerViewModel, double?> valueFunc)
+		{
+			double? sum = null;
+			foreach (var player in Players)
+			{
+				var value = valueFunc(player);
+				if (value != null)
+				{
+					if (sum == null)
+					{
+						sum = value.Value;
+					}
+					else
+					{
+						sum = sum.Value + value.Value;
+					}
+				}
+			}
+			return sum;
 		}
 
 		#endregion

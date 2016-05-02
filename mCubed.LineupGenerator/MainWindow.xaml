@@ -161,7 +161,7 @@
 															 SortSource="{Binding}"
 															 Text="P/$" />
 										<view:SortColumnLink Grid.Column="12"
-															 SortProperty="Player.Team"
+															 SortProperty="Game.AwayTeam.Code"
 															 SortSource="{Binding}"
 															 Text="Team" />
 										<view:SortColumnLink Grid.Column="14"
@@ -577,8 +577,33 @@
 																	</Grid>
 																	<TextBlock Grid.Column="9"
 																			   Text="{Binding Player.ProjectedPointsPerDollar, StringFormat={}{0:0.##}}" />
-																	<TextBlock Grid.Column="11"
-																			   Text="{Binding Player.Team}" />
+																	<TextBlock Grid.Column="11">
+																		<Run Text="{Binding Game.AwayTeam.Code}">
+																			<Run.Style>
+																				<Style TargetType="{x:Type Run}">
+																					<Style.Triggers>
+																						<DataTrigger Binding="{Binding IsHomeTeam}"
+																									 Value="False">
+																							<Setter Property="FontWeight"
+																									Value="Bold" />
+																						</DataTrigger>
+																					</Style.Triggers>
+																				</Style>
+																			</Run.Style>
+																		</Run><Run>@</Run><Run Text="{Binding Game.HomeTeam.Code}">
+																			<Run.Style>
+																				<Style TargetType="{x:Type Run}">
+																					<Style.Triggers>
+																						<DataTrigger Binding="{Binding IsHomeTeam}"
+																									 Value="True">
+																							<Setter Property="FontWeight"
+																									Value="Bold" />
+																						</DataTrigger>
+																					</Style.Triggers>
+																				</Style>
+																			</Run.Style>
+																		</Run>
+																	</TextBlock>
 																	<TextBlock Grid.Column="13"
 																			   Text="{Binding Player.Salary, StringFormat={}{0:C}}" />
 																</Grid>
@@ -678,6 +703,12 @@
 							<ColumnDefinition Width="*" />
 							<ColumnDefinition Width="25" />
 							<ColumnDefinition Width="Auto"
+											  SharedSizeGroup="ProjectedFloorColumn" />
+							<ColumnDefinition Width="25" />
+							<ColumnDefinition Width="Auto"
+											  SharedSizeGroup="ProjectedCeilingColumn" />
+							<ColumnDefinition Width="25" />
+							<ColumnDefinition Width="Auto"
 											  SharedSizeGroup="ProjectedPointsColumn" />
 							<ColumnDefinition Width="25" />
 							<ColumnDefinition Width="Auto"
@@ -699,31 +730,69 @@
 											 SortSource="{Binding LineupsView}"
 											 Text="Lineup" />
 						<view:SortColumnLink Grid.Column="3"
+											 SortProperty="TotalProjectedFloor"
+											 InitialSortDirection="Descending"
+											 SortSource="{Binding LineupsView}"
+											 Text="Floor">
+							<view:SortColumnLink.Style>
+								<Style TargetType="{x:Type view:SortColumnLink}">
+									<Setter Property="Visibility"
+											Value="Collapsed" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding Path=SelectedContest.Contest.Sport}"
+													 Value="NBA">
+											<Setter Property="Visibility"
+													Value="Visible" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</view:SortColumnLink.Style>
+						</view:SortColumnLink>
+						<view:SortColumnLink Grid.Column="5"
+											 SortProperty="TotalProjectedCeiling"
+											 InitialSortDirection="Descending"
+											 SortSource="{Binding LineupsView}"
+											 Text="Ceiling">
+							<view:SortColumnLink.Style>
+								<Style TargetType="{x:Type view:SortColumnLink}">
+									<Setter Property="Visibility"
+											Value="Collapsed" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding Path=SelectedContest.Contest.Sport}"
+													 Value="NBA">
+											<Setter Property="Visibility"
+													Value="Visible" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</view:SortColumnLink.Style>
+						</view:SortColumnLink>
+						<view:SortColumnLink Grid.Column="7"
 											 SortProperty="TotalProjectedPoints"
 											 InitialSortDirection="Descending"
 											 SortSource="{Binding LineupsView}"
 											 Text="Projected" />
-						<view:SortColumnLink Grid.Column="5"
+						<view:SortColumnLink Grid.Column="9"
 											 SortProperty="TotalRecentAveragePoints"
 											 InitialSortDirection="Descending"
 											 SortSource="{Binding LineupsView}"
 											 Text="Recent PPG" />
-						<view:SortColumnLink Grid.Column="7"
+						<view:SortColumnLink Grid.Column="11"
 											 SortProperty="TotalSeasonAveragePoints"
 											 InitialSortDirection="Descending"
 											 SortSource="{Binding LineupsView}"
 											 Text="Season PPG" />
-						<view:SortColumnLink Grid.Column="9"
+						<view:SortColumnLink Grid.Column="13"
 											 SortProperty="Rating"
 											 InitialSortDirection="Descending"
 											 SortSource="{Binding LineupsView}"
 											 Text="Rating" />
-						<view:SortColumnLink Grid.Column="11"
+						<view:SortColumnLink Grid.Column="15"
 											 SortProperty="TotalSalary"
 											 InitialSortDirection="Descending"
 											 SortSource="{Binding LineupsView}"
 											 Text="Salary" />
-						<Grid Grid.Column="13"
+						<Grid Grid.Column="17"
 							  Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
 					</Grid>
 					<ItemsControl Grid.Row="2"
@@ -747,6 +816,12 @@
 														<ColumnDefinition Width="*" />
 														<ColumnDefinition Width="25" />
 														<ColumnDefinition Width="Auto"
+																		  SharedSizeGroup="ProjectedFloorColumn" />
+														<ColumnDefinition Width="25" />
+														<ColumnDefinition Width="Auto"
+																		  SharedSizeGroup="ProjectedCeilingColumn" />
+														<ColumnDefinition Width="25" />
+														<ColumnDefinition Width="Auto"
 																		  SharedSizeGroup="ProjectedPointsColumn" />
 														<ColumnDefinition Width="25" />
 														<ColumnDefinition Width="Auto"
@@ -765,14 +840,18 @@
 															   Text="{Binding PlayersString}"
 															   TextWrapping="Wrap" />
 													<TextBlock Grid.Column="2"
-															   Text="{Binding TotalProjectedPoints, StringFormat={}{0:0.##}}" />
+															   Text="{Binding TotalProjectedFloor, StringFormat={}{0:0.##}}" />
 													<TextBlock Grid.Column="4"
-															   Text="{Binding TotalRecentAveragePoints, StringFormat={}{0:0.##}}" />
+															   Text="{Binding TotalProjectedCeiling, StringFormat={}{0:0.##}}" />
 													<TextBlock Grid.Column="6"
-															   Text="{Binding TotalSeasonAveragePoints, StringFormat={}{0:0.##}}" />
+															   Text="{Binding TotalProjectedPoints, StringFormat={}{0:0.##}}" />
 													<TextBlock Grid.Column="8"
-															   Text="{Binding Rating, StringFormat={}{0:0.##}%}" />
+															   Text="{Binding TotalRecentAveragePoints, StringFormat={}{0:0.##}}" />
 													<TextBlock Grid.Column="10"
+															   Text="{Binding TotalSeasonAveragePoints, StringFormat={}{0:0.##}}" />
+													<TextBlock Grid.Column="12"
+															   Text="{Binding Rating, StringFormat={}{0:0.##}%}" />
+													<TextBlock Grid.Column="14"
 															   Text="{Binding TotalSalary, StringFormat={}{0:C}}" />
 												</Grid>
 											</Border>
