@@ -77,22 +77,13 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Combinatorics\Combinations.cs" />
     <Compile Include="Combinatorics\GenerateOption.cs" />
     <Compile Include="Combinatorics\IMetaCollection.cs" />
@@ -105,12 +96,34 @@
     <Compile Include="Controller\PlayerCardViewModel.cs" />
     <Compile Include="Controller\PlayerViewModel.cs" />
     <Compile Include="Controller\PositionComparer.cs" />
+    <Compile Include="Controller\Settings.cs" />
     <Compile Include="Controller\SortableListCollectionView.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Model\ISortable.cs" />
     <Compile Include="Model\Lineup.cs" />
     <Compile Include="Model\PlayerStatsGroup.cs" />
     <Compile Include="Model\PlayerStatsGroupItem.cs" />
     <Compile Include="Model\PositionPlayers.cs" />
+    <Compile Include="Services\PlayerCardArticle.cs" />
+    <Compile Include="Services\Contest.cs" />
+    <Compile Include="Services\ContestType.cs" />
+    <Compile Include="Services\Game.cs" />
+    <Compile Include="Services\PlayerInjury.cs" />
+    <Compile Include="Services\InjuryType.cs" />
+    <Compile Include="Services\LineupGeneratorService.cs" />
+    <Compile Include="Services\NewsStatus.cs" />
+    <Compile Include="Services\Player.cs" />
+    <Compile Include="Services\PlayerCard.cs" />
+    <Compile Include="Services\PlayerGameStats.cs" />
+    <Compile Include="Services\PlayerStats.cs" />
+    <Compile Include="Services\Sport.cs" />
+    <Compile Include="Services\Team.cs" />
     <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="View\BoolToVisibilityConverter.cs" />
@@ -120,12 +133,15 @@
       <DependentUpon>SortColumnLink.xaml</DependentUpon>
     </Compile>
     <Page Include="View\SortColumnLink.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="mCubed.LineupGenerator.pfx" />
+    <None Include="mCubed.LineupGenerator.exe.settings">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

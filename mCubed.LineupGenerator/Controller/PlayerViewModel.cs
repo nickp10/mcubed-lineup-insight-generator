@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using mCubed.LineupGenerator.Model;
-using mCubed.Services.Core.Model;
+using mCubed.LineupGenerator.Services;
 
 namespace mCubed.LineupGenerator.Controller
 {

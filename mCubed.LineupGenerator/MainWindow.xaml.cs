@@ -37,7 +37,7 @@ namespace mCubed.LineupGenerator
 				var playerViewModel = element == null ? null : element.DataContext as PlayerViewModel;
 				if (playerViewModel != null)
 				{
-					var url = "http://espn.go.com/" + contest.Contest.Sport.ToLower() + "/players?search=" + HttpUtility.UrlEncode(GetLastName(playerViewModel.Player.Name));
+					var url = "http://espn.go.com/" + contest.Contest.Sport.ToString().ToLower() + "/players?search=" + HttpUtility.UrlEncode(GetLastName(playerViewModel.Player.Name));
 					Process.Start(new ProcessStartInfo(url));
 				}
 			}

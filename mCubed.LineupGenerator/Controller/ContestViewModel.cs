@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using mCubed.LineupGenerator.Model;
+using mCubed.LineupGenerator.Services;
 using mCubed.LineupGenerator.Utilities;
-using mCubed.Services.Core.Model;
 
 namespace mCubed.LineupGenerator.Controller
 {
@@ -86,7 +86,7 @@ namespace mCubed.LineupGenerator.Controller
 		{
 			get
 			{
-				var builder = new StringBuilder(Contest.Sport).Append(" ").Append(Contest.ContestType);
+				var builder = new StringBuilder().Append(Contest.Sport).Append(" ").Append(Contest.ContestType);
 				var label = Contest.Label;
 				if (label != null)
 				{

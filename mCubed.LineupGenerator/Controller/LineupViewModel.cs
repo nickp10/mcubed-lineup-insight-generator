@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using mCubed.LineupGenerator.Model;
+using mCubed.LineupGenerator.Services;
 using mCubed.LineupGenerator.Utilities;
 using mCubed.LineupGenerator.View;
-using mCubed.Services.Core;
 
 namespace mCubed.LineupGenerator.Controller
 {
@@ -152,7 +152,7 @@ namespace mCubed.LineupGenerator.Controller
 			CurrentFullScreenProcess = "Retrieving contests...";
 			ThreadPool.QueueUserWorkItem(q =>
 			{
-				var service = new LineupAggregatorService();
+				var service = new LineupGeneratorService();
 				Contests = service.Contests.Select(c => new ContestViewModel(c)).ToArray();
 				CurrentFullScreenProcess = null;
 			});
@@ -209,9 +209,9 @@ namespace mCubed.LineupGenerator.Controller
 						var recommendedPlayers = playersNeededForPosition * 4;
 						foreach (var player in playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPointsPerDollar))
 						{
-							player.IncludeInLineups = player.Player.IsPlaying && recommendedPlayers-- > 0;
+							player.IncludeInLineups = (player.Player.IsStarter || player.Player.IsProbablePitcher) && recommendedPlayers-- > 0;
 						}
-						var topPlayer = playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPoints).FirstOrDefault(p => p.Player.IsPlaying);
+						var topPlayer = playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPoints).FirstOrDefault(p => p.Player.IsStarter || p.Player.IsProbablePitcher);
 						if (topPlayer != null)
 						{
 							topPlayer.IncludeInLineups = true;

@@ -103,27 +103,18 @@ namespace mCubed.LineupGenerator.Model
 
 		#region TotalSalary
 
-		private int? _totalSalary;
-		public int TotalSalary
+		private bool _recalculateTotalSalary = true;
+		private double? _totalSalary;
+		public double TotalSalary
 		{
 			get
 			{
-				if (_totalSalary == null)
+				if (_recalculateTotalSalary)
 				{
-					_totalSalary = Players.Sum(p => p.Player.Salary);
+					_totalSalary = Sum(p => p.Player.Salary);
+					_recalculateTotalSalary = false;
 				}
-				return _totalSalary.Value;
-			}
-		}
-		private int? TotalSalarySetter
-		{
-			set
-			{
-				if (_totalSalary != value)
-				{
-					_totalSalary = value;
-					RaisePropertyChanged("TotalSalary");
-				}
+				return _totalSalary == null ? 0d : _totalSalary.Value;
 			}
 		}
 
@@ -169,27 +160,18 @@ namespace mCubed.LineupGenerator.Model
 
 		#region TotalProjectedPoints
 
+		private bool _recalculateTotalProjectedPoints = true;
 		private double? _totalProjectedPoints;
 		public double TotalProjectedPoints
 		{
 			get
 			{
-				if (_totalProjectedPoints == null)
+				if (_recalculateTotalProjectedPoints)
 				{
-					_totalProjectedPoints = Players.Sum(p => p.Player.ProjectedPoints ?? 0d);
+					_totalProjectedPoints = Sum(p => p.Player.ProjectedPoints);
+					_recalculateTotalProjectedPoints = false;
 				}
-				return _totalProjectedPoints.Value;
-			}
-		}
-		private double? TotalProjectedPointsSetter
-		{
-			set
-			{
-				if (_totalProjectedPoints != value)
-				{
-					_totalProjectedPoints = value;
-					RaisePropertyChanged("TotalProjectedPoints");
-				}
+				return _totalProjectedPoints == null ? 0d : _totalProjectedPoints.Value;
 			}
 		}
 
@@ -197,27 +179,18 @@ namespace mCubed.LineupGenerator.Model
 
 		#region TotalRecentAveragePoints
 
+		private bool _recalculateTotalRecentAveragePoints = true;
 		private double? _totalRecentAveragePoints;
 		public double TotalRecentAveragePoints
 		{
 			get
 			{
-				if (_totalRecentAveragePoints == null)
+				if (_recalculateTotalRecentAveragePoints)
 				{
-					_totalRecentAveragePoints = Players.Sum(p => p.Player.RecentAveragePoints ?? 0d);
+					_totalRecentAveragePoints = Sum(p => p.Player.RecentAveragePoints);
+					_recalculateTotalRecentAveragePoints = false;
 				}
-				return _totalRecentAveragePoints.Value;
-			}
-		}
-		private double? TotalRecentAveragePointsSetter
-		{
-			set
-			{
-				if (_totalRecentAveragePoints != value)
-				{
-					_totalRecentAveragePoints = value;
-					RaisePropertyChanged("TotalRecentAveragePoints");
-				}
+				return _totalRecentAveragePoints == null ? 0d : _totalRecentAveragePoints.Value;
 			}
 		}
 
@@ -225,27 +198,18 @@ namespace mCubed.LineupGenerator.Model
 
 		#region TotalSeasonAveragePoints
 
+		private bool _recalculateTotalSeasonAveragePoints = true;
 		private double? _totalSeasonAveragePoints;
 		public double TotalSeasonAveragePoints
 		{
 			get
 			{
-				if (_totalSeasonAveragePoints == null)
+				if (_recalculateTotalSeasonAveragePoints)
 				{
-					_totalSeasonAveragePoints = Players.Sum(p => p.Player.SeasonAveragePoints ?? 0d);
+					_totalSeasonAveragePoints = Sum(p => p.Player.SeasonAveragePoints);
+					_recalculateTotalSeasonAveragePoints = false;
 				}
-				return _totalSeasonAveragePoints.Value;
-			}
-		}
-		private double? TotalSeasonAveragePointsSetter
-		{
-			set
-			{
-				if (_totalSeasonAveragePoints != value)
-				{
-					_totalSeasonAveragePoints = value;
-					RaisePropertyChanged("TotalSeasonAveragePoints");
-				}
+				return _totalSeasonAveragePoints == null ? 0d : _totalSeasonAveragePoints.Value;
 			}
 		}
 
@@ -258,14 +222,18 @@ namespace mCubed.LineupGenerator.Model
 		private void OnPlayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			PlayersString = null;
-			TotalSalarySetter = null;
+			_recalculateTotalSalary = true;
+			RaisePropertyChanged("TotalSalary");
 			_recalculateProjectedCeiling = true;
 			RaisePropertyChanged("TotalProjectedCeiling");
 			_recalculateProjectedFloor = true;
 			RaisePropertyChanged("TotalProjectedFloor");
-			TotalProjectedPointsSetter = null;
-			TotalRecentAveragePointsSetter = null;
-			TotalSeasonAveragePointsSetter = null;
+			_recalculateTotalProjectedPoints = true;
+			RaisePropertyChanged("TotalProjectedPoints");
+			_recalculateTotalRecentAveragePoints = true;
+			RaisePropertyChanged("TotalRecentAveragePoints");
+			_recalculateTotalSeasonAveragePoints = true;
+			RaisePropertyChanged("TotalSalary");
 		}
 
 		private double? Sum(Func<PlayerViewModel, double?> valueFunc)

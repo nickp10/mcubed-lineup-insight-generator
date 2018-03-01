@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Threading;
-using mCubed.Services.Core;
-using mCubed.Services.Core.Model;
+using mCubed.LineupGenerator.Services;
 
 namespace mCubed.LineupGenerator.Controller
 {
@@ -97,8 +96,8 @@ namespace mCubed.LineupGenerator.Controller
 				IsRetrievingPlayerCard = true;
 				ThreadPool.QueueUserWorkItem(q =>
 				{
-					var service = new PlayerCardService(Contest, Player);
-					PlayerCard = service.PlayerCard;
+					var service = new LineupGeneratorService();
+					PlayerCard = service.GetPlayerCard(Contest.ID, Player.ID);
 					IsRetrievingPlayerCard = false;
 				});
 			}
