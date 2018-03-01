@@ -209,9 +209,9 @@ namespace mCubed.LineupGenerator.Controller
 						var recommendedPlayers = playersNeededForPosition * 4;
 						foreach (var player in playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPointsPerDollar))
 						{
-							player.IncludeInLineups = (player.Player.IsStarter || player.Player.IsProbablePitcher) && recommendedPlayers-- > 0;
+							player.IncludeInLineups = player.Player.IsPlaying && recommendedPlayers-- > 0;
 						}
-						var topPlayer = playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPoints).FirstOrDefault(p => p.Player.IsStarter || p.Player.IsProbablePitcher);
+						var topPlayer = playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPoints).FirstOrDefault(p => p.Player.IsPlaying);
 						if (topPlayer != null)
 						{
 							topPlayer.IncludeInLineups = true;
@@ -230,7 +230,7 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					foreach (var player in contest.PlayersGrouped.SelectMany(p => p.Players))
 					{
-						player.IncludeInLineups = player.Player.IsProbablePitcher || player.Player.IsStarter;
+						player.IncludeInLineups = player.Player.IsPlaying;
 					}
 				});
 			}

@@ -14,11 +14,17 @@ namespace mCubed.LineupGenerator.Services
 		[JsonProperty("injury")]
 		public PlayerInjury Injury { get; set; }
 
+		[JsonProperty("isPlaying")]
+		public bool IsPlaying { get; set; }
+
 		[JsonProperty("isProbablePitcher")]
 		public bool IsProbablePitcher { get; set; }
 
 		[JsonProperty("isStarter")]
 		public bool IsStarter { get; set; }
+
+		[JsonProperty("likability")]
+		public double? Likability { get; set; }
 
 		[JsonProperty("name")]
 		public string Name { get; set; }
