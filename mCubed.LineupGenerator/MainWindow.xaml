@@ -270,9 +270,9 @@
 																			<GroupBox Grid.Column="0"
 																					  Margin="5,0"
 																					  Padding="5"
-																					  Header="Gamelog">
-																				<ItemsControl ItemsSource="{Binding Gamelog}"
-																							  x:Name="GamelogControl">
+																					  Header="Game Log">
+																				<ItemsControl ItemsSource="{Binding GameLog}"
+																							  x:Name="GameLogControl">
 																					<ItemsControl.ItemTemplate>
 																						<DataTemplate>
 																							<Grid>
@@ -287,7 +287,7 @@
 																													  SharedSizeGroup="PlayerCardPoints" />
 																								</Grid.ColumnDefinitions>
 																								<TextBlock Grid.Column="0"
-																										   Text="{Binding Date}" />
+																										   Text="{Binding Date, StringFormat={}{0:MM/dd}}" />
 																								<TextBlock Grid.Column="2"
 																										   Text="{Binding Opponent}" />
 																								<TextBlock Grid.Column="4"
@@ -302,7 +302,7 @@
 																					  Margin="5,0"
 																					  Padding="5"
 																					  Header="News">
-																				<ScrollViewer Height="{Binding ElementName=GamelogControl, Path=ActualHeight}"
+																				<ScrollViewer Height="{Binding ElementName=GameLogControl, Path=ActualHeight}"
 																							  VerticalScrollBarVisibility="Auto"
 																							  HorizontalScrollBarVisibility="Hidden"
 																							  x:Name="NewsScroll">
@@ -322,7 +322,7 @@
 																										<Run Text="Description:"
 																											 FontWeight="Bold"
 																											 FontStyle="Italic" />
-																										<Run Text="{Binding Text}" />
+																										<Run Text="{Binding Details}" />
 																										<LineBreak />
 																									</TextBlock>
 																								</StackPanel>
