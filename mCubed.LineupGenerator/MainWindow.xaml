@@ -102,7 +102,7 @@
 															  SharedSizeGroup="StarterColumn" />
 											<ColumnDefinition Width="25" />
 											<ColumnDefinition Width="Auto"
-															  SharedSizeGroup="LikabilityColumn" />
+															  SharedSizeGroup="LikeabilityColumn" />
 											<ColumnDefinition Width="25" />
 											<ColumnDefinition Width="Auto"
 															  SharedSizeGroup="ProjectedColumn" />
@@ -146,10 +146,10 @@
 															 SortSource="{Binding}"
 															 Text="Starter" />
 										<view:SortColumnLink Grid.Column="6"
-															 SortProperty="Player.Likability"
+															 SortProperty="Player.Likeability"
 															 InitialSortDirection="Descending"
 															 SortSource="{Binding}"
-															 Text="Likability" />
+															 Text="Likeability" />
 										<view:SortColumnLink Grid.Column="8"
 															 SortProperty="Player.ProjectedPoints"
 															 InitialSortDirection="Descending"
@@ -198,7 +198,7 @@
 																						  SharedSizeGroup="StarterColumn" />
 																		<ColumnDefinition Width="25" />
 																		<ColumnDefinition Width="Auto"
-																						  SharedSizeGroup="LikabilityColumn" />
+																						  SharedSizeGroup="LikeabilityColumn" />
 																		<ColumnDefinition Width="25" />
 																		<ColumnDefinition Width="Auto"
 																						  SharedSizeGroup="ProjectedColumn" />
@@ -522,7 +522,7 @@
 																		<TextBlock Text="Starter" />
 																	</Border>
 																	<TextBlock Grid.Column="5"
-																			   Text="{Binding Player.Likability, TargetNullValue='', StringFormat={}{0:0.00}%}" />
+																			   Text="{Binding Player.Likeability, TargetNullValue='', StringFormat={}{0:0.00}%}" />
 																	<Grid Grid.Column="7">
 																		<ToggleButton x:Name="ProjectedPointsToggle">
 																			<ToggleButton.Template>

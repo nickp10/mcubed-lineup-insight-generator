@@ -23,8 +23,8 @@ namespace mCubed.LineupGenerator.Services
 		[JsonProperty("isStarter")]
 		public bool IsStarter { get; set; }
 
-		[JsonProperty("likability")]
-		public double? Likability { get; set; }
+		[JsonProperty("likeability")]
+		public double? Likeability { get; set; }
 
 		[JsonProperty("name")]
 		public string Name { get; set; }
