@@ -41,3 +41,10 @@ Creating Releases
 1. Build the solution.
 1. Zip the bin/Release directory.
 1. Upload the zip file to GitHub.
+
+[mcubed-lineup-insight-server](https://github.com/nickp10/mcubed-lineup-insight-server)
+----
+This application relies on the mcubed-lineup-insight-server being started. There is a .exe.settings file next to the lineup insight generator .exe that indicates how to connect to the lineup insight server.
+
+* *InsightServer* - **Required.** Indicates the server name or IP address of which to connect to the lineup insight server.
+* *InsightPort* - **Required.** Indicates the port of which to connect to the lineup insight server.
