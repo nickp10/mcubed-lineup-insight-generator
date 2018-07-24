@@ -43,14 +43,16 @@ namespace mCubed.LineupGenerator.Controller
 								Concat(game.AwayTeam.Players.Select(p => new PlayerViewModel(Contest, game, false, p))).
 								Concat(game.HomeTeam.Players.Select(p => new PlayerViewModel(Contest, game, true, p)));
 						}
-						_playersGrouped = players.
-							GroupBy(p => p.Player.Position).
-							Select(g => new PositionPlayers
+						players = players.ToArray();
+						_playersGrouped = positions.
+							Distinct(new ContestPositionComparer()).
+							Select(p => new PositionPlayers
 							{
-								Position = g.Key,
-								Players = g.ToList()
+								PositionLabel = p.Label,
+								Players = players.
+									Where(player => p.EligiblePlayerPositions.Contains(player.Player.Position)).
+									ToList()
 							}).
-							OrderBy(g => g.Position, new PositionComparer(positions)).
 							ToList();
 					}
 				}

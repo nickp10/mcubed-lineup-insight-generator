@@ -57,18 +57,18 @@ namespace mCubed.LineupGenerator.Model
 
 		#endregion
 
-		#region Position
+		#region PositionLabel
 
-		private string _positions;
-		public string Position
+		private string _positionLabel;
+		public string PositionLabel
 		{
-			get { return _positions; }
+			get { return _positionLabel; }
 			set
 			{
-				if (_positions != value)
+				if (_positionLabel != value)
 				{
-					_positions = value;
-					RaisePropertyChanged("Position");
+					_positionLabel = value;
+					RaisePropertyChanged("PositionLabel");
 				}
 			}
 		}

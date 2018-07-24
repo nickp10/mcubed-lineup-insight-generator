@@ -90,6 +90,7 @@
     <Compile Include="Combinatorics\Permutations.cs" />
     <Compile Include="Combinatorics\SmallPrimeUtility.cs" />
     <Compile Include="Combinatorics\Variations.cs" />
+    <Compile Include="Controller\ContestPositionComparer.cs" />
     <Compile Include="Controller\ContestViewModel.cs" />
     <Compile Include="Controller\LineupGenerator.cs" />
     <Compile Include="Controller\LineupViewModel.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Model\PlayerStatsGroup.cs" />
     <Compile Include="Model\PlayerStatsGroupItem.cs" />
     <Compile Include="Model\PositionPlayers.cs" />
+    <Compile Include="Services\ContestPosition.cs" />
     <Compile Include="Services\PlayerCardArticle.cs" />
     <Compile Include="Services\Contest.cs" />
     <Compile Include="Services\ContestType.cs" />

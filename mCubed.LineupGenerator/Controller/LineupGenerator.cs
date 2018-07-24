@@ -21,7 +21,8 @@ namespace mCubed.LineupGenerator.Controller
 			var maxPlayersPerTeam = contest.Contest.MaxPlayersPerTeam;
 			return GenerateLineupsForContest(contest, includePlayers).
 				Where(l => l.TotalSalary <= maxSalary).
-				Where(l => l.Players.GroupBy(p => p.Player.Team).All(g => g.Count() <= maxPlayersPerTeam));
+				Where(l => l.Players.GroupBy(p => p.Player.Team).All(g => g.Count() <= maxPlayersPerTeam)).
+				Where(l => l.Players.Distinct().Count() == l.Players.Count);
 		}
 
 		private static IEnumerable<Lineup> GenerateLineupsForContest(ContestViewModel contest, IEnumerable<PlayerViewModel> includePlayers)
@@ -30,11 +31,10 @@ namespace mCubed.LineupGenerator.Controller
 			if (includePlayers != null && positions != null)
 			{
 				var combinations = new List<Combinations<PlayerViewModel>>();
-				foreach (var positionGroup in positions.GroupBy(p => p))
+				foreach (var position in positions)
 				{
-					var position = positionGroup.Key;
-					var playersNeededForPosition = positionGroup.Count();
-					var possiblePlayersForPosition = includePlayers.Where(p => p.Player.Position == position).ToList();
+					var playersNeededForPosition = 1;
+					var possiblePlayersForPosition = includePlayers.Where(p => position.EligiblePlayerPositions.Contains(p.Player.Position)).ToList();
 					combinations.Add(new Combinations<PlayerViewModel>(possiblePlayersForPosition, playersNeededForPosition));
 				}
 				var totalLineups = combinations.Select(c => c.Count).Aggregate((c1, c2) => c1 * c2);

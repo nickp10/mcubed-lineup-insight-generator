@@ -205,11 +205,21 @@ namespace mCubed.LineupGenerator.Controller
 				{
 					foreach (var playerGroup in contest.PlayersGrouped)
 					{
-						var playersNeededForPosition = contest.Contest.Positions.Count(p => p == playerGroup.Position);
-						var recommendedPlayers = playersNeededForPosition * 4;
+						foreach (var player in playerGroup.Players)
+						{
+							player.IncludeInLineups = false;
+						}
+					}
+					foreach (var playerGroup in contest.PlayersGrouped)
+					{
+						var playersNeededForPosition = contest.Contest.Positions.Count(p => p.Label == playerGroup.PositionLabel);
+						var recommendedPlayers = playersNeededForPosition * 3;
 						foreach (var player in playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPointsPerDollar))
 						{
-							player.IncludeInLineups = player.Player.IsPlaying && recommendedPlayers-- > 0;
+							if (player.Player.IsPlaying && recommendedPlayers-- > 0)
+							{
+								player.IncludeInLineups = true;
+							}
 						}
 						var topPlayer = playerGroup.Players.OrderByDescending(p => p.Player.ProjectedPoints).FirstOrDefault(p => p.Player.IsPlaying);
 						if (topPlayer != null)

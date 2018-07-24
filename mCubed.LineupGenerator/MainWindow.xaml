@@ -73,7 +73,7 @@
 						</TextBlock>
 					</Grid>
 					<TabControl Grid.Row="4"
-								DisplayMemberPath="Position"
+								DisplayMemberPath="PositionLabel"
 								IsSynchronizedWithCurrentItem="True"
 								ItemsSource="{Binding SelectedContest.PlayersGroupedView}">
 						<TabControl.ItemContainerStyle>

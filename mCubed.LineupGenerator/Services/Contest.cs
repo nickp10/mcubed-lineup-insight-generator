@@ -31,7 +31,7 @@ namespace mCubed.LineupGenerator.Services
 		public DateTime? PlayerDataNextUpdateTime { get; set; }
 
 		[JsonProperty("positions")]
-		public List<string> Positions { get; set; }
+		public List<ContestPosition> Positions { get; set; }
 
 		[JsonProperty("sport")]
 		public Sport Sport { get; set; }
