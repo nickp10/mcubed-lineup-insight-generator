@@ -36,12 +36,12 @@ namespace mCubed.LineupGenerator.Controller
 
 		#region Properties
 
-		public static string InsightServer
+		public static string[] InsightServers
 		{
 			get
 			{
 				ReadSettings();
-				return _settings["InsightServer"];
+				return _settings["InsightServers"].Split(',');
 			}
 		}
 
