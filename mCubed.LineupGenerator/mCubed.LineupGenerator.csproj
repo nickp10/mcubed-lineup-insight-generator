@@ -123,7 +123,9 @@
     <Compile Include="Services\Player.cs" />
     <Compile Include="Services\PlayerCard.cs" />
     <Compile Include="Services\PlayerGameStats.cs" />
+    <Compile Include="Services\PlayerMLBSpecific.cs" />
     <Compile Include="Services\PlayerStats.cs" />
+    <Compile Include="Services\PositionPercentile.cs" />
     <Compile Include="Services\Sport.cs" />
     <Compile Include="Services\Team.cs" />
     <Compile Include="Utilities\IEnumerableExtensions.cs" />

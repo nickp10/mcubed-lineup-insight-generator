@@ -123,7 +123,7 @@
 															 SortSource="{Binding}"
 															 Text="Name" />
 										<view:SortColumnLink Grid.Column="2"
-															 SortProperty="Player.BattingOrder"
+															 SortProperty="Player.MLBSpecific.BattingOrder"
 															 SortSource="{Binding}"
 															 Text="Batting">
 											<view:SortColumnLink.Style>
@@ -490,7 +490,7 @@
 																				<Setter Property="Visibility"
 																						Value="Visible" />
 																				<Style.Triggers>
-																					<DataTrigger Binding="{Binding Player.BattingOrder}"
+																					<DataTrigger Binding="{Binding Player.MLBSpecific.BattingOrder}"
 																								 Value="NA">
 																						<Setter Property="Visibility"
 																								Value="Collapsed" />
@@ -498,7 +498,7 @@
 																				</Style.Triggers>
 																			</Style>
 																		</Border.Style>
-																		<TextBlock Text="{Binding Player.BattingOrder}" />
+																		<TextBlock Text="{Binding Player.MLBSpecific.BattingOrder}" />
 																	</Border>
 																	<Border Grid.Column="3"
 																			Padding="5,0"
