@@ -44,23 +44,23 @@ namespace mCubed.LineupGenerator.Services
 
 		public List<Contest> Contests
 		{
-			get { return Get<List<Contest>>(); }
+			get { return Get<List<Contest>>("contest-list/full"); }
 		}
 
 		public PlayerCard GetPlayerCard(string contestID, string playerID)
 		{
-			return Get<PlayerCard>(contestID, playerID);
+			return Get<PlayerCard>(string.Format("player-card/{0}/{1}", contestID, playerID));
 		}
 
 		#endregion
 
 		#region Helpers
 
-		private T Get<T>(params string[] urlParams)
+		private T Get<T>(string path)
 		{
 			try
 			{
-				var url = string.Format("http://{0}:{1}/{2}", Server, Settings.InsightPort, string.Join("/", urlParams));
+				var url = string.Format("http://{0}:{1}/{2}", Server, Settings.InsightPort, path);
 				using (var client = new WebClient())
 				{
 					var responseBody = client.DownloadString(url);
